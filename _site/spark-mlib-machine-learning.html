@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>『 Spark 』11. spark 机器学习 | Taotao's Zone</title>
+  <meta name="baidu-site-verification" content="6b2f48c1baf35f9e0eb29b4455265203"/>
+  <meta name="baidu-site-verification" content="hgXDOPtWLn" />
+  <meta name="google-site-verification" content="YqjJD80rZQfugWoznvslaHlII_viwiMiUDEEgPTLEDw" />
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css" />
+  <script src="/files/dc3da690b0d2a5655a8d6150862a2a07.html"></script>
+  <!-- <link rel="stylesheet" href="/css/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="/css/default-min.css" type="text/css" />
+  <link rel="stylesheet" href="/css/desktop-min.css" type="text/css" />
+  <link rel="stylesheet" href="/css/mobile-min.css" type="text/css" />
+  <link rel="shortcut icon" href="/css/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="/css/favicon.ico" mce_href="/favicon.ico" type="image/x-icon">
+  <link rel="alternate" type="application/atom+xml" title="Recent Entries" href="/atom.xml" />
+  <script src="/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+  <script src="/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+  <script src="/js/jquery.transit.min.js" type="text/javascript"></script>
+  <script src="/js/common.js" type="text/javascript"></script>
+  
+  <!-- growingIO code -->
+  <script type='text/javascript'>
+      var _vds = _vds || [];
+      window._vds = _vds;
+      (function(){
+        _vds.push(['setAccountId', '9f3f34627219ccd1']);
+        (function() {
+          var vds = document.createElement('script');
+          vds.type='text/javascript';
+          vds.async = true;
+          vds.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'dn-growing.qbox.me/vds.js';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(vds, s);
+        })();
+      })();
+  </script>
+  
+  <!-- 删掉 baidu spider 主动推送，无效 -->
+  <!-- baidu spider initiative push -->
+<!-- <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+  </script> -->
+  
+  <!-- google analytics push code -->
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72176628-2', 'auto');
+      ga('send', 'pageview');
+  </script>
+
+</head>
+
+<!-- meiqia plug-in -->
+<!-- 
+<script type='text/javascript'>
+    (function(m, ei, q, i, a, j, s) {
+        m[a] = m[a] || function() {
+            (m[a].a = m[a].a || []).push(arguments)
+        };
+        j = ei.createElement(q),
+            s = ei.getElementsByTagName(q)[0];
+        j.async = true;
+        j.charset = 'UTF-8';
+        j.src = i + '?v=' + new Date().getUTCDate();
+        s.parentNode.insertBefore(j, s);
+    })(window, document, 'script', '//static.meiqia.com/dist/meiqia.js', '_MEIQIA');
+    _MEIQIA('entId', 15857);
+</script>
+ -->
+
+<body>
+  <link rel="stylesheet" href="/js/prettify/prettify.css" />
+<style type="text/css">
+  html {
+    /*background: #333333;*/
+    background: rgb(246, 246, 246);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+  /*body { background:transparent;}*/
+  @media screen and (max-width: 770px){
+    body { background: rgba(255, 255, 255, 0.9); }
+  }
+</style>
+
+<div id="content" class="post" style="margin-top: 20px;">
+  <div id="avatar" class="avatar circle" data-in-right="false" style="width: 150px; height: 150px; position: fixed; top: 40px; z-index: 99; opacity: 0;">
+    <div class="center" style="margin-top: 4px; height: 142px; width: 142px; border-radius: 71px; background-image: url('../images/2.jpg');"></div>
+  </div>
+
+  <div class="entry" style="position: relative;">
+    <h1 class="entry-title"><a href="/spark-mlib-machine-learning" title="『 Spark 』11. spark 机器学习">『 Spark 』11. spark 机器学习</a></h1>    
+
+    <p class="entry-date">2016-05-16 
+        <span class="lastModified" style="display: none;" data-source="_posts/new-spark/2016-05-16-spark-mlib-machine-learning.md">最后更新时间: 
+        </span>
+    </p>
+
+
+    <h2 id="section">写在前面</h2>
+
+<p>本系列是综合了自己在学习spark过程中的理解记录 ＋ 对参考文章中的一些理解 ＋ 个人实践spark过程中的一些心得而来。写这样一个系列仅仅是为了梳理个人学习spark的笔记记录，所以一切以能够理解为主，没有必要的细节就不会记录了，而且文中有时候会出现英文原版文档，只要不影响理解，都不翻译了。若想深入了解，最好阅读参考文章和官方文档。</p>
+
+<p>其次，本系列是基于目前最新的 spark 1.6.0 系列开始的，spark 目前的更新速度很快，记录一下版本号还是必要的。 <br />
+最后，如果各位觉得内容有误，欢迎留言备注，所有留言 24 小时内必定回复，非常感谢。</p>
+
+<p>Tips: 如果插图看起来不明显，可以：1. 放大网页；2. 新标签中打开图片，查看原图哦；3. 点击右边目录上方的 <em>present mode</em> 哦。</p>
+
+<h2 id="spark-more-than-a-framework">1. Spark! More than A Framework!</h2>
+
+<p>还记得我们的第一篇 Spark 博文里的这张图吗？其实我觉得 spark 有两个层次的概念：</p>
+
+<ul>
+  <li>一个通用的分布式计算框架，spark core</li>
+  <li>基于 spark core 设计，无缝实现的库，dataframe，sql，mllib，graphx，bagel, streaming, sparkR 以及一些第三方包</li>
+</ul>
+
+<p>我之所以一开始很看好 spark，其中很大原因是第二条，也是下面这张图表达的意思：Spark, more than a framework.</p>
+
+<p><img src="../images/introduction-to-spark-3.jpg" alt="introduction-to-spark-3.jpg" /></p>
+
+<p>之后准备写一些这些库的博文，我用过的只有 sql，dataframe，streaming，mlib，所以可能不会写 sparkr，bagel，graphx 的东西，不过这些网上也有不少优质文章的，哈哈。</p>
+
+<p>今天再回顾回顾 mahine learning in Spark，进行一个小小的总结，之后再慢慢把一些实用的例子写下来。</p>
+
+<h2 id="brief-intro-to-machine-learning-in-spark">2. Brief Intro to Machine Learning in Spark</h2>
+
+<p>spark 里的机器学习目前［1.6.0］有两个库：</p>
+
+<ul>
+  <li><a href="http://spark.apache.org/docs/latest/mllib-guide.html">spark.mllib</a> ，是原始的基于 rdd api 设计和实现的机器学习库</li>
+  <li><a href="http://spark.apache.org/docs/latest/ml-guide.html">spark.ml</a>，是基于 dataframe api 设计和实现的机器学习库</li>
+</ul>
+
+<p>官方推荐使用 spark.ml 来实现你的机器学习算法，并且已经说明 dataframe, datasets API 将会替换 rdd，所以自然 ml 也会在不远的将来替换 mllib 了。事实上，在 spark 2.0 中，就已经开始尝试先把 dataframe 和 datasets 统一成一个 datasets api 了。参考：<a href="http://www.slideshare.net/databricks/2016-spark-summit-east-keynote-matei-zaharia"><code class="highlighter-rouge">slide</code> Spark 2 0</a></p>
+
+<p>从官方开发计划来说，我肯定是强烈推荐使用 spark.ml 库的，而且官方也说明了的，在 spark 2.x 之后，mllib 基本只做维护，其他新的 features 都是基于 ml 来开发了；不过除去这个方面，spark.ml 提供基于 dataframe/datasets 的 pipeline 执行流程，还有基于 spark sql 的高效的 code generation，所以不论从哪个方面来说，我觉得使用 dataframe/datasets，使用 spark.ml 都是一个比较明智的选择。</p>
+
+<p><img src="../images/spark-ml-3.png" alt="spark-ml-3.png" /></p>
+
+<p>不过目前 ml 有一个不足的地方，ml 支持的算法目前没有 mllib 的多。</p>
+
+<h2 id="ml-">3. ML 核心概念</h2>
+
+<ul>
+  <li><em>DataFrame</em>: Spark ML uses DataFrame from Spark SQL as an ML dataset, which can hold a variety of data types. 即机器学习数据集输入输出都以 dataframe 的格式提供。</li>
+  <li><em>Pipeline Components</em>:
+    <ul>
+      <li><em>Transformer</em>: A Transformer is an algorithm which can transform one DataFrame into another DataFrame.</li>
+      <li><em>Estimator</em>: An Estimator is an algorithm which can be fit on a DataFrame to produce a Transformer.</li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p><em>Transformer.transform()s</em> and <em>Estimator.fit()s</em> are both stateless. In the future, stateful algorithms may be supported via alternative concepts. Each instance of a Transformer or Estimator has a unique ID, which is useful in specifying parameters (discussed below).</p>
+</blockquote>
+
+<ul>
+  <li><em>Pipeline</em>: A Pipeline chains multiple Transformers and Estimators together to specify an ML workflow. That’s runing a sequence of algorithms to process and learn from data.</li>
+  <li><em>Parameter</em>: All Transformers and Estimators now share a common API for specifying parameters.</li>
+</ul>
+
+<h2 id="ml-pipeline-">4. ML Pipeline 介绍</h2>
+
+<p>In machine learning, it is common to run a sequence of algorithms to process and learn from data. E.g., a simple text document processing workflow might include several stages:</p>
+
+<ul>
+  <li>Split each document’s text into words.</li>
+  <li>Convert each document’s words into a numerical feature vector.</li>
+  <li>Learn a prediction model using the feature vectors and labels.</li>
+</ul>
+
+<p>Spark ML represents such a workflow as a Pipeline, which consists of a sequence of <em>PipelineStages (Transformers and Estimators)</em> to be run in a specific order.</p>
+
+<h3 id="section-1">4.1 工作原理</h3>
+
+<p>A Pipeline is specified as a <em>sequence of stages</em>, and each stage is either a <em>Transformer</em> or an <em>Estimator</em>. These stages are run in order, and the input DataFrame is transformed as it passes through each stage. For Transformer stages, the <em>transform()</em> method is called on the DataFrame. For Estimator stages, the <em>fit()</em> method is called to produce a Transformer (which becomes part of the PipelineModel, or fitted Pipeline), and that Transformer’s <em>transform()</em> method is called on the DataFrame.</p>
+
+<p>We illustrate this for the simple text document workflow. The figure below is for the training time usage of a Pipeline.</p>
+
+<p><img src="../images/spark-ml-1.png" alt="spark-ml-1.png" /></p>
+
+<p>Above, the top row represents a Pipeline with three stages. The first two (Tokenizer and HashingTF) are Transformers (blue), and the third (LogisticRegression) is an Estimator (red).</p>
+
+<p>The bottom row represents data flowing through the pipeline, where cylinders indicate DataFrames. The Pipeline.fit() method is called on the original DataFrame, which has raw text documents and labels. The Tokenizer.transform() method splits the raw text documents into words, adding a new column with words to the DataFrame. The HashingTF.transform() method converts the words column into feature vectors, adding a new column with those vectors to the DataFrame. Now, since LogisticRegression is an Estimator, the Pipeline first calls LogisticRegression.fit() to produce a LogisticRegressionModel. If the Pipeline had more stages, it would call the LogisticRegressionModel’s transform() method on the DataFrame before passing the DataFrame to the next stage.</p>
+
+<p>A Pipeline is an Estimator. Thus, after a Pipeline’s fit() method runs, it produces a PipelineModel, which is a Transformer. This PipelineModel is used at test time; the figure below illustrates this usage.</p>
+
+<p><img src="../images/spark-ml-2.png" alt="spark-ml-2.png" /></p>
+
+<p>In the figure above, the PipelineModel has the same number of stages as the original Pipeline, but all Estimators in the original Pipeline have become Transformers. When the PipelineModel’s transform() method is called on a test dataset, the data are passed through the fitted pipeline in order. Each stage’s transform() method updates the dataset and passes it to the next stage.</p>
+
+<p>Pipelines and PipelineModels help to ensure that training and test data go through identical feature processing steps.</p>
+
+<h2 id="next">13. Next</h2>
+
+<p>Spark 2.0 马上就要 release 了，下次我们就来看看 spark 2.0 释放了哪些重磅炸弹吧，哈哈～～～</p>
+
+<h2 id="section-2">14. 打开微信，扫一扫，点一点，棒棒的，^_^</h2>
+
+<p><img src="../images/wechat_pay_any.png" alt="wechat_pay_any.png" /></p>
+
+<h2 id="section-3">参考文章</h2>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=ZFBgY0PwUeY&amp;feature=youtu.be">Spark 2 0</a></li>
+  <li><a href="http://www.slideshare.net/databricks/2016-spark-summit-east-keynote-matei-zaharia"><code class="highlighter-rouge">slide</code> Spark 2 0</a></li>
+  <li><a href="http://spark.apache.org/docs/latest/ml-guide.html">Spark ML Guide</a></li>
+  <li><a href="https://databricks.com/blog/2016/05/11/spark-2-0-technical-preview-easier-faster-and-smarter.html">Preview of Apache Spark 2.0 now on Databricks Community Edition</a></li>
+</ul>
+
+<h2 id="section-4">本系列文章链接</h2>
+
+<ul>
+  <li><a href="http://litaotao.github.io/introduction-to-spark?s=inner">『 Spark 』1. spark 简介 </a></li>
+  <li><a href="http://litaotao.github.io/spark-questions-concepts?s=inner">『 Spark 』2. spark 基本概念解析 </a></li>
+  <li><a href="http://litaotao.github.io/spark-programming-model?s=inner">『 Spark 』3. spark 编程模式 </a></li>
+  <li><a href="http://litaotao.github.io/spark-what-is-rdd?s=inner">『 Spark 』4. spark 之 RDD </a></li>
+  <li><a href="http://litaotao.github.io/spark-resouces-blogs-paper?s=inner">『 Spark 』5. 这些年，你不能错过的 spark 学习资源 </a></li>
+  <li><a href="http://litaotao.github.io/deep-into-spark-exection-model?s=inner">『 Spark 』6. 深入研究 spark 运行原理之 job, stage, task</a></li>
+  <li><a href="http://litaotao.github.io/spark-dataframe-introduction?s=inner">『 Spark 』7. 使用 Spark DataFrame 进行大数据分析</a></li>
+  <li><a href="http://litaotao.github.io/spark-in-finance-and-investing?s=inner">『 Spark 』8. 实战案例 ｜ Spark 在金融领域的应用 ｜ 日内走势预测</a></li>
+  <li><a href="http://litaotao.github.io/ipython-notebook-spark?s=inner">『 Spark 』9. 搭建 IPython + Notebook + Spark 开发环境</a></li>
+  <li><a href="http://litaotao.github.io/boost-spark-application-performance?s=inner">『 Spark 』10. spark 应用程序性能优化｜12 个优化方法</a></li>
+  <li><a href="http://litaotao.github.io/spark-mlib-machine-learning?s=inner">『 Spark 』11. spark 机器学习</a></li>
+  <li><a href="http://litaotao.github.io/spark-2.0-faster-easier-smarter?s=inner">『 Spark 』12. Spark 2.0 特性介绍</a></li>
+  <li><a href="http://litaotao.github.io/spark-2.0-release-notes-zh?s=inner">『 Spark 』13. Spark 2.0 Release Notes 中文版 </a></li>
+  <li><a href="http://litaotao.github.io/spark-sql-parquet-optimize?s=inner">『 Spark 』14. 一次 Spark SQL 性能优化之旅</a></li>
+</ul>
+
+
+    <!-- share icon -->
+    <!-- <div class="ds-share" data-thread-key="/spark-mlib-machine-learning" data-title="『 Spark 』11. spark 机器学习"
+         data-content="content"
+         data-url="http://litaotao.github.io//spark-mlib-machine-learning">
+        <div class="ds-share-aside-left">
+          <div class="ds-share-aside-inner">
+          </div>
+          <div class="ds-share-aside-toggle">分享</div>
+        </div>
+    </div>
+ -->
+    <!-- 百度分享按钮 -->
+
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"7","bdPos":"left","bdTop":"118"},"image":{"viewList":["weixin","qzone","tsina","tqq","renren","sqq","evernotecn","youdao"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["weixin","qzone","tsina","tqq","renren","sqq","evernotecn","youdao"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+    <div id="disqus_container">
+      <div style="margin-bottom:20px">
+      <!-- 多说评论框 start -->
+        <div class="ds-thread" data-thread-key=/spark-mlib-machine-learning data-title=『 Spark 』11. spark 机器学习 
+             data-url=http://litaotao.github.io/+/spark-mlib-machine-learning></div>
+      <!-- 多说评论框 end -->
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"litaotao"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          // ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.src = '../js/embed.js'
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0]
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+      </div>
+    </div>
+  </div>
+  
+  <div id="menuIndex" class="sidenav">
+    <div class="myinfo">
+        <center>
+          <div id="avatarHolder" class="avatar circle" style="width: 0px; height: 0px; box-shadow: none; margin-bottom: 20px;">
+          </div>
+          <a href="/index.html" title="Homepage"><i class="icon-home icon-large"></i> Home</a>
+          <a href="http://www.linkedin.com/in/taotaoli"><i class="icon-linkedin-sign icon-large"></i> Linkedin</a>
+          <a href="https://github.com/litaotao"><i class="icon-github icon-large"></i> Code</a>
+          <a href="mailto:taotao.engineer@gmail.com"><i class="icon-envelope icon-large"></i> Mail</a>
+          <button id="present_button" onclick="present_mode()" style="width: 100%; margin-top: 10px; display: none"><i class="icon-align-justify icon-large"></i> Present Mode</button>
+        </center>
+    </div>
+    <div id="menu"></div>
+  </div>
+</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+<script type="text/javascript">
+    //博文页面也做一下刷新操作，避免有时候切换横竖屏时格式不对的问题  
+    // $( window ).resize(function() { 
+    //     location.reload(); 
+    // });
+</script>
+
+
+  <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan id='cnzz_stat_icon_1258855744'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1258855744' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+</body>
+</html>

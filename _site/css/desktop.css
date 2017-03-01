@@ -3,7 +3,8 @@ body {
     /*font-family: "微软雅黑";*/
 	/*font-family: "-webkit-pictograph";*/
 	font-size: 16px;
-	background-color: #f7f7f7;
+	/*background-color: #f7f7f7;*/
+    background-color: rgb(246, 246, 246);
     background: transparent;
 }
 
@@ -42,6 +43,7 @@ h4,h5,h6 {
 p {
 	margin-bottom: 40px;
 	line-height: 1.8em;
+    overflow-wrap: break-word;
 }
 /*
 code {
@@ -114,7 +116,8 @@ body table tr:hover td {
 
 /************layout style*****************/
 #content {
-	width: 1060px;
+    width: 80%;
+	/*width: 1060px;*/
 	margin: 0px auto 60px;
 	min-height: 400px;
 	height: auto !important;
@@ -207,7 +210,8 @@ a.external:after {
 
 .entry {
 	margin-bottom: 80px;
-	width: 680px;
+    width: 65%;
+	/*width: 680px;*/
 	float: left;
 	background: #fff;
 	padding: 30px;
@@ -282,7 +286,7 @@ a.external:after {
 .index-content .section {
 	margin-left: 30%;
 	padding-top: 0px;
-	padding-right: 15%;
+	/*padding-right: 15%;*/
 }
 
 .index-content .artical-list {
@@ -308,7 +312,7 @@ a.external:after {
 
 .index-content h2 a {
 	color: #444;
-	text-decoration: underline;
+	/*text-decoration: underline;*/
     font-family: monospace;
 }
 
@@ -353,15 +357,16 @@ a.external:after {
 }
 
 .index-content .cate-bar {
-	width: 70%;
+	/*width: 70%;*/
 	margin: 0 auto;
 	line-height: 100px;
-	text-align: right;
+    text-align: center;
 	color: #999;
 }
 
 .index-content .cate-bar a {
-	margin: auto 20px;
+    /*margin: auto 20px;*/
+	margin: auto 5%;
 	color: #999;
 }
 
@@ -404,7 +409,7 @@ a.external:after {
 
 #menuIndex a {
 	display: block;
-	padding: 2px 0;
+	padding: 4px 0;
 }
 
 #menuIndex a:hover {
@@ -427,7 +432,7 @@ a.external:after {
 }
 
 #menuIndex ul li.on a {
-	border-right: 2px solid #aaa;
+	border-right: 2px solid #FF0C8A;
 }
 
 #menuIndex li.h1 {

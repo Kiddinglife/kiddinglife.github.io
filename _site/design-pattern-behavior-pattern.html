@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>『 读书笔记 』 设计模式总结之行为型模式 | Taotao's Zone</title>
+  <meta name="baidu-site-verification" content="6b2f48c1baf35f9e0eb29b4455265203"/>
+  <meta name="baidu-site-verification" content="hgXDOPtWLn" />
+  <meta name="google-site-verification" content="YqjJD80rZQfugWoznvslaHlII_viwiMiUDEEgPTLEDw" />
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" type="text/css" />
+  <script src="/files/dc3da690b0d2a5655a8d6150862a2a07.html"></script>
+  <!-- <link rel="stylesheet" href="/css/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="/css/default-min.css" type="text/css" />
+  <link rel="stylesheet" href="/css/desktop-min.css" type="text/css" />
+  <link rel="stylesheet" href="/css/mobile-min.css" type="text/css" />
+  <link rel="shortcut icon" href="/css/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="/css/favicon.ico" mce_href="/favicon.ico" type="image/x-icon">
+  <link rel="alternate" type="application/atom+xml" title="Recent Entries" href="/atom.xml" />
+  <script src="/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+  <script src="/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+  <script src="/js/jquery.transit.min.js" type="text/javascript"></script>
+  <script src="/js/common.js" type="text/javascript"></script>
+  
+  <!-- growingIO code -->
+  <script type='text/javascript'>
+      var _vds = _vds || [];
+      window._vds = _vds;
+      (function(){
+        _vds.push(['setAccountId', '9f3f34627219ccd1']);
+        (function() {
+          var vds = document.createElement('script');
+          vds.type='text/javascript';
+          vds.async = true;
+          vds.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'dn-growing.qbox.me/vds.js';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(vds, s);
+        })();
+      })();
+  </script>
+  
+  <!-- 删掉 baidu spider 主动推送，无效 -->
+  <!-- baidu spider initiative push -->
+<!-- <script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+        }
+        else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+  </script> -->
+  
+  <!-- google analytics push code -->
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72176628-2', 'auto');
+      ga('send', 'pageview');
+  </script>
+
+</head>
+
+<!-- meiqia plug-in -->
+<!-- 
+<script type='text/javascript'>
+    (function(m, ei, q, i, a, j, s) {
+        m[a] = m[a] || function() {
+            (m[a].a = m[a].a || []).push(arguments)
+        };
+        j = ei.createElement(q),
+            s = ei.getElementsByTagName(q)[0];
+        j.async = true;
+        j.charset = 'UTF-8';
+        j.src = i + '?v=' + new Date().getUTCDate();
+        s.parentNode.insertBefore(j, s);
+    })(window, document, 'script', '//static.meiqia.com/dist/meiqia.js', '_MEIQIA');
+    _MEIQIA('entId', 15857);
+</script>
+ -->
+
+<body>
+  <link rel="stylesheet" href="/js/prettify/prettify.css" />
+<style type="text/css">
+  html {
+    /*background: #333333;*/
+    background: rgb(246, 246, 246);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+  /*body { background:transparent;}*/
+  @media screen and (max-width: 770px){
+    body { background: rgba(255, 255, 255, 0.9); }
+  }
+</style>
+
+<div id="content" class="post" style="margin-top: 20px;">
+  <div id="avatar" class="avatar circle" data-in-right="false" style="width: 150px; height: 150px; position: fixed; top: 40px; z-index: 99; opacity: 0;">
+    <div class="center" style="margin-top: 4px; height: 142px; width: 142px; border-radius: 71px; background-image: url('../images/2.jpg');"></div>
+  </div>
+
+  <div class="entry" style="position: relative;">
+    <h1 class="entry-title"><a href="/design-pattern-behavior-pattern" title="『 读书笔记 』 设计模式总结之行为型模式">『 读书笔记 』 设计模式总结之行为型模式</a></h1>    
+
+    <p class="entry-date">2015-03-12 
+        <span class="lastModified" style="display: none;" data-source="_posts/books/2015-03-12-design-pattern-behavior-pattern.md">最后更新时间: 
+        </span>
+    </p>
+
+
+    <h2 id="section">1. 迭代器模式</h2>
+<p>　　提供一种方法访问一个容器对象中各个元素，而又不暴露该对象的内部细节。迭代器模式的结构：</p>
+
+<ul>
+  <li>抽象容器：一般是一个接口，提供一个iterator()方法，例如java中的Collection接口，List接口，Set接口等。</li>
+  <li>具体容器：就是抽象容器的具体实现类，比如List接口的有序列表实现ArrayList，List接口的链表实现LinkList，Set接口的哈希列表的实现HashSet等。</li>
+  <li>抽象迭代器：定义遍历元素所需要的方法，一般来说会有这么三个方法：取得第一个元素的方法first()，取得下一个元素的方法next()，判断是否遍历结束的方法isDone()（或者叫hasNext()），移出当前对象的方法remove(),</li>
+  <li>迭代器实现：实现迭代器接口中定义的方法，完成集合的迭代。</li>
+</ul>
+
+<h3 id="python">1.1 Python源码实例</h3>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#!/usr/bin/env python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="s">"""http://ginstrom.com/scribbles/2007/10/08/design-patterns-python-style/
+Implementation of the iterator pattern with a generator"""</span>
+
+
+<span class="k">def</span> <span class="nf">count_to</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+    <span class="s">"""Counts by word numbers, up to a maximum of five"""</span>
+    <span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="s">"one"</span><span class="p">,</span> <span class="s">"two"</span><span class="p">,</span> <span class="s">"three"</span><span class="p">,</span> <span class="s">"four"</span><span class="p">,</span> <span class="s">"five"</span><span class="p">]</span>
+    <span class="c"># enumerate() returns a tuple containing a count (from start which</span>
+    <span class="c"># defaults to 0) and the values obtained from iterating over sequence</span>
+    <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">count</span><span class="p">),</span> <span class="n">numbers</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">number</span>
+
+<span class="c"># Test the generator</span>
+<span class="n">count_to_two</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">count_to</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">count_to_five</span> <span class="o">=</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">count_to</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'Counting to two...'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">count_to_two</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">' '</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'Counting to five...'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">count_to_five</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">' '</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">()</span>
+
+<span class="c">### OUTPUT ###</span>
+<span class="c"># Counting to two...</span>
+<span class="c"># one two</span>
+<span class="c"># Counting to five...</span>
+<span class="c"># one two three four five</span></code></pre></figure>
+
+<h2 id="section-1">2. 观察者模式</h2>
+<p>　　观察者模式（有时又被称为发布/订阅模式）是软件设计模式的一种。在此种模式中，一个目标对象管理所有相依于它的观察者对象，并且在它本身的状态改变时主动发出通知。这通常透过呼叫各观察者所提供的方法来实现。此种模式通常被用来实作事件处理系统。</p>
+
+<h3 id="python-1">2.1 Python源码示例</h3>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#!/usr/bin/env python</span>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="s">"""
+Reference: http://www.slideshare.net/ishraqabd/publish-subscribe-model-overview-13368808
+Author: https://github.com/HanWenfang
+"""</span>
+
+
+<span class="k">class</span> <span class="nc">Provider</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_queue</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">msg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>  <span class="c"># unfair</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">unsubscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">subscriber</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="p">[</span><span class="n">msg</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg_queue</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">msg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subscribers</span><span class="p">[</span><span class="n">msg</span><span class="p">]:</span>
+                    <span class="n">sub</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_queue</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="k">class</span> <span class="nc">Publisher</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg_center</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">msg_center</span>
+
+    <span class="k">def</span> <span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Subscriber</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">msg_center</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">msg_center</span>
+
+    <span class="k">def</span> <span class="nf">subscribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"{} got {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">message_center</span> <span class="o">=</span> <span class="n">Provider</span><span class="p">()</span>
+
+    <span class="n">fftv</span> <span class="o">=</span> <span class="n">Publisher</span><span class="p">(</span><span class="n">message_center</span><span class="p">)</span>
+
+    <span class="n">jim</span> <span class="o">=</span> <span class="n">Subscriber</span><span class="p">(</span><span class="s">"jim"</span><span class="p">,</span> <span class="n">message_center</span><span class="p">)</span>
+    <span class="n">jim</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s">"cartoon"</span><span class="p">)</span>
+    <span class="n">jack</span> <span class="o">=</span> <span class="n">Subscriber</span><span class="p">(</span><span class="s">"jack"</span><span class="p">,</span> <span class="n">message_center</span><span class="p">)</span>
+    <span class="n">jack</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s">"music"</span><span class="p">)</span>
+    <span class="n">gee</span> <span class="o">=</span> <span class="n">Subscriber</span><span class="p">(</span><span class="s">"gee"</span><span class="p">,</span> <span class="n">message_center</span><span class="p">)</span>
+    <span class="n">gee</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s">"movie"</span><span class="p">)</span>
+
+    <span class="n">fftv</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s">"cartoon"</span><span class="p">)</span>
+    <span class="n">fftv</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s">"music"</span><span class="p">)</span>
+    <span class="n">fftv</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s">"ads"</span><span class="p">)</span>
+    <span class="n">fftv</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s">"movie"</span><span class="p">)</span>
+    <span class="n">fftv</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s">"cartoon"</span><span class="p">)</span>
+    <span class="n">fftv</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s">"cartoon"</span><span class="p">)</span>
+    <span class="n">fftv</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s">"movie"</span><span class="p">)</span>
+    <span class="n">fftv</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s">"blank"</span><span class="p">)</span>
+
+    <span class="n">message_center</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+<span class="c">### OUTPUT ###</span>
+<span class="c"># jim got cartoon</span>
+<span class="c"># jack got music</span>
+<span class="c"># gee got movie</span>
+<span class="c"># jim got cartoon</span>
+<span class="c"># jim got cartoon</span>
+<span class="c"># gee got movie</span></code></pre></figure>
+
+<h2 id="section-2">3. 策略模式</h2>
+<p>　　策略模式作为一种软件设计模式，指对象有某个行为，但是在不同的场景中，该行为有不同的实现算法。比如每个人都要“交个人所得税”，但是“在美国交个人所得税”和“在中国交个人所得税”就有不同的算税方法。主要是应对：在软件构建过程中，某些对象使用的算法可能多种多样，经常发生变化。如果在对象内部实现这些算法，将会使对象变得异常复杂，甚至会造成性能上的负担。GoF《设计模式》中说道：定义一系列算法，把它们一个个封装起来，并且使它们可以相互替换。该模式使得算法可独立于它们的客户变化。</p>
+
+<h3 id="python-">3.1 Python 源码示例</h3>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Duck</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c"># 上面使用继承，这里通用的使用参数方式，传入的就是操作工厂的类</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">strategy</span><span class="p">:</span>
+            <span class="c"># 指定策略，那么执行action就是用这个类的实例</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="n">strategy</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">fly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c"># 这里的第二个参数self，算是炫技吧，就是为了让操作的方法获得这里计算好的count</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">fly</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">UnboundLocalError</span><span class="p">(</span><span class="s">'Exception raised, no strategyClass supplied to Duck!'</span><span class="p">)</span>
+
+<span class="c"># 注意这里没有继承Duck，因为是以参数的方式传入类名</span>
+<span class="k">class</span> <span class="nc">Duck1</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">fly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">'Duck1 fly kind: '</span> <span class="o">+</span> <span class="n">kind</span> <span class="o">+</span> <span class="s">'#'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Duck2</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">fly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">'Duck2 fly kind: '</span> <span class="o">+</span> <span class="n">kind</span> <span class="o">+</span> <span class="s">'#'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">duckfly</span> <span class="o">=</span> <span class="n">Duck</span><span class="p">()</span>
+    <span class="n">duck1fly</span> <span class="o">=</span> <span class="n">Duck</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="n">Duck1</span><span class="p">)</span>
+    <span class="n">duck2fly</span> <span class="o">=</span> <span class="n">Duck</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="n">Duck2</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">duckfly</span><span class="o">.</span><span class="n">fly</span><span class="p">(</span><span class="s">'yes'</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">"The following exception was expected:"</span>
+        <span class="k">print</span> <span class="n">e</span>
+
+    <span class="k">print</span> <span class="n">duck1fly</span><span class="o">.</span><span class="n">fly</span><span class="p">(</span><span class="s">'yes'</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">duck1fly</span><span class="o">.</span><span class="n">fly</span><span class="p">(</span><span class="s">'no'</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">duck1fly</span><span class="o">.</span><span class="n">fly</span><span class="p">(</span><span class="s">'yes'</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">duck2fly</span><span class="o">.</span><span class="n">fly</span><span class="p">(</span><span class="s">'yes'</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">duck2fly</span><span class="o">.</span><span class="n">fly</span><span class="p">(</span><span class="s">'no'</span><span class="p">)</span></code></pre></figure>
+
+<h2 id="section-3">4. 模板方法模式</h2>
+<p>　　模板方法模式定义了一个算法的步骤，并允许次类别为一个或多个步骤提供其实践方式。让次类别在不改变算法架构的情况下，重新定义算法中的某些步骤。在软件工程中，它是一种软件设计模式，和C++模板没有关连。也可以理解为定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。因此模板方法使得子类可以在不改变一个算法的结构的情况下重新定义该算法的某些特定变量。优点是把不变行为搬移到超类，去除子类中的重复代码。</p>
+
+<h3 id="python-2">4.1 Python源码示例</h3>
+<p>　　源码来自<a href="http://blog.csdn.net/five3/article/details/7564578">csdn.net</a></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#!/usr/bin/env python  </span>
+<span class="c">#encoding: utf-8  </span>
+
+<span class="k">class</span> <span class="nc">template</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="nf">logic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">'do something before ....'</span>
+        <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_something_now</span><span class="p">()</span>
+        <span class="k">print</span> <span class="s">'do something after ....'</span>
+        
+    <span class="k">def</span> <span class="nf">do_something_now</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">None</span>      
+        
+<span class="k">class</span> <span class="nc">apply_temp1</span><span class="p">(</span><span class="n">template</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="nf">do_something_now</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">'apply 1'</span>  
+    
+<span class="k">class</span> <span class="nc">apply_temp2</span><span class="p">(</span><span class="n">template</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="nf">do_something_now</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">'apply 2'</span>  
+
+          
+<span class="k">if</span> <span class="s">'__main__'</span> <span class="o">==</span> <span class="n">__name__</span><span class="p">:</span>  
+    <span class="n">obj1</span> <span class="o">=</span> <span class="n">apply_temp1</span><span class="p">()</span>
+    <span class="n">obj2</span> <span class="o">=</span> <span class="n">apply_temp2</span><span class="p">()</span>
+    <span class="n">obj1</span><span class="o">.</span><span class="n">logic</span><span class="p">()</span>
+    <span class="n">obj2</span><span class="o">.</span><span class="n">logic</span><span class="p">()</span>
+    <span class="k">print</span> <span class="n">obj1</span><span class="o">.</span><span class="n">__class__</span>
+    <span class="k">print</span> <span class="n">obj2</span><span class="o">.</span><span class="n">__class__</span></code></pre></figure>
+
+<h2 id="section-4">扫一扫</h2>
+
+<p><img src="../../images/share/2015-03-12-design-pattern-behavior-pattern.md.jpg" alt="2015-03-12-design-pattern-behavior-pattern.md" /></p>
+
+
+    <!-- share icon -->
+    <!-- <div class="ds-share" data-thread-key="/design-pattern-behavior-pattern" data-title="『 读书笔记 』 设计模式总结之行为型模式"
+         data-content="content"
+         data-url="http://litaotao.github.io//design-pattern-behavior-pattern">
+        <div class="ds-share-aside-left">
+          <div class="ds-share-aside-inner">
+          </div>
+          <div class="ds-share-aside-toggle">分享</div>
+        </div>
+    </div>
+ -->
+    <!-- 百度分享按钮 -->
+
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"7","bdPos":"left","bdTop":"118"},"image":{"viewList":["weixin","qzone","tsina","tqq","renren","sqq","evernotecn","youdao"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["weixin","qzone","tsina","tqq","renren","sqq","evernotecn","youdao"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+    <div id="disqus_container">
+      <div style="margin-bottom:20px">
+      <!-- 多说评论框 start -->
+        <div class="ds-thread" data-thread-key=/design-pattern-behavior-pattern data-title=『 读书笔记 』 设计模式总结之行为型模式 
+             data-url=http://litaotao.github.io/+/design-pattern-behavior-pattern></div>
+      <!-- 多说评论框 end -->
+      <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+      <script type="text/javascript">
+      var duoshuoQuery = {short_name:"litaotao"};
+        (function() {
+          var ds = document.createElement('script');
+          ds.type = 'text/javascript';ds.async = true;
+          // ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+          ds.src = '../js/embed.js'
+          ds.charset = 'UTF-8';
+          (document.getElementsByTagName('head')[0]
+           || document.getElementsByTagName('body')[0]).appendChild(ds);
+        })();
+        </script>
+      <!-- 多说公共JS代码 end -->
+      </div>
+    </div>
+  </div>
+  
+  <div id="menuIndex" class="sidenav">
+    <div class="myinfo">
+        <center>
+          <div id="avatarHolder" class="avatar circle" style="width: 0px; height: 0px; box-shadow: none; margin-bottom: 20px;">
+          </div>
+          <a href="/index.html" title="Homepage"><i class="icon-home icon-large"></i> Home</a>
+          <a href="http://www.linkedin.com/in/taotaoli"><i class="icon-linkedin-sign icon-large"></i> Linkedin</a>
+          <a href="https://github.com/litaotao"><i class="icon-github icon-large"></i> Code</a>
+          <a href="mailto:taotao.engineer@gmail.com"><i class="icon-envelope icon-large"></i> Mail</a>
+          <button id="present_button" onclick="present_mode()" style="width: 100%; margin-top: 10px; display: none"><i class="icon-align-justify icon-large"></i> Present Mode</button>
+        </center>
+    </div>
+    <div id="menu"></div>
+  </div>
+</div>
+
+<script src="/js/post.js" type="text/javascript"></script>
+<script type="text/javascript">
+    //博文页面也做一下刷新操作，避免有时候切换横竖屏时格式不对的问题  
+    // $( window ).resize(function() { 
+    //     location.reload(); 
+    // });
+</script>
+
+
+  <script type="text/javascript">
+    var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan id='cnzz_stat_icon_1258855744'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1258855744' type='text/javascript'%3E%3C/script%3E"));
+  </script>
+
+</body>
+</html>

@@ -7,8 +7,8 @@ permalink: /:title
 encoding: UTF-8
 gems: [jekyll-paginate]
 
-title: Github Blog Template
-url: http://litaotao.github.io
+title: Taotao's Zone
+url: http://litaotao.github.io/
 feed: /atom.xml
 author_info: <a href="http://litaotao.github.io/">taotaoli</a>
 
@@ -21,4 +21,4 @@ myblog:
   coverimgs: []
   postbgimg: []
 
-categories: [python, books]
+categories: [web, tools, spark, new-spark, python, money, erlang, db, books]
