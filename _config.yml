@@ -1,24 +1,60 @@
-# auto: true
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
 
+# Site settings
+title: Kiddinglife
+brief-intro: C/C++/PYTHON ENGINEER
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://kiddinglife.github.io" # the base hostname & protocol for your site
+
+permalink: /:year/:month/:day/:title/
+
+# other links
+twitter_username: 
+facebook_username: 
+github_username:  kiddinglife
+email: jakezhang1989@hotmail.com
+weibo_username: 
+zhihu_username: 
+linkedIn_username: www.linkedin.com/in/kiddinglife
+dribbble_username:
+
+description_footer: I give my youth dedicated to coding！
+
+# comments
+# two ways to comment, only choose one, and use your own short name
+# 两种评论插件，选一个就好了，使用自己的 short_name
+duoshuo_shortname: #kiddinglife
+disqus_shortname: disqus_raq622hQJR
+
+# statistic analysis 统计代码
+# 百度统计 id，将统计代码替换为自己的百度统计id，即
+# hm.src = "//hm.baidu.com/hm.js?xxxxxxxxxxxx";
+# xxxxx字符串
+baidu_tongji_id: cf8506e0ef223e57ff6239944e5d46a4
+google_analytics_id: UA-72449510-4 # google 分析追踪id
+
+# Build settings
 markdown: kramdown
-highlighter: rouge
-paginate: 8
-permalink: /:title
-encoding: UTF-8
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# port
+# port: 1234
+
+# url
+category_dir: category/
+tag_dir: tag/
+
+# excerpt
+excerpt_separator: "\n\n\n\n"
+
+# paginate
 gems: [jekyll-paginate]
-
-title: Kiddinglife's Blog
-url: http://Kiddinglife.github.io/
-feed: /atom.xml
-author_info: <a href="http://Kiddinglife.github.io/">Kiddinglife</a>
-
-myblog:
-  gavatar: images/2.jpg
-  gpname: Kiddinglife
-  linkedin: http://www.linkedin.com/in/taotaoli
-  github: https://github.com/Kiddinglife
-  email: mailto:jakezhang1989@hotmail.com
-  coverimgs: []
-  postbgimg: []
-
-categories: [web, tools, spark, new-spark, python, money, erlang, db, books]
+paginate: 6

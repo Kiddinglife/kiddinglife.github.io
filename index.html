@@ -1,67 +1,160 @@
 ---
-layout: home
+layout: default
 ---
 
-<div class="index-content blog">
-    <div class="section">
-        <div class="cate-bar">
-          <a href="{{ site.myblog.linkedin }}"><i class="icon-linkedin-sign icon-large"></i><span> Linkedin</span></a>
-          <a href="{{ site.myblog.github }}"><i class="icon-github icon-large"></i><span> Code</span></a>
-          <a class="hide-phone" href="{{ site.myblog.email }}"><i class="icon-envelope icon-large"></i><span> Mail</span></a>
-          <a href="http://litaotao.github.io/resume" target="_blank"><i class="icon-edit-sign icon-large"></i><span> Resume</span></a>
-        </div>
+<div class="page clearfix" index>
+    <div class="left">
+        <h1>Welcome to HyG's Blog!</h1>
+        <small>这里记录着我的前端学习之路</small>
+        <hr>
+        <ul>
+            {% for post in paginator.posts %}
+              <li>
+                <h2>
+                  <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>{{ post.date | date: "%F" }}
+                    </div>
+                    <div class="label-card">
+                        {% if post.author %}<i class="fa fa-user"></i>{{ post.author }}
+                        {% endif %}
+                    </div>
+                    <div class="label-card">
+                        {% if page.meta %}<i class="fa fa-key"></i>{{ page.meta }}  {% endif %}
+                    </div>
 
-        <ul class="artical-list">
-        {% for post in site.posts %}
-            <li><div class="title-date">{{ post.date | date:"%Y-%m-%d" }}</div>
-                <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-                <div class="title-desc">{{ post.description }}</div>
-            </li>
-        {% endfor %}
+                    <div class="label-card">
+                    {% include category.html %}
+                    </div>
+
+                    <div class="label-card">
+                    {% include tag.html %}
+                    </div>
+                </div>
+                <div class="excerpt">
+                    {{post.excerpt}}
+                </div>
+                <div class="read-all">
+                    <a  href="{{ post.url | prepend: site.baseurl }}"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            {% endfor %}
         </ul>
+
+
+
+        <!-- Pagination links -->
+        <div class="pagination">
+          {% if paginator.previous_page %}
+            <a href="/index.html" class="previous"><i class="fa fa-angle-double-left"></i></a>
+            <a href="{{ paginator.previous_page_path }}" class="previous"><i class="fa fa-angle-left"></i></a>
+          {% else %}
+            <span class="previous disable"><i class="fa fa-angle-double-left"></i></span>
+            <span class="previous disable"><i class="fa fa-angle-left"></i></span>
+          {% endif %}
+          <span class="page_number ">{{ paginator.page }}/{{ paginator.total_pages }}</span>
+          {% if paginator.next_page %}
+            <a href="{{ paginator.next_page_path }}" class="next"><i class="fa fa-angle-right"></i></a>
+            <a href="/page{{ paginator.total_pages }}" class="next"><i class="fa fa-angle-double-right"></i></a>
+          {% else %}
+            <span class="next disable"><i class="fa fa-angle-right"></i></span>
+            <span class="next disable"><i class="fa fa-angle-double-right"></i></span>
+          {% endif %}
+        </div>
     </div>
-    
-    <div class="aside" style="background-image: url( geturl() );">
-      <div id="avatar" class="avatar circle" style="width: 150px; height: 150px; position: absolute; right: -75px; top: 75px; opacity: 0;">
-        <div class="center circle" style="margin-top: 4px; height: 142px; width: 142px; background-image: url('images/2.jpg')"></div>
-      </div> 
+    <!-- <button class="anchor"><i class="fa fa-anchor"></i></button> -->
+    <div class="right">
+        <div class="wrap">
+            <div class="side">
+                <div>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    Recent Posts
+                </div>
+                <ul class="content-ul" recent>
+                    {% for post in site.posts offset: 0 limit: 10  %}
+                        <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Content -->
+            <div class="side ">
+                <div>
+                    <i class="fa fa-th-list"></i>
+                    Categories
+                </div>
+                <ul class="content-ul" cate>
+                    {% for category in site.categories %}
+                    <li>
+                        <a href="{{ root_url }}/{{ site.category_dir }}#{{ category | first }}" class="categories-list-item" cate="{{ category | first }}">
+                            <span class="name">
+                                {{ category | first }}
+                            </span>
+                            <span class="badge">{{ category | last | size }}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <div class="side">
+                <div>
+                    <i class="fa fa-tags"></i>
+                    Tags
+                </div>
+                <div class="tags-cloud">
+                    {% assign first = site.tags.first %}
+                    {% assign max = first[1].size %}
+                    {% assign min = max %}
+                    {% for tag in site.tags offset:1 %}
+                      {% if tag[1].size > max %}
+                        {% assign max = tag[1].size %}
+                      {% elsif tag[1].size < min %}
+                        {% assign min = tag[1].size %}
+                      {% endif %}
+                    {% endfor %}
+
+                    {% if max == min %}
+                        {% assign diff = 1 %}
+                    {% else %}
+                        {% assign diff = max | minus: min %}
+                    {% endif %}
+
+                    {% for tag in site.tags %}
+                      {% assign temp = tag[1].size | minus: min | times: 36 | divided_by: diff %}
+                      {% assign base = temp | divided_by: 4 %}
+                      {% assign remain = temp | modulo: 4 %}
+                      {% if remain == 0 %}
+                        {% assign size = base | plus: 9 %}
+                      {% elsif remain == 1 or remain == 2 %}
+                        {% assign size = base | plus: 9 | append: '.5' %}
+                      {% else %}
+                        {% assign size = base | plus: 10 %}
+                      {% endif %}
+                      {% if remain == 0 or remain == 1 %}
+                        {% assign color = 9 | minus: base %}
+                      {% else %}
+                        {% assign color = 8 | minus: base %}
+                      {% endif %}
+                      <a href="{{ root_url }}/{{ site.tag_dir }}#{{ tag[0] }}" style="font-size: {{ size }}pt; color: #{{ color }}{{ color }}{{ color }};">{{ tag[0] }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- <div class="side">
+                <div>
+                    <i class="fa fa-external-link"></i>
+                    Links
+                </div>
+                <ul  class="content-ul">
+
+                </ul>
+            </div> -->
+        </div>
     </div>
-
-    <script>
-    function geturl() {
-        var all = [
-            "http://litaotao.github.io/images/cover_2.jpg",
-            "http://litaotao.github.io/images/cover_3.jpg",
-            // "http://litaotao.github.io/images/cover_5.jpg",
-            // "http://litaotao.github.io/images/cover_6.jpg",
-            "http://litaotao.github.io/images/cover_7.jpg",
-            // "http://litaotao.github.io/images/cover_8.jpg",
-            "http://litaotao.github.io/images/cover_9.jpg",
-            "http://litaotao.github.io/images/cover_10.jpg",
-            "http://litaotao.github.io/images/cover_11.jpg",
-            // "http://litaotao.github.io/images/cover_12.jpg",
-        ];
-        // 背景图片轮换方式，每小时一换，增加 cache 命中率，加快访问速度；
-        // var index = new Date().getHours() % all.length;
-        // return all[index];
-        return all[Math.floor((Math.random() * all.length))];
-    }
-
-    $(function(){
-        $('div#avatar').transition({ scale: 2.5 }).transition({ opacity: 1, scale: 1 }, 800, 'ease');
-        photo_url = "background-image: url( " + geturl() + " )";
-        if (document.body.scrollWidth > 770) {
-            $('div.aside')[0].setAttribute("style", photo_url);
-        }
-    })
-
-    // 切换屏幕［横竖屏］ 时刷新页面；以免大屏图片到小屏依旧保存，体验太差
-    // $( window ).resize(function() { 
-        // console.log("Screen Resized, refresh page start...");
-        // location.reload(); 
-        // console.log("Screen Resized, refresh page done...");
-    // });
-
-    </script>
-
 </div>
+<!-- <script src="{{ "/js/scroll.min.js " | prepend: site.baseurl }}" charset="utf-8"></script> -->
+<!-- <script src="{{ "/js/pageContent.js " | prepend: site.baseurl }}" charset="utf-8"></script> -->
