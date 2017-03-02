@@ -16,14 +16,14 @@ Having successfully completed the Bachelor of Science in Information Technology 
 I have many years working experiences using Python/C/C++ in Australia and Chinese companies.
 
 ##  GitHub Repos
-* `[+]` [A complete transport protocol stack on OSI layer 4](https://github.com/Kiddinglife/geconet/tree/dev)
-* `[+]` [Online games with similar architecture as in big world engine](https://github.com/Kiddinglife/gecoengine/tree/dev)
+* `[Transport Protocol Stack]` <https://github.com/Kiddinglife/geconet>
+* `[Game Backend Solution]` <https://github.com/Kiddinglife/gecoengine>
 
 ## Contact
 
-* `[+]` [Linkin](www.linkedin.com/in/kiddinglife)
-* `[+]` [GitHub](https://github.com/kiddinglife)
-* `[+]` jakezhang1989@hotmail.com
+* `[Linkin]` <https://www.linkedin.com/in/kiddinglife>
+* `[Github]` <https://github.com/kiddinglife>
+* `[Email]` <jakezhang1989@hotmail.com>
 
 ## Link
 
