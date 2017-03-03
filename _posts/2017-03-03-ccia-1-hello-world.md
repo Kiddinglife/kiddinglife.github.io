@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "C++ Concurrency in Action 1"
+title:  "Read:C++ConcurrencyInAction-1"
 categories: read
 tags:  thread c++
 ---
