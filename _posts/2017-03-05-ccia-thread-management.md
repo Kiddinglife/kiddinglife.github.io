@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "Endian Formate"
-date:   2017-03-1 14:06:05
-categories: network
-tags: endian
+title:  "Read:CCIA-2-basic-thread-mangement"
+date:   2017-03-05 21:06:05
+categories: read
+tags:  thread c++
 ---
 
 * content
