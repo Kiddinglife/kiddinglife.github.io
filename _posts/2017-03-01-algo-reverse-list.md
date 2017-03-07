@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Algo: Reverse List"
+title:  "Reverse List"
 categories: algo
 tags:  c++ list ordering
 ---

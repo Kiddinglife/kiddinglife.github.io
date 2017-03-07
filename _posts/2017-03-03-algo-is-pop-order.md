@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Algo: Is right Pop Sequence ?"
+title:  "Is right Pop Sequence ?"
 categories: algo
 tags:  c++ stack
 ---

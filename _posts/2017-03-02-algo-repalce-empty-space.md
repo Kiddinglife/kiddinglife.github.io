@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Algo: Replace Empty Space"
+title:  "Replace Empty Space"
 categories: algo
 tags:  c++ stack
 ---

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Network: Endian Formate"
+title:  "Endian Formate"
 categories: network
 tags:  endian memory 
 ---

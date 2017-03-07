@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Algo: Find Integer"
+title:  "Find Integer"
 categories: algo
 tags:  c++ array binary-search
 ---
