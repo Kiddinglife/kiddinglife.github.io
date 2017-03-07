@@ -2,7 +2,7 @@
 layout: post
 title:  "Is right Pop Sequence ?"
 categories: algo
-tags:  c++ stack
+tags:  stack
 ---
 
 * content

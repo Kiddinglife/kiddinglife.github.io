@@ -2,7 +2,7 @@
 layout: post
 title:  "Find Integer"
 categories: algo
-tags:  c++ array binary-search
+tags:  array binary-search
 ---
 
 * content

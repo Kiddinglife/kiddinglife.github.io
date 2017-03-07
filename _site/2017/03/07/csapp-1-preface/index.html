@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Replace Empty Space</title>
-    <meta name="description" content="static void replace_empty_space_in_string (char *str, int length){  /**   * Given a string and please repalce all empty char of " " with "%20"   * eg. input ...">
+    <title>CS:APP-1-Introduction</title>
+    <meta name="description" content="  What To Be Read  Assumptions  Aims  What To Be Expected  My Way to ReadWhat To Be ReadCS:APP is the short name for a great book called “Computer Systems: A...">
 
     <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
     <link rel="stylesheet" href="/css/main.css ">
-    <link rel="canonical" href="http://localhost:1234/2017/03/02/algo-repalce-empty-space/">
+    <link rel="canonical" href="http://localhost:1234/2017/03/07/csapp-1-preface/">
     <link rel="alternate" type="application/rss+xml" title="Kiddinglife" href="http://localhost:1234/feed.xml ">
 
 
@@ -139,11 +139,11 @@
 
         <div class="page clearfix" post>
     <div class="left">
-        <h1>Replace Empty Space</h1>
+        <h1>CS:APP-1-Introduction</h1>
         <div class="label">
 
             <div class="label-card">
-                <i class="fa fa-calendar"></i>2017-03-02
+                <i class="fa fa-calendar"></i>2017-03-07
             </div>
 
             <div class="label-card">
@@ -163,7 +163,7 @@
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#algo" title="Category: algo" rel="category">algo</a>
+        <a href="/category/#read" title="Category: read" rel="category">read</a>
     
   
 
@@ -180,8 +180,8 @@
   <i class="fa fa-tags"></i>
   
     
-        <!--a href="/tag/#stack" title="Tag: stack" rel="tag">stack</a-->
-        <a href="/tag/#stack" title="Tag: stack" rel="tag">stack</a>
+        <!--a href="/tag/#os" title="Tag: os" rel="tag">os</a-->
+        <a href="/tag/#os" title="Tag: os" rel="tag">os</a>
     
   
 
@@ -192,57 +192,58 @@
         </div>
         <hr>
         <article itemscope itemtype="http://schema.org/BlogPosting">
-        
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="nf">replace_empty_space_in_string</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="cm">/**
-   * Given a string and please repalce all empty char of " " with "%20"
-   * eg. input "hello world", should output "hello%20world"
-   *
-   * train of thought:
-   * for char in str from right to left:
-   *    if char is ' ':
-   *       replace char with %20
-   *       decrment index by 2 as we copy two more chars
-   *    else:
-   *       copy char
-   */</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">str</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">newlen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">str_len</span> <span class="o">=</span> <span class="n">strlen</span> <span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str_len</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
-      <span class="n">newlen</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="n">newlen</span> <span class="o">+=</span> <span class="n">str_len</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">newlen</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(;</span> <span class="n">str_len</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">newlen</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">str_len</span><span class="o">--</span><span class="p">,</span> <span class="n">newlen</span><span class="o">--</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">str_len</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
-      <span class="n">newlen</span><span class="o">--</span><span class="p">;</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'2'</span><span class="p">;</span>
-      <span class="n">newlen</span><span class="o">--</span><span class="p">;</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'%'</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="n">str</span><span class="p">[</span><span class="n">str_len</span><span class="p">];</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="n">TEST_F</span><span class="p">(</span><span class="n">mpath</span><span class="p">,</span><span class="n">test_replace_empty_space</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="kt">char</span> <span class="n">str</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">"hello world"</span><span class="p">;</span>
-  <span class="n">strcpy</span> <span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">msg</span><span class="p">);</span>
-  <span class="n">replace_empty_space_in_string</span> <span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="mi">1024</span><span class="p">);</span>
-  <span class="n">ASSERT_STREQ</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="s">"hello%20world"</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre>
-</div>
+        <ul id="markdown-toc">
+  <li><a href="#what-to-be-read" id="markdown-toc-what-to-be-read">What To Be Read</a></li>
+  <li><a href="#assumptions" id="markdown-toc-assumptions">Assumptions</a></li>
+  <li><a href="#aims" id="markdown-toc-aims">Aims</a></li>
+  <li><a href="#what-to-be-expected" id="markdown-toc-what-to-be-expected">What To Be Expected</a></li>
+  <li><a href="#my-way-to-read" id="markdown-toc-my-way-to-read">My Way to Read</a></li>
+</ul>
+
+<h2 id="what-to-be-read">What To Be Read</h2>
+<p>CS:APP is the short name for a great book called 
+<strong><em>“Computer Systems: A Programmer’s Perspective”</em></strong></p>
+
+<h2 id="assumptions">Assumptions</h2>
+<ul>
+  <li>Use the term “Unix” as an umbrella term for systems having Unix as 
+their heritage, including Solaris, Mac OS, and Linux.</li>
+  <li>Have some familiarity with C or C++.</li>
+  <li>Do not assume any prior experience with hardware, machine language, 
+or assembly-language programming.</li>
+</ul>
+
+<h2 id="aims">Aims</h2>
+<ul>
+  <li>
+    <p>Present the fundamental concepts in ways that you will find useful right away. 
+You will also be prepared to delve deeper, studying such topics as compilers, computer 
+architecture, operating systems, em-bedded systems, and networking.</p>
+  </li>
+  <li>
+    <p>Other systems books are written from a builder’s perspective. This book is written from a 
+<strong>programmer’s perspective</strong>, describing how application programmers can use their knowledge 
+of a system to write better programs.</p>
+  </li>
+  <li>
+    <p>If you study and learn the concepts in this book, you will be on your way to
+becoming the rare “<strong>power programmer</strong>” who knows how things work and how
+to fix them when they break.</p>
+  </li>
+</ul>
+
+<h2 id="what-to-be-expected">What To Be Expected</h2>
+<p>Become Power Programmer.</p>
+
+<h2 id="my-way-to-read">My Way to Read</h2>
+<ul>
+  <li>More rely on diagrams to illustrate complicated concepts.</li>
+  <li>Highlight emphasises.</li>
+  <li>Code sample program by my own.</li>
+  <li>Go over previous chapters frequently</li>
+  <li>Find more materials on topic in each chapter to refine my understandings.</li>
+</ul>
+
 
         </article>
         <hr>
@@ -255,13 +256,6 @@
                     
                 
             
-        
-            
-            
-                
-                    
-                
-            
                 
                     
                 
@@ -296,17 +290,12 @@
             
                 
                     
-                        
-                        <h2 id="similar_posts">Similar Posts</h2>
-                        <ul>
-                        
-                        <li class="relatedPost">
-                            <a href="http://localhost:1234/2017/03/03/algo-is-pop-order/">Is right Pop Sequence ?
-                            
-                            </a>
-                        </li>
-                        
-                        
+                
+            
+        
+            
+            
+                
                     
                 
             
@@ -351,20 +340,16 @@
                 
             
         
-        
-            </ul>
         
 
         <div class="post-recent">
     <div class="pre">
         
-        <p><strong>上一篇</strong> <a href="/2017/03/01/find-number-in-array/">Find Integer</a></p>
+        <p><strong>上一篇</strong> <a href="/2017/03/06/ccia-2-thread-management/">CCIA-2-BasicThreadMangement</a></p>
         
     </div>
     <div class="nex">
 
-        
-        <p><strong>下一篇</strong> <a href="/2017/03/02/tdd-steps/">How to apply tdd</a></p>
         
     </div>
 </div>
@@ -373,7 +358,7 @@
         <h2 id="comments">Comments</h2>
         
 <!-- 多说评论框 start -->
-<div class="ds-thread" data-thread-key="http://localhost:1234/2017/03/02/algo-repalce-empty-space/" data-title="Replace Empty Space" data-url="http://localhost:1234/2017/03/02/algo-repalce-empty-space/"></div>
+<div class="ds-thread" data-thread-key="http://localhost:1234/2017/03/07/csapp-1-preface/" data-title="CS:APP-1-Introduction" data-url="http://localhost:1234/2017/03/07/csapp-1-preface/"></div>
 <!-- 多说评论框 end -->
 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
@@ -401,8 +386,8 @@
      */
 
     var disqus_config = function() {
-        this.page.url = 'http://localhost:1234/2017/03/02/algo-repalce-empty-space/'; // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://localhost:1234/2017/03/02/algo-repalce-empty-space/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'http://localhost:1234/2017/03/07/csapp-1-preface/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:1234/2017/03/07/csapp-1-preface/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 
     (function() { // DON'T EDIT BELOW THIS LINE

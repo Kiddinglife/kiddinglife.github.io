@@ -2,7 +2,7 @@
 layout: post
 title:  "Reverse List"
 categories: algo
-tags:  c++ list ordering
+tags:  list ordering
 ---
 
 * content

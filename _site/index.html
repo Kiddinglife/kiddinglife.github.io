@@ -146,6 +146,116 @@
             
               <li>
                 <h2>
+                  <a class="post-link" href="/2017/03/07/csapp-1-preface/">CS:APP-1-Introduction</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2017-03-07
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#read" title="Category: read" rel="category">read</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#os" title="Tag: os" rel="tag">os</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    <ul id="markdown-toc">
+  <li><a href="#what-to-be-read" id="markdown-toc-what-to-be-read">What To Be Read</a></li>
+  <li><a href="#assumptions" id="markdown-toc-assumptions">Assumptions</a></li>
+  <li><a href="#aims" id="markdown-toc-aims">Aims</a></li>
+  <li><a href="#what-to-be-expected" id="markdown-toc-what-to-be-expected">What To Be Expected</a></li>
+  <li><a href="#my-way-to-read" id="markdown-toc-my-way-to-read">My Way to Read</a></li>
+</ul>
+
+<h2 id="what-to-be-read">What To Be Read</h2>
+<p>CS:APP is the short name for a great book called 
+<strong><em>“Computer Systems: A Programmer’s Perspective”</em></strong></p>
+
+<h2 id="assumptions">Assumptions</h2>
+<ul>
+  <li>Use the term “Unix” as an umbrella term for systems having Unix as 
+their heritage, including Solaris, Mac OS, and Linux.</li>
+  <li>Have some familiarity with C or C++.</li>
+  <li>Do not assume any prior experience with hardware, machine language, 
+or assembly-language programming.</li>
+</ul>
+
+<h2 id="aims">Aims</h2>
+<ul>
+  <li>
+    <p>Present the fundamental concepts in ways that you will find useful right away. 
+You will also be prepared to delve deeper, studying such topics as compilers, computer 
+architecture, operating systems, em-bedded systems, and networking.</p>
+  </li>
+  <li>
+    <p>Other systems books are written from a builder’s perspective. This book is written from a 
+<strong>programmer’s perspective</strong>, describing how application programmers can use their knowledge 
+of a system to write better programs.</p>
+  </li>
+  <li>
+    <p>If you study and learn the concepts in this book, you will be on your way to
+becoming the rare “<strong>power programmer</strong>” who knows how things work and how
+to fix them when they break.</p>
+  </li>
+</ul>
+
+<h2 id="what-to-be-expected">What To Be Expected</h2>
+<p>Become Power Programmer.</p>
+
+<h2 id="my-way-to-read">My Way to Read</h2>
+<ul>
+  <li>More rely on diagrams to illustrate complicated concepts.</li>
+  <li>Highlight emphasises.</li>
+  <li>Code sample program by my own.</li>
+  <li>Go over previous chapters frequently</li>
+  <li>Find more materials on topic in each chapter to refine my understandings.</li>
+</ul>
+
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2017/03/07/csapp-1-preface/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
                   <a class="post-link" href="/2017/03/06/ccia-2-thread-management/">CCIA-2-BasicThreadMangement</a>
                 </h2>
                 <div class="label">
@@ -683,6 +793,102 @@ most circumstances; it’s only if the identifier has semantic meaning associate
             
               <li>
                 <h2>
+                  <a class="post-link" href="/2017/03/06/grof-jump-floor/">Frog Jump Floor</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2017-03-06
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#algo" title="Category: algo" rel="category">algo</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#iteration" title="Tag: iteration" rel="tag">iteration</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">int</span> <span class="nf">jump_floor</span> <span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="cm">/**
+   * 一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法.
+   * A frog can jump 1 or 2 levels at a time and
+   * please calculate how mnay ways to jump to the top of an 'n' level stair
+   * Train of Thoughts:
+   * when level 1, 1 way to jump
+   * when level 2, 2 ways to jump
+   * when level 3, 3 ways to jump
+   * when level 4, 5 ways to jump
+   * when level 5, 8 ways to jump
+   * ....
+   * when level n, f(n-1)+f(n-2) ways to jump
+   */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">first</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">third</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">number</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">third</span> <span class="o">=</span> <span class="n">first</span> <span class="o">+</span> <span class="n">second</span><span class="p">;</span>
+    <span class="n">first</span> <span class="o">=</span> <span class="n">second</span><span class="p">;</span>
+    <span class="n">second</span> <span class="o">=</span> <span class="n">third</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">third</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">mpath</span><span class="p">,</span><span class="n">test_jump_floor</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">jump_floor</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="mi">8</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2017/03/06/grof-jump-floor/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
                   <a class="post-link" href="/2017/03/05/gernric-api-introduction/">Generic</a>
                 </h2>
                 <div class="label">
@@ -982,8 +1188,6 @@ each thread performs the same operation on different parts of the data.</li>
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#c++" title="Tag: c++" rel="tag">c++</a>&nbsp;
-    
         <a href="/tag/#stack" title="Tag: stack" rel="tag">stack</a>
     
   
@@ -1076,198 +1280,6 @@ each thread performs the same operation on different parts of the data.</li>
                 <hr>
               </li>
             
-              <li>
-                <h2>
-                  <a class="post-link" href="/2017/03/02/tdd-steps/">How to apply tdd</a>
-                </h2>
-                <div class="label">
-                    <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-03-02
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-
-                    <div class="label-card">
-                    
-
-
-<!-- <span class="point">•</span> -->
-<span class="categories">
-  <i class="fa fa-th-list"></i>
-  
-    
-        <a href="/category/#test" title="Category: test" rel="category">test</a>
-    
-  
-
-  <!-- <span class="point">•</span> -->
-</span>
-
-
-                    </div>
-
-                    <div class="label-card">
-                    
-<!-- <span class="point">•</span> -->
-<span class="pageTag">
-  <i class="fa fa-tags"></i>
-  
-    
-        <a href="/tag/#tdd" title="Tag: tdd" rel="tag">tdd</a>
-    
-  
-
-</span>
-
-                    </div>
-                </div>
-                <div class="excerpt">
-                    <ul id="markdown-toc">
-  <li><a href="#always-think-about-implementation-before-you-click-keyboard" id="markdown-toc-always-think-about-implementation-before-you-click-keyboard">Always think about implementation before you click keyboard.</a></li>
-</ul>
-
-<h4 id="always-think-about-implementation-before-you-click-keyboard">Always think about implementation before you click keyboard.</h4>
-
-<p>The steps to use tdd is like this:</p>
-
-<p>a. write down “real code” class and methods signatures based on the design</p>
-
-<p>b. write down some comments about the initial implementations.</p>
-
-<p>c. write down one unit test in the order of the implementation comments</p>
-
-<p>d. write down one piece of implementation</p>
-
-<p>e. do simply desktop review of the lines of codes when you think it finishes</p>
-
-<p>f. test it until it gets green</p>
-
-<p>g. refactor the codes and the unit tests</p>
-
-<p>h. repeat steps c – g until finishing the whole function.</p>
-
-                </div>
-                <div class="read-all">
-                    <a  href="/2017/03/02/tdd-steps/"><i class="fa fa-newspaper-o"></i>Read All</a>
-                </div>
-                <hr>
-              </li>
-            
-              <li>
-                <h2>
-                  <a class="post-link" href="/2017/03/02/algo-repalce-empty-space/">Replace Empty Space</a>
-                </h2>
-                <div class="label">
-                    <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-03-02
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-
-                    <div class="label-card">
-                    
-
-
-<!-- <span class="point">•</span> -->
-<span class="categories">
-  <i class="fa fa-th-list"></i>
-  
-    
-        <a href="/category/#algo" title="Category: algo" rel="category">algo</a>
-    
-  
-
-  <!-- <span class="point">•</span> -->
-</span>
-
-
-                    </div>
-
-                    <div class="label-card">
-                    
-<!-- <span class="point">•</span> -->
-<span class="pageTag">
-  <i class="fa fa-tags"></i>
-  
-    
-        <a href="/tag/#c++" title="Tag: c++" rel="tag">c++</a>&nbsp;
-    
-        <a href="/tag/#stack" title="Tag: stack" rel="tag">stack</a>
-    
-  
-
-</span>
-
-                    </div>
-                </div>
-                <div class="excerpt">
-                    
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="nf">replace_empty_space_in_string</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="cm">/**
-   * Given a string and please repalce all empty char of " " with "%20"
-   * eg. input "hello world", should output "hello%20world"
-   *
-   * train of thought:
-   * for char in str from right to left:
-   *    if char is ' ':
-   *       replace char with %20
-   *       decrment index by 2 as we copy two more chars
-   *    else:
-   *       copy char
-   */</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">str</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">newlen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">str_len</span> <span class="o">=</span> <span class="n">strlen</span> <span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str_len</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
-      <span class="n">newlen</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="n">newlen</span> <span class="o">+=</span> <span class="n">str_len</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">newlen</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(;</span> <span class="n">str_len</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">newlen</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">str_len</span><span class="o">--</span><span class="p">,</span> <span class="n">newlen</span><span class="o">--</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">str_len</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
-      <span class="n">newlen</span><span class="o">--</span><span class="p">;</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'2'</span><span class="p">;</span>
-      <span class="n">newlen</span><span class="o">--</span><span class="p">;</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'%'</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="n">str</span><span class="p">[</span><span class="n">str_len</span><span class="p">];</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="n">TEST_F</span><span class="p">(</span><span class="n">mpath</span><span class="p">,</span><span class="n">test_replace_empty_space</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="kt">char</span> <span class="n">str</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">"hello world"</span><span class="p">;</span>
-  <span class="n">strcpy</span> <span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">msg</span><span class="p">);</span>
-  <span class="n">replace_empty_space_in_string</span> <span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="mi">1024</span><span class="p">);</span>
-  <span class="n">ASSERT_STREQ</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="s">"hello%20world"</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre>
-</div>
-
-                </div>
-                <div class="read-all">
-                    <a  href="/2017/03/02/algo-repalce-empty-space/"><i class="fa fa-newspaper-o"></i>Read All</a>
-                </div>
-                <hr>
-              </li>
-            
         </ul>
 
 
@@ -1295,7 +1307,11 @@ each thread performs the same operation on different parts of the data.</li>
                 </div>
                 <ul class="content-ul" recent>
                     
+                        <li><a href="/2017/03/07/csapp-1-preface/">CS:APP-1-Introduction</a></li>
+                    
                         <li><a href="/2017/03/06/ccia-2-thread-management/">CCIA-2-BasicThreadMangement</a></li>
+                    
+                        <li><a href="/2017/03/06/grof-jump-floor/">Frog Jump Floor</a></li>
                     
                         <li><a href="/2017/03/05/gernric-api-introduction/">Generic</a></li>
                     
@@ -1310,8 +1326,6 @@ each thread performs the same operation on different parts of the data.</li>
                         <li><a href="/2017/03/01/find-number-in-array/">Find Integer</a></li>
                     
                         <li><a href="/2017/03/01/endian-formate/">Endian Formate</a></li>
-                    
-                        <li><a href="/2017/03/01/algo-reverse-list/">Reverse List</a></li>
                     
                 </ul>
             </div>
@@ -1329,7 +1343,7 @@ each thread performs the same operation on different parts of the data.</li>
                             <span class="name">
                                 algo
                             </span>
-                            <span class="badge">4</span>
+                            <span class="badge">5</span>
                         </a>
                     </li>
                     
@@ -1356,7 +1370,7 @@ each thread performs the same operation on different parts of the data.</li>
                             <span class="name">
                                 read
                             </span>
-                            <span class="badge">2</span>
+                            <span class="badge">3</span>
                         </a>
                     </li>
                     
@@ -1385,13 +1399,6 @@ each thread performs the same operation on different parts of the data.</li>
 
                     
 
-                    
-                      
-                      
-                      
-                      
-                      
-                      <a href="/tag/#c++" style="font-size: 18pt; color: #000;">c++</a>
                     
                       
                       
@@ -1440,7 +1447,7 @@ each thread performs the same operation on different parts of the data.</li>
                       
                       
                       
-                      <a href="/tag/#stack" style="font-size: 11pt; color: #777;">stack</a>
+                      <a href="/tag/#stack" style="font-size: 18pt; color: #000;">stack</a>
                     
                       
                       
@@ -1454,7 +1461,14 @@ each thread performs the same operation on different parts of the data.</li>
                       
                       
                       
-                      <a href="/tag/#thread" style="font-size: 11pt; color: #777;">thread</a>
+                      <a href="/tag/#thread" style="font-size: 18pt; color: #000;">thread</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#c++" style="font-size: 18pt; color: #000;">c++</a>
                     
                       
                       
@@ -1462,6 +1476,20 @@ each thread performs the same operation on different parts of the data.</li>
                       
                       
                       <a href="/tag/#python" style="font-size: 9pt; color: #999;">python</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#iteration" style="font-size: 9pt; color: #999;">iteration</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#os" style="font-size: 9pt; color: #999;">os</a>
                     
                 </div>
             </div>

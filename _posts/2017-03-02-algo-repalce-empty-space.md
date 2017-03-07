@@ -2,7 +2,7 @@
 layout: post
 title:  "Replace Empty Space"
 categories: algo
-tags:  c++ stack
+tags:  stack
 ---
 
 * content

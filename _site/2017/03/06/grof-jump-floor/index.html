@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Replace Empty Space</title>
-    <meta name="description" content="static void replace_empty_space_in_string (char *str, int length){  /**   * Given a string and please repalce all empty char of " " with "%20"   * eg. input ...">
+    <title>Frog Jump Floor</title>
+    <meta name="description" content="static int jump_floor (int number){  /**   * 一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法.   * A frog can jump 1 or 2 levels at a time and   * please calcula...">
 
     <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
     <link rel="stylesheet" href="/css/main.css ">
-    <link rel="canonical" href="http://localhost:1234/2017/03/02/algo-repalce-empty-space/">
+    <link rel="canonical" href="http://localhost:1234/2017/03/06/grof-jump-floor/">
     <link rel="alternate" type="application/rss+xml" title="Kiddinglife" href="http://localhost:1234/feed.xml ">
 
 
@@ -139,11 +139,11 @@
 
         <div class="page clearfix" post>
     <div class="left">
-        <h1>Replace Empty Space</h1>
+        <h1>Frog Jump Floor</h1>
         <div class="label">
 
             <div class="label-card">
-                <i class="fa fa-calendar"></i>2017-03-02
+                <i class="fa fa-calendar"></i>2017-03-06
             </div>
 
             <div class="label-card">
@@ -180,8 +180,8 @@
   <i class="fa fa-tags"></i>
   
     
-        <!--a href="/tag/#stack" title="Tag: stack" rel="tag">stack</a-->
-        <a href="/tag/#stack" title="Tag: stack" rel="tag">stack</a>
+        <!--a href="/tag/#iteration" title="Tag: iteration" rel="tag">iteration</a-->
+        <a href="/tag/#iteration" title="Tag: iteration" rel="tag">iteration</a>
     
   
 
@@ -193,56 +193,43 @@
         <hr>
         <article itemscope itemtype="http://schema.org/BlogPosting">
         
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="nf">replace_empty_space_in_string</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">)</span>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">int</span> <span class="nf">jump_floor</span> <span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span>
 <span class="p">{</span>
   <span class="cm">/**
-   * Given a string and please repalce all empty char of " " with "%20"
-   * eg. input "hello world", should output "hello%20world"
-   *
-   * train of thought:
-   * for char in str from right to left:
-   *    if char is ' ':
-   *       replace char with %20
-   *       decrment index by 2 as we copy two more chars
-   *    else:
-   *       copy char
+   * 一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法.
+   * A frog can jump 1 or 2 levels at a time and
+   * please calculate how mnay ways to jump to the top of an 'n' level stair
+   * Train of Thoughts:
+   * when level 1, 1 way to jump
+   * when level 2, 2 ways to jump
+   * when level 3, 3 ways to jump
+   * when level 4, 5 ways to jump
+   * when level 5, 8 ways to jump
+   * ....
+   * when level n, f(n-1)+f(n-2) ways to jump
    */</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">str</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">newlen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">str_len</span> <span class="o">=</span> <span class="n">strlen</span> <span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str_len</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">first</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">third</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">number</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
   <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
-      <span class="n">newlen</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">third</span> <span class="o">=</span> <span class="n">first</span> <span class="o">+</span> <span class="n">second</span><span class="p">;</span>
+    <span class="n">first</span> <span class="o">=</span> <span class="n">second</span><span class="p">;</span>
+    <span class="n">second</span> <span class="o">=</span> <span class="n">third</span><span class="p">;</span>
   <span class="p">}</span>
-  <span class="n">newlen</span> <span class="o">+=</span> <span class="n">str_len</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">newlen</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(;</span> <span class="n">str_len</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">newlen</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">str_len</span><span class="o">--</span><span class="p">,</span> <span class="n">newlen</span><span class="o">--</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">str_len</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
-      <span class="n">newlen</span><span class="o">--</span><span class="p">;</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'2'</span><span class="p">;</span>
-      <span class="n">newlen</span><span class="o">--</span><span class="p">;</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'%'</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span>
-      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="n">str</span><span class="p">[</span><span class="n">str_len</span><span class="p">];</span>
-  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">third</span><span class="p">;</span>
 <span class="p">}</span>
-<span class="n">TEST_F</span><span class="p">(</span><span class="n">mpath</span><span class="p">,</span><span class="n">test_replace_empty_space</span><span class="p">)</span>
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">mpath</span><span class="p">,</span><span class="n">test_jump_floor</span><span class="p">)</span>
 <span class="p">{</span>
-  <span class="kt">char</span> <span class="n">str</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">"hello world"</span><span class="p">;</span>
-  <span class="n">strcpy</span> <span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">msg</span><span class="p">);</span>
-  <span class="n">replace_empty_space_in_string</span> <span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="mi">1024</span><span class="p">);</span>
-  <span class="n">ASSERT_STREQ</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="s">"hello%20world"</span><span class="p">);</span>
+  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">jump_floor</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="mi">8</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre>
 </div>
+
 
         </article>
         <hr>
@@ -280,13 +267,6 @@
                     
                 
             
-        
-            
-            
-                
-                    
-                
-            
                 
                     
                 
@@ -296,17 +276,12 @@
             
                 
                     
-                        
-                        <h2 id="similar_posts">Similar Posts</h2>
-                        <ul>
-                        
-                        <li class="relatedPost">
-                            <a href="http://localhost:1234/2017/03/03/algo-is-pop-order/">Is right Pop Sequence ?
-                            
-                            </a>
-                        </li>
-                        
-                        
+                
+            
+        
+            
+            
+                
                     
                 
             
@@ -351,20 +326,18 @@
                 
             
         
-        
-            </ul>
         
 
         <div class="post-recent">
     <div class="pre">
         
-        <p><strong>上一篇</strong> <a href="/2017/03/01/find-number-in-array/">Find Integer</a></p>
+        <p><strong>上一篇</strong> <a href="/2017/03/05/gernric-api-introduction/">Generic</a></p>
         
     </div>
     <div class="nex">
 
         
-        <p><strong>下一篇</strong> <a href="/2017/03/02/tdd-steps/">How to apply tdd</a></p>
+        <p><strong>下一篇</strong> <a href="/2017/03/06/ccia-2-thread-management/">CCIA-2-BasicThreadMangement</a></p>
         
     </div>
 </div>
@@ -373,7 +346,7 @@
         <h2 id="comments">Comments</h2>
         
 <!-- 多说评论框 start -->
-<div class="ds-thread" data-thread-key="http://localhost:1234/2017/03/02/algo-repalce-empty-space/" data-title="Replace Empty Space" data-url="http://localhost:1234/2017/03/02/algo-repalce-empty-space/"></div>
+<div class="ds-thread" data-thread-key="http://localhost:1234/2017/03/06/grof-jump-floor/" data-title="Frog Jump Floor" data-url="http://localhost:1234/2017/03/06/grof-jump-floor/"></div>
 <!-- 多说评论框 end -->
 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
@@ -401,8 +374,8 @@
      */
 
     var disqus_config = function() {
-        this.page.url = 'http://localhost:1234/2017/03/02/algo-repalce-empty-space/'; // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://localhost:1234/2017/03/02/algo-repalce-empty-space/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'http://localhost:1234/2017/03/06/grof-jump-floor/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:1234/2017/03/06/grof-jump-floor/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 
     (function() { // DON'T EDIT BELOW THIS LINE

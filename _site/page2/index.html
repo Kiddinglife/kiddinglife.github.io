@@ -146,6 +146,196 @@
             
               <li>
                 <h2>
+                  <a class="post-link" href="/2017/03/02/tdd-steps/">How to apply tdd</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2017-03-02
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#test" title="Category: test" rel="category">test</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#tdd" title="Tag: tdd" rel="tag">tdd</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    <ul id="markdown-toc">
+  <li><a href="#always-think-about-implementation-before-you-click-keyboard" id="markdown-toc-always-think-about-implementation-before-you-click-keyboard">Always think about implementation before you click keyboard.</a></li>
+</ul>
+
+<h4 id="always-think-about-implementation-before-you-click-keyboard">Always think about implementation before you click keyboard.</h4>
+
+<p>The steps to use tdd is like this:</p>
+
+<p>a. write down “real code” class and methods signatures based on the design</p>
+
+<p>b. write down some comments about the initial implementations.</p>
+
+<p>c. write down one unit test in the order of the implementation comments</p>
+
+<p>d. write down one piece of implementation</p>
+
+<p>e. do simply desktop review of the lines of codes when you think it finishes</p>
+
+<p>f. test it until it gets green</p>
+
+<p>g. refactor the codes and the unit tests</p>
+
+<p>h. repeat steps c – g until finishing the whole function.</p>
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2017/03/02/tdd-steps/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
+                  <a class="post-link" href="/2017/03/02/algo-repalce-empty-space/">Replace Empty Space</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2017-03-02
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#algo" title="Category: algo" rel="category">algo</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#stack" title="Tag: stack" rel="tag">stack</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span> <span class="nf">replace_empty_space_in_string</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">length</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="cm">/**
+   * Given a string and please repalce all empty char of " " with "%20"
+   * eg. input "hello world", should output "hello%20world"
+   *
+   * train of thought:
+   * for char in str from right to left:
+   *    if char is ' ':
+   *       replace char with %20
+   *       decrment index by 2 as we copy two more chars
+   *    else:
+   *       copy char
+   */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">str</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">length</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">newlen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">str_len</span> <span class="o">=</span> <span class="n">strlen</span> <span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str_len</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
+      <span class="n">newlen</span> <span class="o">+=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">newlen</span> <span class="o">+=</span> <span class="n">str_len</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">newlen</span> <span class="o">&gt;</span> <span class="n">length</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(;</span> <span class="n">str_len</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">newlen</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">str_len</span><span class="o">--</span><span class="p">,</span> <span class="n">newlen</span><span class="o">--</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">str_len</span><span class="p">]</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'0'</span><span class="p">;</span>
+      <span class="n">newlen</span><span class="o">--</span><span class="p">;</span>
+      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'2'</span><span class="p">;</span>
+      <span class="n">newlen</span><span class="o">--</span><span class="p">;</span>
+      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="sc">'%'</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+      <span class="n">str</span><span class="p">[</span><span class="n">newlen</span><span class="p">]</span> <span class="o">=</span> <span class="n">str</span><span class="p">[</span><span class="n">str_len</span><span class="p">];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">mpath</span><span class="p">,</span><span class="n">test_replace_empty_space</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="kt">char</span> <span class="n">str</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">"hello world"</span><span class="p">;</span>
+  <span class="n">strcpy</span> <span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">msg</span><span class="p">);</span>
+  <span class="n">replace_empty_space_in_string</span> <span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="mi">1024</span><span class="p">);</span>
+  <span class="n">ASSERT_STREQ</span><span class="p">(</span><span class="n">str</span><span class="p">,</span><span class="s">"hello%20world"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2017/03/02/algo-repalce-empty-space/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
                   <a class="post-link" href="/2017/03/01/find-number-in-array/">Find Integer</a>
                 </h2>
                 <div class="label">
@@ -184,8 +374,6 @@
 <span class="pageTag">
   <i class="fa fa-tags"></i>
   
-    
-        <a href="/tag/#c++" title="Tag: c++" rel="tag">c++</a>&nbsp;
     
         <a href="/tag/#array" title="Tag: array" rel="tag">array</a>&nbsp;
     
@@ -421,8 +609,6 @@
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#c++" title="Tag: c++" rel="tag">c++</a>&nbsp;
-    
         <a href="/tag/#list" title="Tag: list" rel="tag">list</a>&nbsp;
     
         <a href="/tag/#ordering" title="Tag: ordering" rel="tag">ordering</a>
@@ -524,7 +710,11 @@
                 </div>
                 <ul class="content-ul" recent>
                     
+                        <li><a href="/2017/03/07/csapp-1-preface/">CS:APP-1-Introduction</a></li>
+                    
                         <li><a href="/2017/03/06/ccia-2-thread-management/">CCIA-2-BasicThreadMangement</a></li>
+                    
+                        <li><a href="/2017/03/06/grof-jump-floor/">Frog Jump Floor</a></li>
                     
                         <li><a href="/2017/03/05/gernric-api-introduction/">Generic</a></li>
                     
@@ -539,8 +729,6 @@
                         <li><a href="/2017/03/01/find-number-in-array/">Find Integer</a></li>
                     
                         <li><a href="/2017/03/01/endian-formate/">Endian Formate</a></li>
-                    
-                        <li><a href="/2017/03/01/algo-reverse-list/">Reverse List</a></li>
                     
                 </ul>
             </div>
@@ -558,7 +746,7 @@
                             <span class="name">
                                 algo
                             </span>
-                            <span class="badge">4</span>
+                            <span class="badge">5</span>
                         </a>
                     </li>
                     
@@ -585,7 +773,7 @@
                             <span class="name">
                                 read
                             </span>
-                            <span class="badge">2</span>
+                            <span class="badge">3</span>
                         </a>
                     </li>
                     
@@ -614,13 +802,6 @@
 
                     
 
-                    
-                      
-                      
-                      
-                      
-                      
-                      <a href="/tag/#c++" style="font-size: 18pt; color: #000;">c++</a>
                     
                       
                       
@@ -669,7 +850,7 @@
                       
                       
                       
-                      <a href="/tag/#stack" style="font-size: 11pt; color: #777;">stack</a>
+                      <a href="/tag/#stack" style="font-size: 18pt; color: #000;">stack</a>
                     
                       
                       
@@ -683,7 +864,14 @@
                       
                       
                       
-                      <a href="/tag/#thread" style="font-size: 11pt; color: #777;">thread</a>
+                      <a href="/tag/#thread" style="font-size: 18pt; color: #000;">thread</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#c++" style="font-size: 18pt; color: #000;">c++</a>
                     
                       
                       
@@ -691,6 +879,20 @@
                       
                       
                       <a href="/tag/#python" style="font-size: 9pt; color: #999;">python</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#iteration" style="font-size: 9pt; color: #999;">iteration</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#os" style="font-size: 9pt; color: #999;">os</a>
                     
                 </div>
             </div>
