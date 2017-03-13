@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CCIA-1-HelloWorld"
+title:  "CCIA-1-hello-world"
 categories: read
 tags:  thread c++
 ---

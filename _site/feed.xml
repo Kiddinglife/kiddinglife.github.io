@@ -5,9 +5,94 @@
     <description></description>
     <link>http://localhost:1234/</link>
     <atom:link href="http://localhost:1234/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 07 Mar 2017 19:11:54 +1100</pubDate>
-    <lastBuildDate>Tue, 07 Mar 2017 19:11:54 +1100</lastBuildDate>
+    <pubDate>Mon, 13 Mar 2017 19:19:52 +1100</pubDate>
+    <lastBuildDate>Mon, 13 Mar 2017 19:19:52 +1100</lastBuildDate>
     <generator>Jekyll v3.4.0</generator>
+    
+      <item>
+        <title>CCIA-3-1-shared-data-between-threads</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#31-problems-with-sharing-data-between-threads&quot; id=&quot;markdown-toc-31-problems-with-sharing-data-between-threads&quot;&gt;3.1 Problems with sharing data between threads&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#311-race-condition&quot; id=&quot;markdown-toc-311-race-condition&quot;&gt;3.1.1 Race Condition&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#312-problematic-race-conditions&quot; id=&quot;markdown-toc-312-problematic-race-conditions&quot;&gt;3.1.2 Problematic race conditions&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#313-avoid-problematic-race-conditions&quot; id=&quot;markdown-toc-313-avoid-problematic-race-conditions&quot;&gt;3.1.3 Avoid Problematic race conditions&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;31-problems-with-sharing-data-between-threads&quot;&gt;3.1 Problems with sharing data between threads&lt;/h2&gt;
+If all shared data is read-only, there’s no problem. However, if data is shared between threads, and &lt;strong&gt;one or more threads&lt;/strong&gt; start modifying the data, there’s a lot of potential for trouble.
+
+One concept that’s widely used to help programmers reason about their code is that of invariants—statements that are always true about a particular data structure, These invariants are often broken during an update, especially if the data structure is of any complexity or the update requires modification of more than one value.
+
+Consider a doubly linked list, the steps in deleting an entry from such a list are shown below:
+&lt;ol&gt;
+  &lt;li&gt;Identify the node to delete (N). a&lt;/li&gt;
+  &lt;li&gt;Update the link from the node prior to N to point to the node after N. b&lt;/li&gt;
+  &lt;li&gt;Update the link from the node after N to point to the node prior to N. c&lt;/li&gt;
+  &lt;li&gt;Delete node N. d&lt;/li&gt;
+&lt;/ol&gt;
+
+if one thread is reading the doubly linked list while another is removing a node, it’s quite possible for the reading thread to see the list with a node only partially removed (because only one of the links has been changed, as in step b of figure 3.1), so the &lt;strong&gt;invariant is broken&lt;/strong&gt;.
+
+The consequences of this broken invariant can vary; if the other thread is just reading the list items from left to right in the diagram, it will skip the node being. On the other hand, if the second thread is trying to delete the rightmost node in the diagram, it might end up permanently corrupting the data structure and
+eventually crashing the program. this is an example of one of the most common causes of bugs in concurrent code: &lt;strong&gt;a race condition&lt;/strong&gt;.
+
+&lt;h3 id=&quot;311-race-condition&quot;&gt;3.1.1 Race Condition&lt;/h3&gt;
+In concurrency, a race condition is anything where the outcome depends on the &lt;strong&gt;relative ordering&lt;/strong&gt; of execution of operations on two or more threads; the threads race to perform their &lt;strong&gt;respective operations&lt;/strong&gt;.
+
+the term race condition is usually used to mean a &lt;strong&gt;problematic race condition&lt;/strong&gt;; &lt;strong&gt;benign race conditions&lt;/strong&gt; aren’t so interesting and aren’t a cause of bugs. The C++ Standard also defines the term data race to mean the specific type of race condition that arises because of concurrent modification to a single object (see section 5.1.2 for details); data races cause the dreaded undefined behavior and it is problemic race condition.
+
+Take steps in deleting an entry from such a list above as example. Assume thread a operation is to visit each element and thread b operation is to delete element. There are 3 outcomes with diferent relative-ordering executions:
+&lt;ol&gt;
+  &lt;li&gt;benign race condition outcome: thread a reads deleting element -&amp;gt; thread b deletes left link step b-&amp;gt; thread b deletes right link step c&lt;/li&gt;
+  &lt;li&gt;problemic race condition outcome: thread b deletes left link step b -&amp;gt; thread a reads deleting element -&amp;gt; thread b deletes right link step c&lt;/li&gt;
+  &lt;li&gt;benign race condition outcome: thread a reads deleting element -&amp;gt; thread b deletes right link step c -&amp;gt;  thread a reads deleting element&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;312-problematic-race-conditions&quot;&gt;3.1.2 Problematic race conditions&lt;/h3&gt;
+Problematic race conditions typically occur where completing an operation requires modification of two or more distinct pieces of data, such as the two link pointers in the above example.
+
+what happens is that the operation must access two separate pieces of data, these must be modified in separate instructions, and another thread could potentially access the data structure when only one of them has been completed.
+
+Because race conditions are generally timing sensitive, they can often disappear entirely when
+the application is run under the debugger, because the debugger affects the timing
+of the program, even if only slightly.
+
+&lt;h3 id=&quot;313-avoid-problematic-race-conditions&quot;&gt;3.1.3 Avoid Problematic race conditions&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    The simplest option is to wrap your data structure with a protection mechanism, to ensure that only the thread actually performing a modification can see the intermediate states where the invariants are broken. From the point of view of other threads accessing that data structure,such modifications either haven’t started or have completed.
+  &lt;/li&gt;
+  &lt;li&gt;
+    Another option is to modify the design of your data structure and its invariants so
+that modifications are done as a series of indivisible changes, each of which preserves
+the invariants. This is generally referred to as &lt;strong&gt;lock-free&lt;/strong&gt; programming and is difficult to get
+right.
+  &lt;/li&gt;
+  &lt;li&gt;
+    Another way of dealing with race conditions is to handle the updates to the data
+structure as a transaction, just as updates to a database are done within a transaction.
+The required series of data modifications and reads is stored in a transaction log and
+then committed in a single step.
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+The most basic mechanism for protecting shared data provided by the C++ Standard is the mutex, so we’ll look at that in my next blog. See you then!
+
+</description>
+        <pubDate>Sun, 12 Mar 2017 21:02:02 +1100</pubDate>
+        <link>http://localhost:1234/2017/03/12/ccia-3-1-shared-data-protection/</link>
+        <guid isPermaLink="true">http://localhost:1234/2017/03/12/ccia-3-1-shared-data-protection/</guid>
+        
+        <category>thread</category>
+        
+        <category>c++</category>
+        
+        
+        <category>read</category>
+        
+      </item>
     
       <item>
         <title>CS:APP-1-Introduction</title>
@@ -76,7 +161,7 @@ Become Power Programmer.
       </item>
     
       <item>
-        <title>CCIA-2-BasicThreadMangement</title>
+        <title>CCIA-2-basic-thread-mangement</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#21-线程管理的基础-basic-thread-mangement&quot; id=&quot;markdown-toc-21-线程管理的基础-basic-thread-mangement&quot;&gt;2.1 线程管理的基础 Basic Thread Mangement&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#211-launching-a-thread-启动线程&quot; id=&quot;markdown-toc-211-launching-a-thread-启动线程&quot;&gt;2.1.1 Launching a thread 启动线程&lt;/a&gt;&lt;/li&gt;
@@ -751,7 +836,7 @@ As you can see, &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;energyShip
       </item>
     
       <item>
-        <title>CCIA-1-HelloWorld</title>
+        <title>CCIA-1-hello-world</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#12-why-use-concurrency-&quot; id=&quot;markdown-toc-12-why-use-concurrency-&quot;&gt;1.2 Why use concurrency ?&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -1089,43 +1174,6 @@ h. repeat steps c – g until finishing the whole function.
         
         
         <category>algo</category>
-        
-      </item>
-    
-      <item>
-        <title>Endian Formate</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#binary-expression-be-and-value-expression-ve-are-different-things&quot; id=&quot;markdown-toc-binary-expression-be-and-value-expression-ve-are-different-things&quot;&gt;Binary expression (be) and Value expression (ve) are different things.&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;binary-expression-be-and-value-expression-ve-are-different-things&quot;&gt;Binary expression (be) and Value expression (ve) are different things.&lt;/h4&gt;
-
-Basically, be is the store format in memory while ve is the human-readable values that be represents.
-
-eg. short a = 128
-
-its value expression is looking like this: 00000000 10000000
-
-its binary expression is looking like this:
-
-little endian 10000000 00000000
-
-big endian 00000000 10000000
-
-the aim of this blog is to highlight a misunderstanding I used to have. That is I mixed up the be and ve. Take the example above, I used to thought little endian 10000000 00000000 should be calculated as value of 2^10 because the bit 1 is at the index of 10.
-
-Actually, the correct way to calculate the value by cpu is like this: because the first byte 100000 is stored in low address so it should be high byte in value expression, and the second byte 000000 should be the low byte in value expression, take attention on the bold fonts, this is highlighted because it was where I made mistakes. So, the final value expression should be 00000000 10000000, and it value is therefore 2^8 that equals to the old value.
-</description>
-        <pubDate>Wed, 01 Mar 2017 00:00:00 +1100</pubDate>
-        <link>http://localhost:1234/2017/03/01/endian-formate/</link>
-        <guid isPermaLink="true">http://localhost:1234/2017/03/01/endian-formate/</guid>
-        
-        <category>endian</category>
-        
-        <category>memory</category>
-        
-        
-        <category>network</category>
         
       </item>
     

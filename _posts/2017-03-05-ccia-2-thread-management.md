@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CCIA-2-BasicThreadMangement"
+title:  "CCIA-2-basic-thread-mangement"
 date:   2017-03-05 21:06:05
 categories: read
 tags:  thread c++
