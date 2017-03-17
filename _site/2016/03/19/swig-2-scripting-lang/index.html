@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>SWIG-2-script-lang</title>
-    <meta name="description" content="  4.2 How does a script lang talk to C?          4.2.1 Wrapper functions      This blog provides a brief overview of:  script language extension programming ...">
+    <meta name="description" content="  4.2 How does a script lang talk to C?          4.2.1 Wrapper functions      4.2.2 Variable linking      4.2.3 Constants      4.2.4 Structures and classes  ...">
 
     <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="icon" href="/favicon.ico?" type="image/x-icon">
@@ -203,6 +203,9 @@
         <ul id="markdown-toc">
   <li><a href="#42-how-does-a-script-lang-talk-to-c" id="markdown-toc-42-how-does-a-script-lang-talk-to-c">4.2 How does a script lang talk to C?</a>    <ul>
       <li><a href="#421-wrapper-functions" id="markdown-toc-421-wrapper-functions">4.2.1 Wrapper functions</a></li>
+      <li><a href="#422-variable-linking" id="markdown-toc-422-variable-linking">4.2.2 Variable linking</a></li>
+      <li><a href="#423-constants" id="markdown-toc-423-constants">4.2.3 Constants</a></li>
+      <li><a href="#424-structures-and-classes" id="markdown-toc-424-structures-and-classes">4.2.4 Structures and classes</a></li>
     </ul>
   </li>
 </ul>
@@ -287,6 +290,27 @@ This is usually done in an initialization function called by the language when t
 <p>Although the process of adding a new function to Tcl has been illustrated, the procedure is almost identical 
 for Perl and Python. Both require special wrappers to be written and both need additional initialization code.
 Only the specific details are different.</p>
+
+<h3 id="422-variable-linking">4.2.2 Variable linking</h3>
+<p>ariable linking refers to the problem of mapping a C/C++ global variable to a variable in the scripting language 
+interpreter. For example, suppose you had the following variable: <code class="highlighter-rouge">double Foo = 3.5;</code></p>
+
+<p>evaluating a variable such as $Foo might implicitly call the get function. Similarly, typing $Foo = 4 would call the 
+underlying set function to change the value.</p>
+
+<h3 id="423-constants">4.2.3 Constants</h3>
+<p>In many cases, a C program or library may define a large collection of constants. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#define RED
+</span><span class="mh">0xff0000</span>
+<span class="cp">#define BLUE 0x0000ff
+#define GREEN 0x00ff00
+</span></code></pre>
+</div>
+<p>To make constants available, their values can be stored in scripting language variables such as $RED, $BLUE, and $GREEN.
+Virtually all scripting languages provide C functions for creating variables so installing constants is usually a trivial 
+exercise.</p>
+
+<h3 id="424-structures-and-classes">4.2.4 Structures and classes</h3>
 
 
         </article>

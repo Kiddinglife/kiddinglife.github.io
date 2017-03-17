@@ -84,6 +84,26 @@ Although the process of adding a new function to Tcl has been illustrated, the p
 for Perl and Python. Both require special wrappers to be written and both need additional initialization code.
 Only the specific details are different.
 
+### 4.2.2 Variable linking
+ariable linking refers to the problem of mapping a C/C++ global variable to a variable in the scripting language 
+interpreter. For example, suppose you had the following variable: `double Foo = 3.5;`
+
+evaluating a variable such as $Foo might implicitly call the get function. Similarly, typing $Foo = 4 would call the 
+underlying set function to change the value.
+
+### 4.2.3 Constants
+In many cases, a C program or library may define a large collection of constants. For example:
+```c++
+#define RED
+0xff0000
+#define BLUE 0x0000ff
+#define GREEN 0x00ff00
+```
+To make constants available, their values can be stored in scripting language variables such as $RED, $BLUE, and $GREEN.
+Virtually all scripting languages provide C functions for creating variables so installing constants is usually a trivial 
+exercise.
+
+### 4.2.4 Structures and classes
 
 
 
