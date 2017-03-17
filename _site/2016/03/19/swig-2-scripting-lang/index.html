@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Reverse List</title>
-    <meta name="description" content="struct ListNode{    int val;    ListNode* next;    ListNode (int x) :        val (x), next (NULL)    {    }};static ListNode* reverse_list (ListNode* pHead){...">
+    <title>SWIG-2-script-lang</title>
+    <meta name="description" content="  4.2 How does a script lang talk to C?          4.2.1 Wrapper functions      This blog provides a brief overview of:  script language extension programming ...">
 
     <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
     <link rel="stylesheet" href="/css/main.css ">
-    <link rel="canonical" href="http://localhost:1234/2017/03/01/algo-reverse-list/">
+    <link rel="canonical" href="http://localhost:1234/2016/03/19/swig-2-scripting-lang/">
     <link rel="alternate" type="application/rss+xml" title="Kiddinglife" href="http://localhost:1234/feed.xml ">
 
 
@@ -141,11 +141,11 @@
 
         <div class="page clearfix" post>
     <div class="left">
-        <h1>Reverse List</h1>
+        <h1>SWIG-2-script-lang</h1>
         <div class="label">
 
             <div class="label-card">
-                <i class="fa fa-calendar"></i>2017-03-01
+                <i class="fa fa-calendar"></i>2016-03-19
             </div>
 
             <div class="label-card">
@@ -165,7 +165,7 @@
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#algo" title="Category: algo" rel="category">algo</a>
+        <a href="/category/#tool" title="Category: tool" rel="category">tool</a>
     
   
 
@@ -182,11 +182,14 @@
   <i class="fa fa-tags"></i>
   
     
-        <!--a href="/tag/#list" title="Tag: list" rel="tag">list</a-->
-        <a href="/tag/#list" title="Tag: list" rel="tag">list</a>&nbsp;
+        <!--a href="/tag/#swig" title="Tag: swig" rel="tag">swig</a-->
+        <a href="/tag/#swig" title="Tag: swig" rel="tag">swig</a>&nbsp;
     
-        <!--a href="/tag/#ordering" title="Tag: ordering" rel="tag">ordering</a-->
-        <a href="/tag/#ordering" title="Tag: ordering" rel="tag">ordering</a>
+        <!--a href="/tag/#script-language" title="Tag: script-language" rel="tag">script-language</a-->
+        <a href="/tag/#script-language" title="Tag: script-language" rel="tag">script-language</a>&nbsp;
+    
+        <!--a href="/tag/#c%2Fc%2B%2B" title="Tag: c/c++" rel="tag">c/c++</a-->
+        <a href="/tag/#c/c++" title="Tag: c/c++" rel="tag">c/c++</a>
     
   
 
@@ -197,61 +200,94 @@
         </div>
         <hr>
         <article itemscope itemtype="http://schema.org/BlogPosting">
-        
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">ListNode</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
-    <span class="n">ListNode</span><span class="o">*</span> <span class="n">next</span><span class="p">;</span>
-    <span class="n">ListNode</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="o">:</span>
-        <span class="n">val</span> <span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">next</span> <span class="p">(</span><span class="nb">NULL</span><span class="p">)</span>
-    <span class="p">{</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-<span class="k">static</span> <span class="n">ListNode</span><span class="o">*</span> <span class="nf">reverse_list</span> <span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">pHead</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="cm">/**
-   * 输入一个链表，反转链表后，输出链表的所有元素。
-   * ------------------------------
-   * Given a list. Please reverse it and then print all elements in it.
-   *
-   * train of thought:
-   * order sublist and put the first unorder ele in the front of ordered sublist
-   * 1 234  1 is init ordered sublist, 234 is unordered sublist
-   * we put the first ele 2 in unordered sublist to the front of ordered sublist 1, we have
-   * 21 34 21 is ordered sublist, 34 is unordered sublist
-   * we put the first ele 3 in unordered sublist to the front of ordered sublist 21, we have
-   * 321 4  321 is init ordered sublist, 4 is unordered sublist
-   * we put the first ele 4 in unordered sublist to the front of ordered sublist 321, we have
-   * 4321
-   * done!
-   */</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">pHead</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-  <span class="n">ListNode</span> <span class="o">*</span><span class="n">tail</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">,</span> <span class="o">*</span><span class="n">nxt</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-  <span class="k">while</span> <span class="p">(</span><span class="n">nxt</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="c1">// insert nxt to front of head
-</span>    <span class="n">tail</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">nxt</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-    <span class="n">nxt</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">;</span>
-    <span class="n">pHead</span> <span class="o">=</span> <span class="n">nxt</span><span class="p">;</span>
-    <span class="n">nxt</span> <span class="o">=</span> <span class="n">tail</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="n">pHead</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="n">TEST_F</span><span class="p">(</span><span class="n">mpath</span><span class="p">,</span><span class="n">test_reverse_list</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">ListNode</span> <span class="n">one</span> <span class="o">=</span> <span class="n">ListNode</span> <span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-  <span class="n">ListNode</span> <span class="n">two</span> <span class="o">=</span> <span class="n">ListNode</span> <span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-  <span class="n">ListNode</span> <span class="n">three</span> <span class="o">=</span> <span class="n">ListNode</span> <span class="p">(</span><span class="mi">3</span><span class="p">);</span>
-  <span class="n">one</span><span class="p">.</span><span class="n">next</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">two</span><span class="p">;</span>
-  <span class="n">two</span><span class="p">.</span><span class="n">next</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">three</span><span class="p">;</span>
-  <span class="n">ListNode</span><span class="o">*</span> <span class="n">head</span> <span class="o">=</span> <span class="n">reverse_list</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">one</span><span class="p">);</span>
-  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
-  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
-  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
+        <ul id="markdown-toc">
+  <li><a href="#42-how-does-a-script-lang-talk-to-c" id="markdown-toc-42-how-does-a-script-lang-talk-to-c">4.2 How does a script lang talk to C?</a>    <ul>
+      <li><a href="#421-wrapper-functions" id="markdown-toc-421-wrapper-functions">4.2.1 Wrapper functions</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>This blog provides a brief overview of:</p>
+<ol>
+  <li>script language extension programming</li>
+  <li>mechanisms by which script lang interpreters access C and C++ code</li>
+</ol>
+
+<p>C/C++ can be used for maximal performance and complicated systems programming tasks.<br />
+Scripting languages can be used for rapid prototyping, interactive debugging, scripting, 
+and access to high-level data structures such associative arrays.</p>
+
+<h2 id="42-how-does-a-script-lang-talk-to-c">4.2 How does a script lang talk to C?</h2>
+<p>By extending the interpreter, it is usually possible to add new commands and variables.</p>
+
+<p>To do this, most lang define a special API for adding new commands. Furthermore, a special foreign function interface 
+defines how these new commands are supposed to hook into the interpreter.</p>
+
+<p>Typically, when you add a new command to a scripting interpreter you need to do two things:</p>
+<ul>
+  <li>first you need to write a special “wrapper” function that serves as the glue between the 
+interpreter and the underlying C function.</li>
+  <li>Then you need to give the interpreter information about the wrapper by providing 
+details about the name of the function, arguments, and so forth.</li>
+</ul>
+
+<h3 id="421-wrapper-functions">4.2.1 Wrapper functions</h3>
+<p>Suppose you have an ordinary C function like this :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">fact</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">else</span> <span class="k">return</span> <span class="n">n</span><span class="o">*</span><span class="n">fact</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre>
 </div>
+
+<p>A wrapper function for it must do three things :</p>
+<ul>
+  <li>Gather function arguments and make sure they are valid.</li>
+  <li>Call the C function.</li>
+  <li>Convert the return value into a form recognized by the scripting language.</li>
+</ul>
+
+<p>As an example, the Tcl wrapper function for the fact() function above example might look like the following :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">wrap_fact</span><span class="p">(</span><span class="n">ClientData</span> <span class="n">clientData</span><span class="p">,</span> 
+              <span class="n">Tcl_Interp</span> <span class="o">*</span><span class="n">interp</span><span class="p">,</span>
+              <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> 
+              <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> 
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">result</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">arg0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="n">interp</span><span class="o">-&gt;</span><span class="n">result</span> <span class="o">=</span> <span class="s">"wrong # args"</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">TCL_ERROR</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">arg0</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fact</span><span class="p">(</span><span class="n">arg0</span><span class="p">);</span>
+    <span class="n">sprintf</span><span class="p">(</span><span class="n">interp</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">,</span><span class="s">"%d"</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">TCL_OK</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<hr />
+<p>Once you have created a wrapper function, the final step is to tell the scripting language about the new function. 
+This is usually done in an initialization function called by the language when the module is loaded.</p>
+
+<p>For example, adding the above function to the Tcl interpreter requires code like the following :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">Wrap_Init</span><span class="p">(</span><span class="n">Tcl_Interp</span> <span class="o">*</span><span class="n">interp</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Tcl_CreateCommand</span><span class="p">(</span><span class="n">interp</span><span class="p">,</span> 
+    <span class="s">"fact"</span><span class="p">,</span> <span class="n">wrap_fact</span><span class="p">,</span> 
+    <span class="p">(</span><span class="n">ClientData</span><span class="p">)</span> <span class="nb">NULL</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">Tcl_CmdDeleteProc</span> <span class="o">*</span><span class="p">)</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">TCL_OK</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>When executed, Tcl will now have a new command called “fact” that you can use like any other Tcl command.</p>
+
+<p>Although the process of adding a new function to Tcl has been illustrated, the procedure is almost identical 
+for Perl and Python. Both require special wrappers to be written and both need additional initialization code.
+Only the specific details are different.</p>
+
 
         </article>
         <hr>
@@ -265,16 +301,11 @@
                 
                     
                 
-            
-                
-                    
-                
                     
                 
             
-        
-            
-            
+                
+                    
                 
                     
                 
@@ -289,7 +320,22 @@
                 
                     
                 
+                    
+                
             
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
                 
                     
                 
@@ -304,13 +350,6 @@
                 
                     
                 
-            
-        
-            
-            
-                
-                    
-                
                     
                 
             
@@ -319,10 +358,6 @@
             
                 
                     
-                
-                    
-                
-            
                 
                     
                 
@@ -337,19 +372,11 @@
                 
                     
                 
-            
-        
-            
-            
-                
-                    
-                
                     
                 
             
-        
-            
-            
+                
+                    
                 
                     
                 
@@ -364,7 +391,44 @@
                 
                     
                 
+                    
+                
             
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
                 
                     
                 
@@ -377,13 +441,13 @@
         <div class="post-recent">
     <div class="pre">
         
-        <p><strong>上一篇</strong> <a href="/2016/03/19/swig-2-scripting-lang/">SWIG-2-script-lang</a></p>
+        <p><strong>上一篇</strong> <a href="/2016/03/18/lock-free-multi-process-shared-memory/">lock-free-multi-process-shared-memory</a></p>
         
     </div>
     <div class="nex">
 
         
-        <p><strong>下一篇</strong> <a href="/2017/03/01/endian-formate/">Endian Formate</a></p>
+        <p><strong>下一篇</strong> <a href="/2017/03/01/algo-reverse-list/">Reverse List</a></p>
         
     </div>
 </div>
@@ -392,7 +456,7 @@
         <h2 id="comments">Comments</h2>
         
 <!-- 多说评论框 start -->
-<div class="ds-thread" data-thread-key="http://localhost:1234/2017/03/01/algo-reverse-list/" data-title="Reverse List" data-url="http://localhost:1234/2017/03/01/algo-reverse-list/"></div>
+<div class="ds-thread" data-thread-key="http://localhost:1234/2016/03/19/swig-2-scripting-lang/" data-title="SWIG-2-script-lang" data-url="http://localhost:1234/2016/03/19/swig-2-scripting-lang/"></div>
 <!-- 多说评论框 end -->
 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
@@ -420,8 +484,8 @@
      */
 
     var disqus_config = function() {
-        this.page.url = 'http://localhost:1234/2017/03/01/algo-reverse-list/'; // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://localhost:1234/2017/03/01/algo-reverse-list/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'http://localhost:1234/2016/03/19/swig-2-scripting-lang/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:1234/2016/03/19/swig-2-scripting-lang/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 
     (function() { // DON'T EDIT BELOW THIS LINE

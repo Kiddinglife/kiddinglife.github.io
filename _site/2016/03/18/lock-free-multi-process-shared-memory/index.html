@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Reverse List</title>
-    <meta name="description" content="struct ListNode{    int val;    ListNode* next;    ListNode (int x) :        val (x), next (NULL)    {    }};static ListNode* reverse_list (ListNode* pHead){...">
+    <title>lock-free-multi-process-shared-memory</title>
+    <meta name="description" content="  How to make lock free ipc communication between          OPTION 1:      OPTION2:      How to make lock free ipc communication betweena single writer and a ...">
 
     <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
     <link rel="stylesheet" href="/css/main.css ">
-    <link rel="canonical" href="http://localhost:1234/2017/03/01/algo-reverse-list/">
+    <link rel="canonical" href="http://localhost:1234/2016/03/18/lock-free-multi-process-shared-memory/">
     <link rel="alternate" type="application/rss+xml" title="Kiddinglife" href="http://localhost:1234/feed.xml ">
 
 
@@ -141,11 +141,11 @@
 
         <div class="page clearfix" post>
     <div class="left">
-        <h1>Reverse List</h1>
+        <h1>lock-free-multi-process-shared-memory</h1>
         <div class="label">
 
             <div class="label-card">
-                <i class="fa fa-calendar"></i>2017-03-01
+                <i class="fa fa-calendar"></i>2016-03-18
             </div>
 
             <div class="label-card">
@@ -165,7 +165,7 @@
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#algo" title="Category: algo" rel="category">algo</a>
+        <a href="/category/#ipc" title="Category: ipc" rel="category">ipc</a>
     
   
 
@@ -182,11 +182,11 @@
   <i class="fa fa-tags"></i>
   
     
-        <!--a href="/tag/#list" title="Tag: list" rel="tag">list</a-->
-        <a href="/tag/#list" title="Tag: list" rel="tag">list</a>&nbsp;
+        <!--a href="/tag/#os" title="Tag: os" rel="tag">os</a-->
+        <a href="/tag/#os" title="Tag: os" rel="tag">os</a>&nbsp;
     
-        <!--a href="/tag/#ordering" title="Tag: ordering" rel="tag">ordering</a-->
-        <a href="/tag/#ordering" title="Tag: ordering" rel="tag">ordering</a>
+        <!--a href="/tag/#lock-free" title="Tag: lock-free" rel="tag">lock-free</a-->
+        <a href="/tag/#lock-free" title="Tag: lock-free" rel="tag">lock-free</a>
     
   
 
@@ -197,61 +197,50 @@
         </div>
         <hr>
         <article itemscope itemtype="http://schema.org/BlogPosting">
-        
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">ListNode</span>
-<span class="p">{</span>
-    <span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
-    <span class="n">ListNode</span><span class="o">*</span> <span class="n">next</span><span class="p">;</span>
-    <span class="n">ListNode</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">)</span> <span class="o">:</span>
-        <span class="n">val</span> <span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">next</span> <span class="p">(</span><span class="nb">NULL</span><span class="p">)</span>
-    <span class="p">{</span>
-    <span class="p">}</span>
-<span class="p">};</span>
-<span class="k">static</span> <span class="n">ListNode</span><span class="o">*</span> <span class="nf">reverse_list</span> <span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">pHead</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="cm">/**
-   * 输入一个链表，反转链表后，输出链表的所有元素。
-   * ------------------------------
-   * Given a list. Please reverse it and then print all elements in it.
-   *
-   * train of thought:
-   * order sublist and put the first unorder ele in the front of ordered sublist
-   * 1 234  1 is init ordered sublist, 234 is unordered sublist
-   * we put the first ele 2 in unordered sublist to the front of ordered sublist 1, we have
-   * 21 34 21 is ordered sublist, 34 is unordered sublist
-   * we put the first ele 3 in unordered sublist to the front of ordered sublist 21, we have
-   * 321 4  321 is init ordered sublist, 4 is unordered sublist
-   * we put the first ele 4 in unordered sublist to the front of ordered sublist 321, we have
-   * 4321
-   * done!
-   */</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">pHead</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
-  <span class="n">ListNode</span> <span class="o">*</span><span class="n">tail</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">,</span> <span class="o">*</span><span class="n">nxt</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-  <span class="k">while</span> <span class="p">(</span><span class="n">nxt</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="c1">// insert nxt to front of head
-</span>    <span class="n">tail</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">nxt</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-    <span class="n">nxt</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">pHead</span><span class="p">;</span>
-    <span class="n">pHead</span> <span class="o">=</span> <span class="n">nxt</span><span class="p">;</span>
-    <span class="n">nxt</span> <span class="o">=</span> <span class="n">tail</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="n">pHead</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="n">TEST_F</span><span class="p">(</span><span class="n">mpath</span><span class="p">,</span><span class="n">test_reverse_list</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">ListNode</span> <span class="n">one</span> <span class="o">=</span> <span class="n">ListNode</span> <span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-  <span class="n">ListNode</span> <span class="n">two</span> <span class="o">=</span> <span class="n">ListNode</span> <span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-  <span class="n">ListNode</span> <span class="n">three</span> <span class="o">=</span> <span class="n">ListNode</span> <span class="p">(</span><span class="mi">3</span><span class="p">);</span>
-  <span class="n">one</span><span class="p">.</span><span class="n">next</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">two</span><span class="p">;</span>
-  <span class="n">two</span><span class="p">.</span><span class="n">next</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">three</span><span class="p">;</span>
-  <span class="n">ListNode</span><span class="o">*</span> <span class="n">head</span> <span class="o">=</span> <span class="n">reverse_list</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">one</span><span class="p">);</span>
-  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
-  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
-  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre>
-</div>
+        <ul id="markdown-toc">
+  <li><a href="#how-to-make-lock-free-ipc-communication-between" id="markdown-toc-how-to-make-lock-free-ipc-communication-between">How to make lock free ipc communication between</a>    <ul>
+      <li><a href="#option-1" id="markdown-toc-option-1">OPTION 1:</a></li>
+      <li><a href="#option2" id="markdown-toc-option2">OPTION2:</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="how-to-make-lock-free-ipc-communication-between">How to make lock free ipc communication between</h3>
+<p>a single writer and a single reader via shared-memory ?</p>
+
+<h4 id="option-1">OPTION 1:</h4>
+<p>two fifo q1 and q2 used to simlate biodirectional data flows bwtween p1 and p2.</p>
+
+<p>no lock required at all. queue refers to linux lock free queue.</p>
+
+<p>q1: t1 as writer and t2 as reader so single data flow p1—&gt;p2<br />
+q2: t1 as reader and t2 as writer so single data flow p1&lt;—p2</p>
+
+<p>when writer writes all buffer, return error code of ENOBUF to 
+caller just as socket does</p>
+
+<h4 id="option2">OPTION2:</h4>
+<p>这种单独单写的连原子操作都不需要，更不要说mutex之类的了。</p>
+
+<p>假设A,B两进程通信</p>
+
+<p>首先，将共享内存区域分成n块，如何分自己定义。</p>
+
+<p>其次，每块内存指定一个byte做标志，</p>
+
+<p>定义为: 0为A可读写状态，B不可读写；<br />
+       1为B可读写状态，A不可读写。<br />
+A的行为：
+          遍历n块内存，找到一个标志为0的：
+          接收：
+          查看是否有B发来的消息，有，则接收，设置为可发送状态；
+          发送：消息复制到该块区域，设置标志为1；
+B的行为:
+          遍历n块内存，找到一个标志为1的：
+          接收：
+          查看是否有B发来的消息，有，则接收，设置为可发送状态；
+          发送：消息复制到该块区域，设置标志为0；</p>
+
 
         </article>
         <hr>
@@ -277,38 +266,17 @@
             
                 
                     
-                
-                    
-                
-            
-        
-            
-            
-                
-                    
-                
-                    
-                
-            
-                
-                    
-                
-                    
-                
-            
-        
-            
-            
-                
-                    
-                
-                    
-                
-            
-        
-            
-            
-                
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="http://localhost:1234/2017/03/07/csapp-1-preface/">CS:APP-1-Introduction
+                            
+                            </a>
+                        </li>
+                        
+                        
                     
                 
                     
@@ -356,6 +324,39 @@
                     
                 
             
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
         
             
             
@@ -372,18 +373,20 @@
                 
             
         
+        
+            </ul>
         
 
         <div class="post-recent">
     <div class="pre">
         
-        <p><strong>上一篇</strong> <a href="/2016/03/19/swig-2-scripting-lang/">SWIG-2-script-lang</a></p>
+        <p><strong>上一篇</strong> <a href="/2016/03/17/swig-1-intro/">SWIG-1-Introductions</a></p>
         
     </div>
     <div class="nex">
 
         
-        <p><strong>下一篇</strong> <a href="/2017/03/01/endian-formate/">Endian Formate</a></p>
+        <p><strong>下一篇</strong> <a href="/2016/03/19/swig-2-scripting-lang/">SWIG-2-script-lang</a></p>
         
     </div>
 </div>
@@ -392,7 +395,7 @@
         <h2 id="comments">Comments</h2>
         
 <!-- 多说评论框 start -->
-<div class="ds-thread" data-thread-key="http://localhost:1234/2017/03/01/algo-reverse-list/" data-title="Reverse List" data-url="http://localhost:1234/2017/03/01/algo-reverse-list/"></div>
+<div class="ds-thread" data-thread-key="http://localhost:1234/2016/03/18/lock-free-multi-process-shared-memory/" data-title="lock-free-multi-process-shared-memory" data-url="http://localhost:1234/2016/03/18/lock-free-multi-process-shared-memory/"></div>
 <!-- 多说评论框 end -->
 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
@@ -420,8 +423,8 @@
      */
 
     var disqus_config = function() {
-        this.page.url = 'http://localhost:1234/2017/03/01/algo-reverse-list/'; // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://localhost:1234/2017/03/01/algo-reverse-list/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'http://localhost:1234/2016/03/18/lock-free-multi-process-shared-memory/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:1234/2016/03/18/lock-free-multi-process-shared-memory/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 
     (function() { // DON'T EDIT BELOW THIS LINE

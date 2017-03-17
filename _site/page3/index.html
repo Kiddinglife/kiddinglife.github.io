@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Kiddinglife</title>
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:1234/page3/">
+    <link rel="alternate" type="application/rss+xml" title="Kiddinglife" href="http://localhost:1234/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">Kiddinglife</a>
+        <small>C/C++/PYTHON ENGINEER</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>Collections
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>Demo
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>About
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" index>
+    <div class="left">
+        <h1>For My Youth Dedicated to Programming</h1>
+        <small>this blog is used to refine my knowledges about IT</small>
+        <hr>
+        <ul>
+            
+              <li>
+                <h2>
+                  <a class="post-link" href="/2016/03/19/swig-2-scripting-lang/">SWIG-2-script-lang</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2016-03-19
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#tool" title="Category: tool" rel="category">tool</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#swig" title="Tag: swig" rel="tag">swig</a>&nbsp;
+    
+        <a href="/tag/#script-language" title="Tag: script-language" rel="tag">script-language</a>&nbsp;
+    
+        <a href="/tag/#c/c++" title="Tag: c/c++" rel="tag">c/c++</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    <ul id="markdown-toc">
+  <li><a href="#42-how-does-a-script-lang-talk-to-c" id="markdown-toc-42-how-does-a-script-lang-talk-to-c">4.2 How does a script lang talk to C?</a>    <ul>
+      <li><a href="#421-wrapper-functions" id="markdown-toc-421-wrapper-functions">4.2.1 Wrapper functions</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>This blog provides a brief overview of:</p>
+<ol>
+  <li>script language extension programming</li>
+  <li>mechanisms by which script lang interpreters access C and C++ code</li>
+</ol>
+
+<p>C/C++ can be used for maximal performance and complicated systems programming tasks.<br />
+Scripting languages can be used for rapid prototyping, interactive debugging, scripting, 
+and access to high-level data structures such associative arrays.</p>
+
+<h2 id="42-how-does-a-script-lang-talk-to-c">4.2 How does a script lang talk to C?</h2>
+<p>By extending the interpreter, it is usually possible to add new commands and variables.</p>
+
+<p>To do this, most lang define a special API for adding new commands. Furthermore, a special foreign function interface 
+defines how these new commands are supposed to hook into the interpreter.</p>
+
+<p>Typically, when you add a new command to a scripting interpreter you need to do two things:</p>
+<ul>
+  <li>first you need to write a special “wrapper” function that serves as the glue between the 
+interpreter and the underlying C function.</li>
+  <li>Then you need to give the interpreter information about the wrapper by providing 
+details about the name of the function, arguments, and so forth.</li>
+</ul>
+
+<h3 id="421-wrapper-functions">4.2.1 Wrapper functions</h3>
+<p>Suppose you have an ordinary C function like this :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">fact</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">else</span> <span class="k">return</span> <span class="n">n</span><span class="o">*</span><span class="n">fact</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>A wrapper function for it must do three things :</p>
+<ul>
+  <li>Gather function arguments and make sure they are valid.</li>
+  <li>Call the C function.</li>
+  <li>Convert the return value into a form recognized by the scripting language.</li>
+</ul>
+
+<p>As an example, the Tcl wrapper function for the fact() function above example might look like the following :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">wrap_fact</span><span class="p">(</span><span class="n">ClientData</span> <span class="n">clientData</span><span class="p">,</span> 
+              <span class="n">Tcl_Interp</span> <span class="o">*</span><span class="n">interp</span><span class="p">,</span>
+              <span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> 
+              <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> 
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">result</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">arg0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="n">interp</span><span class="o">-&gt;</span><span class="n">result</span> <span class="o">=</span> <span class="s">"wrong # args"</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">TCL_ERROR</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">arg0</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fact</span><span class="p">(</span><span class="n">arg0</span><span class="p">);</span>
+    <span class="n">sprintf</span><span class="p">(</span><span class="n">interp</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">,</span><span class="s">"%d"</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">TCL_OK</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<hr />
+<p>Once you have created a wrapper function, the final step is to tell the scripting language about the new function. 
+This is usually done in an initialization function called by the language when the module is loaded.</p>
+
+<p>For example, adding the above function to the Tcl interpreter requires code like the following :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">Wrap_Init</span><span class="p">(</span><span class="n">Tcl_Interp</span> <span class="o">*</span><span class="n">interp</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Tcl_CreateCommand</span><span class="p">(</span><span class="n">interp</span><span class="p">,</span> 
+    <span class="s">"fact"</span><span class="p">,</span> <span class="n">wrap_fact</span><span class="p">,</span> 
+    <span class="p">(</span><span class="n">ClientData</span><span class="p">)</span> <span class="nb">NULL</span><span class="p">,</span>
+    <span class="p">(</span><span class="n">Tcl_CmdDeleteProc</span> <span class="o">*</span><span class="p">)</span> <span class="nb">NULL</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">TCL_OK</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>When executed, Tcl will now have a new command called “fact” that you can use like any other Tcl command.</p>
+
+<p>Although the process of adding a new function to Tcl has been illustrated, the procedure is almost identical 
+for Perl and Python. Both require special wrappers to be written and both need additional initialization code.
+Only the specific details are different.</p>
+
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2016/03/19/swig-2-scripting-lang/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
+                  <a class="post-link" href="/2016/03/18/lock-free-multi-process-shared-memory/">lock-free-multi-process-shared-memory</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2016-03-18
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#ipc" title="Category: ipc" rel="category">ipc</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#os" title="Tag: os" rel="tag">os</a>&nbsp;
+    
+        <a href="/tag/#lock-free" title="Tag: lock-free" rel="tag">lock-free</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    <ul id="markdown-toc">
+  <li><a href="#how-to-make-lock-free-ipc-communication-between" id="markdown-toc-how-to-make-lock-free-ipc-communication-between">How to make lock free ipc communication between</a>    <ul>
+      <li><a href="#option-1" id="markdown-toc-option-1">OPTION 1:</a></li>
+      <li><a href="#option2" id="markdown-toc-option2">OPTION2:</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="how-to-make-lock-free-ipc-communication-between">How to make lock free ipc communication between</h3>
+<p>a single writer and a single reader via shared-memory ?</p>
+
+<h4 id="option-1">OPTION 1:</h4>
+<p>two fifo q1 and q2 used to simlate biodirectional data flows bwtween p1 and p2.</p>
+
+<p>no lock required at all. queue refers to linux lock free queue.</p>
+
+<p>q1: t1 as writer and t2 as reader so single data flow p1—&gt;p2<br />
+q2: t1 as reader and t2 as writer so single data flow p1&lt;—p2</p>
+
+<p>when writer writes all buffer, return error code of ENOBUF to 
+caller just as socket does</p>
+
+<h4 id="option2">OPTION2:</h4>
+<p>这种单独单写的连原子操作都不需要，更不要说mutex之类的了。</p>
+
+<p>假设A,B两进程通信</p>
+
+<p>首先，将共享内存区域分成n块，如何分自己定义。</p>
+
+<p>其次，每块内存指定一个byte做标志，</p>
+
+<p>定义为: 0为A可读写状态，B不可读写；<br />
+       1为B可读写状态，A不可读写。<br />
+A的行为：
+          遍历n块内存，找到一个标志为0的：
+          接收：
+          查看是否有B发来的消息，有，则接收，设置为可发送状态；
+          发送：消息复制到该块区域，设置标志为1；
+B的行为:
+          遍历n块内存，找到一个标志为1的：
+          接收：
+          查看是否有B发来的消息，有，则接收，设置为可发送状态；
+          发送：消息复制到该块区域，设置标志为0；</p>
+
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2016/03/18/lock-free-multi-process-shared-memory/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+              <li>
+                <h2>
+                  <a class="post-link" href="/2016/03/17/swig-1-intro/">SWIG-1-Introductions</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2016-03-17
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#tool" title="Category: tool" rel="category">tool</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#swig" title="Tag: swig" rel="tag">swig</a>&nbsp;
+    
+        <a href="/tag/#script-language" title="Tag: script-language" rel="tag">script-language</a>&nbsp;
+    
+        <a href="/tag/#c/c++" title="Tag: c/c++" rel="tag">c/c++</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    <ul id="markdown-toc">
+  <li><a href="#21-what-is-swig" id="markdown-toc-21-what-is-swig">2.1 What is SWIG?</a></li>
+  <li><a href="#22-why-use-swig" id="markdown-toc-22-why-use-swig">2.2 Why use SWIG?</a></li>
+  <li><a href="#24-supported-cc-language-features" id="markdown-toc-24-supported-cc-language-features">2.4 Supported C/C++ language features</a></li>
+  <li><a href="#18-backwards-compatibility" id="markdown-toc-18-backwards-compatibility">1.8 Backwards compatibility</a></li>
+  <li><a href="#112-installation" id="markdown-toc-112-installation">1.12 Installation</a>    <ul>
+      <li><a href="#1121-windows-installation" id="markdown-toc-1121-windows-installation">1.12.1 Windows installation</a></li>
+      <li><a href="#1122-unix-installation" id="markdown-toc-1122-unix-installation">1.12.2 Unix installation</a></li>
+      <li><a href="#1124-testing" id="markdown-toc-1124-testing">1.12.4 Testing</a></li>
+      <li><a href="#1125-examples" id="markdown-toc-1125-examples">1.12.5 Examples</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="21-what-is-swig">2.1 What is SWIG?</h2>
+<p>In a nutshell, SWIG is a compiler that takes C/C++ declarations and creates the wrappers needed to access those 
+declarations from other languages including Perl, Python, Tcl, Ruby, Guile, and Java.</p>
+
+<p>Possible applications of SWIG include:</p>
+<ul>
+  <li>Building interpreted interfaces to existing C programs.</li>
+  <li>Rapid prototyping and application development.</li>
+  <li>Interactive debugging.</li>
+  <li>Reengineering or refactoring of legacy software into scripting language components.</li>
+  <li>Making a graphical user interface (using Tk for example).</li>
+  <li>Testing of C libraries and programs (using scripts).</li>
+  <li>Building high performance C modules for scripting languages.</li>
+  <li>Making C programming more enjoyable (or tolerable depending on your point of view).</li>
+  <li>Impressing your friends.</li>
+  <li>Obtaining vast sums of research funding (although obviously not applicable to the author).</li>
+</ul>
+
+<h2 id="22-why-use-swig">2.2 Why use SWIG?</h2>
+<p>let’s list a few problems with C/C++ programming:</p>
+<ul>
+  <li>Writing a user interface is rather painful (i.e., consider programming with MFC, X11, GTK, or any number of other
+libraries).</li>
+  <li>Testing is time consuming (the compile/debug cycle).</li>
+  <li>Not easy to reconfigure or customize without recompilation.</li>
+  <li>Modularization can be tricky.</li>
+  <li>Security concerns (buffer overflows for instance).</li>
+</ul>
+
+<h2 id="24-supported-cc-language-features">2.4 Supported C/C++ language features</h2>
+<ul>
+  <li>Full C99 pre-processing.</li>
+  <li>All ANSI C and C++ data types.</li>
+  <li>Functions, variables, and constants.</li>
+  <li>Classes.</li>
+  <li>Single and multiple inheritance.</li>
+  <li>Overloaded functions and methods.</li>
+  <li>Overloaded operators.</li>
+  <li>C++ templates (including member templates, specialization, and partial specialization).</li>
+  <li>Namespaces.</li>
+  <li>Variable length arguments.</li>
+  <li>C++ smart pointers.</li>
+</ul>
+
+<h2 id="18-backwards-compatibility">1.8 Backwards compatibility</h2>
+<p>If you are a previous user of SWIG, don’t expect SWIG to provide complete backwards compatibility.</p>
+
+<p>If you need to work with different versions of SWIG and backwards compatibility is an issue, you can use the SWIG_VERSION preprocessor symbol which holds the version of SWIG being executed.</p>
+
+<p>SWIG_VERSION is a hexadecimal integer such as 0x010311 (corresponding to SWIG-1.3.11). This can be used in an interface file to define different typemaps, take advantage of different features etc:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#if SWIG_VERSION &gt;= 0x010311
+</span><span class="cm">/*Use some fancy new feature */</span>
+<span class="cp">#endif
+</span></code></pre>
+</div>
+
+<h2 id="112-installation">1.12 Installation</h2>
+<p>If you checked the code out via Git, you will have to run ./autogen.sh before ./configure.</p>
+<h3 id="1121-windows-installation">1.12.1 Windows installation</h3>
+<p>The Windows distribution is called swigwin and includes a prebuilt SWIG executable, swig.exe and so ypu do not need to compile it.</p>
+<h3 id="1122-unix-installation">1.12.2 Unix installation</h3>
+<p>To build and install SWIG, simply type the following:</p>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>./configure
+<span class="gp">$ </span>make
+<span class="gp">$ </span>make install
+</code></pre>
+</div>
+<p>By default SWIG installs itself in /usr/local. If you need to install SWIG in a different location or in your home directory, use the –prefix option to ./configure. For example:</p>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>./configure --prefix<span class="o">=</span>/home/yourname/projects
+<span class="gp">$ </span>make
+<span class="gp">$ </span>make install
+</code></pre>
+</div>
+<p>Note: the directory given to –prefix must be an absolute pathname. Do not use the ~ shell-escape to refer to your home 
+directory. SWIG won’t work properly if you do this.</p>
+
+<h3 id="1124-testing">1.12.4 Testing</h3>
+<p>if you want to test SWIG after building it, a check can be performed on Unix operating systems. 
+Type the following: <code class="highlighter-rouge">$ make -k check</code>  you can use parallel make to speed up the check as it does take quite some 
+time to run, for example: <code class="highlighter-rouge">$ make -j2 -k check</code></p>
+
+<p>Even if the check fails, there is a pretty good chance SWIG still works correctly — you will just have to mess 
+around with one of the examples and some makefiles to get it to work.</p>
+
+<p>Some tests may also fail due to missing dependency packages, eg PCRE or Boost, but this will require careful
+analysis of the configure output done during configuration.</p>
+
+<h3 id="1125-examples">1.12.5 Examples</h3>
+<p>The Examples directory also includes Visual C++ project 6 (.dsp) files for building some of the examples on Windows. 
+Later versions of Visual Studio will convert these old style project files into a current solution file.</p>
+
+<p>Ensure the SWIG executable is as supplied in the SWIG root directory in order for the examples to work. 
+Most languages require some environment variables to be set before running Visual C++. Note that Visual 
+C++ must be re-started to pick up any changes in environment variables.</p>
+
+<p>Open up an example .dsp file, Visual C++ will create a workspace for you (.dsw file). Ensure the
+Release build is selected then do a Rebuild All from the Build menu. The required environment variables are displayed with their
+current values.</p>
+
+<p>Python
+PYTHON_INCLUDE : Set this to the directory that contains Python.h<br />
+PYTHON_LIB : Set this to the python library including path for linking<br />
+Example using Python 2.1.1:  <br />
+PYTHON_INCLUDE: D:\python21\include<br />
+PYTHON_LIB: D:\python21\libs\python21.lib</p>
+
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2016/03/17/swig-1-intro/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
+        </ul>
+
+
+
+        <!-- Pagination links -->
+        <div class="pagination">
+          
+            <a href="/index.html" class="previous"><i class="fa fa-angle-double-left"></i></a>
+            <a href="/page2" class="previous"><i class="fa fa-angle-left"></i></a>
+          
+          <span class="page_number ">3/3</span>
+          
+            <span class="next disable"><i class="fa fa-angle-right"></i></span>
+            <span class="next disable"><i class="fa fa-angle-double-right"></i></span>
+          
+        </div>
+    </div>
+    <!-- <button class="anchor"><i class="fa fa-anchor"></i></button> -->
+    <div class="right">
+        <div class="wrap">
+            <div class="side">
+                <div>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    Recent Posts
+                </div>
+                <ul class="content-ul" recent>
+                    
+                        <li><a href="/2017/03/12/ccia-3-1-shared-data-protection/">CCIA-3-1-shared-data-between-threads</a></li>
+                    
+                        <li><a href="/2017/03/07/csapp-1-preface/">CS:APP-1-Introduction</a></li>
+                    
+                        <li><a href="/2017/03/06/ccia-2-thread-management/">CCIA-2-basic-thread-mangement</a></li>
+                    
+                        <li><a href="/2017/03/06/grof-jump-floor/">Frog Jump Floor</a></li>
+                    
+                        <li><a href="/2017/03/05/gernric-api-introduction/">Generic</a></li>
+                    
+                        <li><a href="/2017/03/03/ccia-1-hello-world/">CCIA-1-hello-world</a></li>
+                    
+                        <li><a href="/2017/03/03/algo-is-pop-order/">Is right Pop Sequence ?</a></li>
+                    
+                        <li><a href="/2017/03/02/tdd-steps/">How to apply tdd</a></li>
+                    
+                        <li><a href="/2017/03/02/algo-repalce-empty-space/">Replace Empty Space</a></li>
+                    
+                        <li><a href="/2017/03/01/find-number-in-array/">Find Integer</a></li>
+                    
+                </ul>
+            </div>
+
+            <!-- Content -->
+            <div class="side ">
+                <div>
+                    <i class="fa fa-th-list"></i>
+                    Categories
+                </div>
+                <ul class="content-ul" cate>
+                    
+                    <li>
+                        <a href="/category/#tool" class="categories-list-item" cate="tool">
+                            <span class="name">
+                                tool
+                            </span>
+                            <span class="badge">2</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#ipc" class="categories-list-item" cate="ipc">
+                            <span class="name">
+                                ipc
+                            </span>
+                            <span class="badge">1</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#algo" class="categories-list-item" cate="algo">
+                            <span class="name">
+                                algo
+                            </span>
+                            <span class="badge">5</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#network" class="categories-list-item" cate="network">
+                            <span class="name">
+                                network
+                            </span>
+                            <span class="badge">1</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#test" class="categories-list-item" cate="test">
+                            <span class="name">
+                                test
+                            </span>
+                            <span class="badge">1</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#read" class="categories-list-item" cate="read">
+                            <span class="name">
+                                read
+                            </span>
+                            <span class="badge">4</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#geco" class="categories-list-item" cate="geco">
+                            <span class="name">
+                                geco
+                            </span>
+                            <span class="badge">1</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <div class="side">
+                <div>
+                    <i class="fa fa-tags"></i>
+                    Tags
+                </div>
+                <div class="tags-cloud">
+                    
+                    
+                    
+                    
+
+                    
+
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#swig" style="font-size: 13.5pt; color: #444;">swig</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#script-language" style="font-size: 13.5pt; color: #444;">script-language</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#c/c++" style="font-size: 13.5pt; color: #444;">c/c++</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#os" style="font-size: 13.5pt; color: #444;">os</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#lock-free" style="font-size: 9pt; color: #999;">lock-free</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#list" style="font-size: 9pt; color: #999;">list</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#ordering" style="font-size: 9pt; color: #999;">ordering</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#endian" style="font-size: 9pt; color: #999;">endian</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#memory" style="font-size: 9pt; color: #999;">memory</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#array" style="font-size: 9pt; color: #999;">array</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#binary-search" style="font-size: 9pt; color: #999;">binary-search</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#stack" style="font-size: 13.5pt; color: #444;">stack</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#tdd" style="font-size: 9pt; color: #999;">tdd</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#thread" style="font-size: 18pt; color: #000;">thread</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#c++" style="font-size: 18pt; color: #000;">c++</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#python" style="font-size: 9pt; color: #999;">python</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#iteration" style="font-size: 9pt; color: #999;">iteration</a>
+                    
+                </div>
+            </div>
+
+            <!-- <div class="side">
+                <div>
+                    <i class="fa fa-external-link"></i>
+                    Links
+                </div>
+                <ul  class="content-ul">
+
+                </ul>
+            </div> -->
+        </div>
+    </div>
+</div>
+<!-- <script src="/js/scroll.min.js " charset="utf-8"></script> -->
+<!-- <script src="/js/pageContent.js " charset="utf-8"></script> -->
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             For my youth dedicated to coding 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/kiddinglife" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:jakezhang1989@hotmail.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>       
+            <a href="https://www.linkedin.com/in/kiddinglife" title="LinkedIn"><i class="fa fa-linkedin" aria-hidden="true"></i></a>  
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>
