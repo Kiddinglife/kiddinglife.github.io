@@ -131,6 +131,8 @@
                 
                     
                 
+                    
+                
             </ul>
         </nav>
     </div>
@@ -202,6 +204,13 @@
       <li><a href="#313-avoid-problematic-race-conditions" id="markdown-toc-313-avoid-problematic-race-conditions">3.1.3 Avoid Problematic race conditions</a></li>
     </ul>
   </li>
+  <li><a href="#32-protecting-shared-data-with-mutexes" id="markdown-toc-32-protecting-shared-data-with-mutexes">3.2 Protecting shared data with mutexes</a>    <ul>
+      <li><a href="#321-use-mutex" id="markdown-toc-321-use-mutex">3.2.1 Use mutex</a></li>
+      <li><a href="#322-structure-code-to-protect-right-shared-data" id="markdown-toc-322-structure-code-to-protect-right-shared-data">3.2.2 Structure code to protect right shared data</a></li>
+      <li><a href="#323-spotting-race-conditions-inherent-in-interfaces" id="markdown-toc-323-spotting-race-conditions-inherent-in-interfaces">3.2.3 Spotting race conditions inherent in interfaces</a></li>
+      <li><a href="#324-deadlock-the-problem-and-a-solution" id="markdown-toc-324-deadlock-the-problem-and-a-solution">3.2.4 Deadlock: the problem and a solution</a></li>
+    </ul>
+  </li>
 </ul>
 
 <h2 id="31-problems-with-sharing-data-between-threads">3.1 Problems with sharing data between threads</h2>
@@ -245,24 +254,278 @@ of the program, even if only slightly.</p>
 
 <h3 id="313-avoid-problematic-race-conditions">3.1.3 Avoid Problematic race conditions</h3>
 <ul>
-  <li>
-    <p>The simplest option is to wrap your data structure with a protection mechanism, to ensure that only the thread actually performing a modification can see the intermediate states where the invariants are broken. From the point of view of other threads accessing that data structure,such modifications either haven’t started or have completed.</p>
-  </li>
-  <li>
-    <p>Another option is to modify the design of your data structure and its invariants so
+  <li>The simplest option is to wrap your data structure with a protection mechanism, to ensure that only the thread actually performing a modification can see the intermediate states where the invariants are broken. From the point of view of other threads accessing that data structure,such modifications either haven’t started or have completed.</li>
+  <li>Another option is to modify the design of your data structure and its invariants so
 that modifications are done as a series of indivisible changes, each of which preserves
 the invariants. This is generally referred to as <strong>lock-free</strong> programming and is difficult to get
-right.</p>
-  </li>
-  <li>
-    <p>Another way of dealing with race conditions is to handle the updates to the data
+right.</li>
+  <li>Another way of dealing with race conditions is to handle the updates to the data
 structure as a transaction, just as updates to a database are done within a transaction.
 The required series of data modifications and reads is stored in a transaction log and
-then committed in a single step.</p>
-  </li>
+then committed in a single step.</li>
 </ul>
 
-<p>The most basic mechanism for protecting shared data provided by the C++ Standard is the mutex, so we’ll look at that in my next blog. See you then!</p>
+<p>The most basic mechanism for protecting shared data provided by the C++ Standard is the mutex, so we’ll look at that.</p>
+
+<h2 id="32-protecting-shared-data-with-mutexes">3.2 Protecting shared data with mutexes</h2>
+<p>Before accessing a shared data structure, you lock the mutex associated with that data, and when you’ve finished accessing the data structure, you unlock the mutex.</p>
+
+<p>Mutexes are the most general of the data-protection mechanisms available in C++,
+but they’re not a silver bullet:</p>
+<ul>
+  <li>it’s important to structure your code to protect the right data (see section 3.2.2)</li>
+  <li>avoid race conditions inherent in your interfaces (see section 3.2.3)</li>
+  <li>deadlock (see section 3.2.4)</li>
+  <li>protecting either too much or too little data (see section 3.2.8)</li>
+</ul>
+
+<h3 id="321-use-mutex">3.2.1 Use mutex</h3>
+<p>n C++, you create a mutex by constructing an instance of std::mutex , lock it with a call to the member function lock() , and unlock it with a call to the member function unlock().</p>
+
+<p>The following listing shows how to protect a list that can be accessed by multiple threads using a std::mutex , along with std::lock_guard . Both of these are declared in the <mutex> header.</mutex></p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;list&gt;
+#include &lt;mutex&gt;
+#include &lt;algorithm&gt;
+</span><span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">some_list</span><span class="p">;</span> <span class="c1">//  1
+</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">some_mutex</span><span class="p">;</span> <span class="c1">//  2
+</span><span class="kt">void</span> <span class="nf">add_to_list</span><span class="p">(</span><span class="kt">int</span> <span class="n">new_value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">guard</span><span class="p">(</span><span class="n">some_mutex</span><span class="p">);</span> <span class="c1">//  3
+</span>    <span class="n">some_list</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">new_value</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">bool</span> <span class="nf">list_contains</span><span class="p">(</span><span class="kt">int</span> <span class="n">value_to_find</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">guard</span><span class="p">(</span><span class="n">some_mutex</span><span class="p">);</span> <span class="c1">//  4
+</span>    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">find</span><span class="p">(</span><span class="n">some_list</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">some_list</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">value_to_find</span><span class="p">)</span> <span class="o">!=</span> <span class="n">some_list</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>there’s a single global variable <em>1</em>, and it’s protected with a corresponding global instance of std::mutex <em>2</em>.
+The use of <code class="highlighter-rouge">std::lock_guard&lt;std::mutex&gt;</code> in <code class="highlighter-rouge">add_to_list()</code> <em>3</em> and again in <code class="highlighter-rouge">list_contains()</code> <em>4</em> means that the accesses in these functions are mutually exclusive: list_contains() will never see the list partway
+through a modification by <code class="highlighter-rouge">add_to_list()</code>.</p>
+
+<p>If all the member functions of he class lock the mutex before accessing any other data members and unlock it when done, the data is nicely protected from all comers.</p>
+
+<p>Well, that’s not quite true, as the astute among you will have noticed: if one of the member functions returns a pointer or reference to the protected data, then it doesn’t matter that the member functions all lock the mutex in a nice orderly fashion, because you’ve just blown a big hole in the protection.</p>
+
+<p><em>Any code that has access to that pointer or reference can now access (and potentially modify) the protected data without locking the mutex.</em></p>
+
+<p>Protecting data with a mutex therefore requires careful interface design, to
+ensure that the mutex is locked before there’s any access to the protected data and
+that there are no backdoors.</p>
+
+<h3 id="322-structure-code-to-protect-right-shared-data">3.2.2 Structure code to protect right shared data</h3>
+<p>At one level, checking for stray pointers or references is easy; as long as none of the member functions return a pointer or reference to the protected data to their caller either via their return value or via an out parameter, the data is safe.</p>
+
+<p>those functions that aren’t under your control might store the pointer or reference in a place where it can later be used without the protection of the mutex. Particularly dangerous in this regard are functions that are supplied at runtime via a function argument or other means, as in the next listing.</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">some_data</span>
+<span class="p">{</span>
+        <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">b</span><span class="p">;</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">do_something</span><span class="p">();</span>
+<span class="p">};</span>
+<span class="k">class</span> <span class="nc">data_wrapper</span>
+<span class="p">{</span>
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">some_data</span> <span class="n">data</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">m</span><span class="p">;</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Function</span><span class="o">&gt;</span>
+        <span class="kt">void</span> <span class="n">process_data</span><span class="p">(</span><span class="n">Function</span> <span class="n">func</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">l</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>
+            <span class="n">func</span><span class="p">(</span><span class="n">data</span><span class="p">);</span> <span class="c1">//  1  Pass “protected” data to user-supplied function
+</span>        <span class="p">}</span>
+<span class="p">};</span>
+<span class="n">some_data</span><span class="o">*</span> <span class="n">unprotected</span><span class="p">;</span>
+<span class="kt">void</span> <span class="nf">malicious_function</span><span class="p">(</span><span class="n">some_data</span><span class="o">&amp;</span> <span class="n">protected_data</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">unprotected</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">protected_data</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">data_wrapper</span> <span class="n">x</span><span class="p">;</span>
+<span class="kt">void</span> <span class="nf">foo</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">x</span><span class="p">.</span><span class="n">process_data</span><span class="p">(</span><span class="n">malicious_function</span><span class="p">);</span> <span class="c1">//  2 Pass in a malicious function
+</span>    <span class="n">unprotected</span><span class="o">-&gt;</span><span class="n">do_something</span><span class="p">();</span> <span class="c1">//  3 Unprotected access to protected data
+</span><span class="p">}</span>
+</code></pre>
+</div>
+<p>you have a guideline to follow, which will help you in these cases:<br />
+<em>Don’t pass pointers and references to protected data outside the scope of the lock, whether by
+returning them from a function, storing them in externally visible memory, or passing them as
+arguments to user-supplied functions.</em></p>
+
+<p>Although this is a common mistake when trying to use mutexes to protect shared
+data, it’s far from the only potential pitfall. As you’ll see in the next section, <strong>it’s still
+possible to have race conditions, even when data is protected with a mutex</strong>.</p>
+
+<h3 id="323-spotting-race-conditions-inherent-in-interfaces">3.2.3 Spotting race conditions inherent in interfaces</h3>
+<p>Consider a stack:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span><span class="k">typename</span> <span class="n">Container</span><span class="o">=</span><span class="n">std</span><span class="o">::</span><span class="n">deque</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">stack</span>
+<span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+    <span class="k">explicit</span> <span class="n">stack</span><span class="p">(</span><span class="k">const</span> <span class="n">Container</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="k">explicit</span> <span class="n">stack</span><span class="p">(</span><span class="n">Container</span><span class="o">&amp;&amp;</span> <span class="o">=</span> <span class="n">Container</span><span class="p">());</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Alloc</span><span class="o">&gt;</span> <span class="k">explicit</span> <span class="n">stack</span><span class="p">(</span><span class="k">const</span> <span class="n">Alloc</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Alloc</span><span class="o">&gt;</span> <span class="n">stack</span><span class="p">(</span><span class="k">const</span> <span class="n">Container</span><span class="o">&amp;</span><span class="p">,</span> <span class="k">const</span> <span class="n">Alloc</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Alloc</span><span class="o">&gt;</span> <span class="n">stack</span><span class="p">(</span><span class="n">Container</span><span class="o">&amp;&amp;</span><span class="p">,</span> <span class="k">const</span> <span class="n">Alloc</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">Alloc</span><span class="o">&gt;</span> <span class="n">stack</span><span class="p">(</span><span class="n">stack</span><span class="o">&amp;&amp;</span><span class="p">,</span> <span class="k">const</span> <span class="n">Alloc</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="n">T</span><span class="o">&amp;</span> <span class="n">top</span><span class="p">();</span>
+    <span class="n">T</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">top</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="n">T</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;&amp;</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="n">pop</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="n">swap</span><span class="p">(</span><span class="n">stack</span><span class="o">&amp;&amp;</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>In order for a thread to safely pop a node:</p>
+<ul>
+  <li>firstly you need to ensure that  you’re preventing concurrent accesses to three nodes:<br />
+the node being deleted (node2) and the nodes on either side (node 1 and 3).</li>
+  <li>secondly you need to ensure that  you’re preventing concurrent accesses to three interfaces:<br />
+empty(),top() and pop().</li>
+</ul>
+
+<p>think about the reason for this whole problem in term of <em><strong>multi-level-invariant</strong></em> shown below:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="c1">// to maitain level 1 invarirant, lock concurrent accesss to stack varaibles inside each interface
+// to maitain level 2 invariant, lock concurrent accesss to stack interfaces inside caller scope
+</span><span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">s</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="c1">//1
+</span><span class="p">{</span>
+    <span class="kt">int</span> <span class="k">const</span> <span class="n">value</span><span class="o">=</span><span class="n">s</span><span class="p">.</span><span class="n">top</span><span class="p">();</span> <span class="c1">//2
+</span>    <span class="n">s</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span> <span class="c1">//3
+</span>    <span class="n">do_something</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>calling top() on an empty stack is undefined behavior. With a shared stack object, this call sequence is no longer
+safe, because there might be a call to pop() from another thread that removes the last element in between the call to 
+empty() and the call to top()._This is yet another race condition and far more insidious than the undefined behavior of 
+the empty() / top() race;</p>
+
+<p>the use of a mutex internally to protect the stack contents doesn’t prevent it; it’s a consequence of the interface. 
+This problem is not unique to a mutex-based implementation; it’s an interface problem, so the race conditions would still
+occur with a lock-free implementation.</p>
+
+<p>A more radical change to the interface that combines the calls to top() and pop() under the protection of the mutex can
+resolved PRC <em>but a combined call can lead to issues if the copy constructor for the objects on the stack can throw an exception.</em></p>
+
+<p>Why? Assume you have <code class="highlighter-rouge">stack&lt;vector&lt;int&gt;&gt;</code>. If the pop() function was defined to return the value popped, 
+as well as remove it from the stack,you have a potential problem: the value being popped is returned to the caller only
+after the stack has been modified, but the process of copying the data to return to the caller might throw an exception. 
+If this happens, the data just popped is lost; it has been removed from the stack, but the copy was unsuccessful!</p>
+
+<p>So the designers of the std::stack interface helpfully split the operation in two: get the top element ( top() )
+and then remove it from the stack ( pop() ), so that if you can’t safely copy the data, it
+stays on the stack. If the problem was lack of heap memory, maybe the application can
+free some memory and try again.</p>
+
+<p><em>Unfortunately, it’s precisely this split that you’re trying to avoid in eliminating the race condition! Thankfully, 
+there are alternatives, but they aren’t without cost.</em></p>
+
+<ol>
+  <li>PASS IN A REFERENCE<br />
+pass a reference to a variable in which you wish to receive the popped value as an argument 
+in the call to pop():
+    <div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="n">pop</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">result</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
+<span class="n">some_stack</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="n">result</span><span class="p">);</span>
+</code></pre>
+    </div>
+  </li>
+  <li>
+    <p>RETURN A POINTER <br />
+return a pointer to the popped item rather than return the item by value. <br />
+The advantage here is that pointers can be freely copied without throwing an exception, 
+so you’ve avoided Cargill’s exception problem.  <br />
+The disadvantage is that returning a pointer requires a means of managing the memory allocated to the
+object, and for simple types such as integers, the overhead of such memory manage-
+ment can exceed the cost of just returning the type by value</p>
+  </li>
+  <li>provide both of 2 and 3<br />
+ Flexibility should never be ruled out, especially in generic code</li>
+</ol>
+
+<p>Based on suggestions shown above, this is an thread-safe-stack:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;exception&gt;
+#include &lt;memory&gt;
+#include &lt;mutex&gt;
+#include &lt;stack&gt;
+</span><span class="k">struct</span> <span class="n">empty_stack</span><span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">exception</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">char</span><span class="o">*</span>	<span class="n">what</span><span class="p">()</span> <span class="k">const</span> <span class="k">throw</span><span class="p">()</span> <span class="p">{};</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">threadsafe_stack</span>
+<span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">stack</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">;</span>
+    <span class="k">mutable</span>	<span class="n">std</span><span class="o">::</span><span class="n">mutex</span> <span class="n">m</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">threadsafe_stack</span><span class="p">(){}</span>
+    <span class="n">threadsafe_stack</span><span class="p">(</span><span class="k">const</span> <span class="n">threadsafe_stack</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// 1 This stack implementation is actually copyable—the copy constructor 
+</span>        <span class="c1">// locks the mutex in the source object and then copies the internal stack.
+</span>        <span class="c1">// You do the copy in the constructor body  rather than the member initializer 
+</span>        <span class="c1">// list in order to ensure that the mutex is held across the copy.
+</span>        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">m</span><span class="p">);</span> 
+        <span class="n">data</span> <span class="o">=</span> <span class="n">other</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>	
+    <span class="p">}</span>
+    <span class="n">threadsafe_stack</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">threadsafe_stack</span><span class="o">&amp;</span><span class="p">)</span><span class="o">=</span><span class="k">delete</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="nf">push</span><span class="p">(</span><span class="n">T</span>	<span class="n">new_value</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">m</span><span class="p">);</span> 
+        <span class="n">data</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">new_value</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">pop</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>     
+        <span class="c1">//2 Check for empty before trying to pop value
+</span>        <span class="k">if</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="k">throw</span> <span class="n">empty_stack</span><span class="p">();</span> 
+        <span class="c1">//3 allocate return value before pop it out
+</span>        <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="k">const</span> <span class="n">res</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">top</span><span class="p">()));</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">pop</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span>	<span class="n">value</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>  
+        <span class="c1">//4 some threads remove element from backdoor interfaces eg, call data.pop()
+</span>        <span class="k">if</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="k">throw</span> <span class="n">empty_stack</span><span class="p">();</span>      
+        <span class="n">value</span><span class="o">=</span><span class="n">data</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kt">bool</span> <span class="n">empty</span><span class="p">()</span> <span class="k">const</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lock</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">data</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+    <span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Problems with mutexes can also arise from:</p>
+<ol>
+  <li>locking at too large a granularity<br />
+the extreme situation is a single global mutex that protects all shared data.</li>
+  <li>locking at too small a granularity<br />
+the protection doesn’t cover the entirety of the desired operation (this is problem )</li>
+</ol>
+
+<p>One issue with fine-grained locking schemes is that sometimes you need more than one mutex locked in order to protect 
+all the data in an operation.</p>
+
+<p>if you end up having to lock two or more mutexes for a given operation, there’s
+another potential problem lurking in the wings: <em><strong>deadlock</strong></em>. This is almost the opposite
+of a race condition: rather than two threads racing to be first, each one is waiting for
+the other, so neither makes any progress.</p>
+
+<h3 id="324-deadlock-the-problem-and-a-solution">3.2.4 Deadlock: the problem and a solution</h3>
 
 
         </article>
