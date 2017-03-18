@@ -104,8 +104,53 @@ Virtually all scripting languages provide C functions for creating variables so 
 exercise.
 
 ### 4.2.4 Structures and classes
+The most straightforward technique for handling structures is to implement a collection of accessor functions that hide the underlying representation of a structure. For example:
+```c++
+struct Vector {
+  Vector();
+  ~Vector();
+  double x, y, z;
+};
+```
+can be transformed into the following set of functions :
+```c++
+Vector *new_Vector();
+void delete_Vector(Vector *v);
+double Vector_x_get(Vector *v);
+double Vector_y_get(Vector *v);
+double Vector_z_get(Vector *v);
+void Vector_x_set(Vector *v, double x);
+void Vector_y_set(Vector *v, double y);
+void Vector_z_set(Vector *v, double z);
+```
+Now, from an interpreter these function might be used as follows:
+```c++
+% set v [new_Vector]
+% Vector_x_set $v 3.5
+% Vector_y_get $v
+% delete_Vector $v
+% ...
+```
+Since accessor functions provide a mechanism for accessing the internals of an object, the interpreter does not need to know anything about the actual representation of a Vector.
 
-
-
-
-
+### 4.2.5 Proxy classes
+In certain cases, it is possible to use the low-level accessor functions to create a proxy class, also known as a shadow class. For example, if you have the following C++ definition :
+```c++
+class Vector 
+{
+public:
+  Vector();
+  ~Vector();
+  double x, y, z;
+};
+```
+proxy classing mechanism would allow you to access the structure in a more natural manner from the interpreter. For example, in Python, you might want to do this:
+```c++
+>>> v = Vector()
+>>> v.x = 3
+>>> v.y = 4
+>>> v.z = -13
+>>> ...
+>>> del v
+```
+In the following blogs, we will go to the details of proxy class. See you then!
