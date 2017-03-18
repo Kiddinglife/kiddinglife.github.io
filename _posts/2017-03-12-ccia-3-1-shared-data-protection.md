@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CCIA-3-1-shared-data-between-threads"
+title:  "CCIA-3-shared-data-1"
 date:   2017-03-12 10:02:02
 categories: read
 tags:  thread c++
