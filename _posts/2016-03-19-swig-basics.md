@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "SWIG-3-Basics"
+title:  "SWIG-3-Basics-1"
 date:   2016-03-19 20:10:03
 categories: tool
 tags:  swig script-language c/c++
