@@ -150,6 +150,7 @@ Logging the start and finish times of calls that can take measurable time:
    2. If the transaction completes successfully, discard the queue and log a summary.
    3. If an error is encountered, log the content of the entire queue and the error.
  - This technique is especially useful for test logging of system interactions.
+ - An implementation for log queue please see [https://github.com/egymgmbh/log-queue] 
  
 #### 11 Always Improve Logging
 When problems occur, before fixing the problem:  
