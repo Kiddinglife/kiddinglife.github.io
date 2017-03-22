@@ -206,6 +206,7 @@
       <li><a href="#422-variable-linking" id="markdown-toc-422-variable-linking">4.2.2 Variable linking</a></li>
       <li><a href="#423-constants" id="markdown-toc-423-constants">4.2.3 Constants</a></li>
       <li><a href="#424-structures-and-classes" id="markdown-toc-424-structures-and-classes">4.2.4 Structures and classes</a></li>
+      <li><a href="#425-proxy-classes" id="markdown-toc-425-proxy-classes">4.2.5 Proxy classes</a></li>
     </ul>
   </li>
 </ul>
@@ -311,7 +312,56 @@ Virtually all scripting languages provide C functions for creating variables so 
 exercise.</p>
 
 <h3 id="424-structures-and-classes">4.2.4 Structures and classes</h3>
+<p>The most straightforward technique for handling structures is to implement a collection of accessor functions that hide the underlying representation of a structure. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">Vector</span> <span class="p">{</span>
+  <span class="n">Vector</span><span class="p">();</span>
+  <span class="o">~</span><span class="n">Vector</span><span class="p">();</span>
+  <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>can be transformed into the following set of functions :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Vector</span> <span class="o">*</span><span class="n">new_Vector</span><span class="p">();</span>
+<span class="kt">void</span> <span class="n">delete_Vector</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+<span class="kt">double</span> <span class="n">Vector_x_get</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+<span class="kt">double</span> <span class="n">Vector_y_get</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+<span class="kt">double</span> <span class="n">Vector_z_get</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">Vector_x_set</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">,</span> <span class="kt">double</span> <span class="n">x</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">Vector_y_set</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">Vector_z_set</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">,</span> <span class="kt">double</span> <span class="n">z</span><span class="p">);</span>
+</code></pre>
+</div>
+<p>Now, from an interpreter these function might be used as follows:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span> <span class="n">set</span> <span class="n">v</span> <span class="p">[</span><span class="n">new_Vector</span><span class="p">]</span>
+<span class="o">%</span> <span class="n">Vector_x_set</span> <span class="err">$</span><span class="n">v</span> <span class="mf">3.5</span>
+<span class="o">%</span> <span class="n">Vector_y_get</span> <span class="err">$</span><span class="n">v</span>
+<span class="o">%</span> <span class="n">delete_Vector</span> <span class="err">$</span><span class="n">v</span>
+<span class="o">%</span> <span class="p">...</span>
+</code></pre>
+</div>
+<p>Since accessor functions provide a mechanism for accessing the internals of an object, the interpreter does not need to know anything about the actual representation of a Vector.</p>
 
+<h3 id="425-proxy-classes">4.2.5 Proxy classes</h3>
+<p>In certain cases, it is possible to use the low-level accessor functions to create a proxy class, also known as a shadow class. For example, if you have the following C++ definition :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Vector</span> 
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Vector</span><span class="p">();</span>
+  <span class="o">~</span><span class="n">Vector</span><span class="p">();</span>
+  <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>proxy classing mechanism would allow you to access the structure in a more natural manner from the interpreter. For example, in Python, you might want to do this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">v</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">v</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">v</span><span class="p">.</span><span class="n">z</span> <span class="o">=</span> <span class="o">-</span><span class="mi">13</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">del</span> <span class="n">v</span>
+</code></pre>
+</div>
+<p>In the following blogs, we will go to the details of proxy class. See you then!</p>
 
         </article>
         <hr>
@@ -471,7 +521,7 @@ exercise.</p>
     <div class="nex">
 
         
-        <p><strong>下一篇</strong> <a href="/2017/03/01/algo-reverse-list/">Reverse List</a></p>
+        <p><strong>下一篇</strong> <a href="/2016/03/20/swig-basics/">SWIG-3-Basics-1</a></p>
         
     </div>
 </div>
