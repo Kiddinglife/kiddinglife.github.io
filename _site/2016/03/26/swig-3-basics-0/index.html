@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SWIG-3-Basics-0</title>
+    <meta name="description" content="  5.2 Wrapping Simple C Declarations          5.2.1 Basic Type Handling                  5.2.1.1 Integral          5.2.1.2 Float          5.2.1.3 Unicode:   ...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:1234/2016/03/26/swig-3-basics-0/">
+    <link rel="alternate" type="application/rss+xml" title="Kiddinglife" href="http://localhost:1234/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">Kiddinglife</a>
+        <small>C/C++/PYTHON ENGINEER</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>Collections
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>Demo
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>About
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>SWIG-3-Basics-0</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-03-26
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#tool" title="Category: tool" rel="category">tool</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#swig" title="Tag: swig" rel="tag">swig</a-->
+        <a href="/tag/#swig" title="Tag: swig" rel="tag">swig</a>&nbsp;
+    
+        <!--a href="/tag/#script-language" title="Tag: script-language" rel="tag">script-language</a-->
+        <a href="/tag/#script-language" title="Tag: script-language" rel="tag">script-language</a>&nbsp;
+    
+        <!--a href="/tag/#c%2Fc%2B%2B" title="Tag: c/c++" rel="tag">c/c++</a-->
+        <a href="/tag/#c/c++" title="Tag: c/c++" rel="tag">c/c++</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#52-wrapping-simple-c-declarations" id="markdown-toc-52-wrapping-simple-c-declarations">5.2 Wrapping Simple C Declarations</a>    <ul>
+      <li><a href="#521-basic-type-handling" id="markdown-toc-521-basic-type-handling">5.2.1 Basic Type Handling</a>        <ul>
+          <li><a href="#5211-integral" id="markdown-toc-5211-integral">5.2.1.1 Integral</a></li>
+          <li><a href="#5212-float" id="markdown-toc-5212-float">5.2.1.2 Float</a></li>
+          <li><a href="#5213-unicode" id="markdown-toc-5213-unicode">5.2.1.3 Unicode:</a></li>
+        </ul>
+      </li>
+      <li><a href="#522-global-variables" id="markdown-toc-522-global-variables">5.2.2 Global Variables</a></li>
+      <li><a href="#523-constants" id="markdown-toc-523-constants">5.2.3 Constants</a>        <ul>
+          <li><a href="#5231-special-cases" id="markdown-toc-5231-special-cases">5.2.3.1 Special cases</a></li>
+          <li><a href="#5232-a-brief-word-about-const" id="markdown-toc-5232-a-brief-word-about-const">5.2.3.2 A brief word about const</a></li>
+        </ul>
+      </li>
+      <li><a href="#525-a-cautionary-tale-of-char-" id="markdown-toc-525-a-cautionary-tale-of-char-">5.2.5 A cautionary tale of char *</a></li>
+    </ul>
+  </li>
+  <li><a href="#53-pointers-and-complex-objects" id="markdown-toc-53-pointers-and-complex-objects">5.3 Pointers and complex objects</a>    <ul>
+      <li><a href="#531-simple-pointers" id="markdown-toc-531-simple-pointers">5.3.1 Simple pointers</a></li>
+      <li><a href="#532-run-time-pointer-type-checking" id="markdown-toc-532-run-time-pointer-type-checking">5.3.2 Run time pointer type checking</a></li>
+      <li><a href="#533-derived-types-structs-and-classes" id="markdown-toc-533-derived-types-structs-and-classes">5.3.3 Derived types, structs, and classes</a></li>
+      <li><a href="#535-typedef" id="markdown-toc-535-typedef">5.3.5 Typedef</a></li>
+      <li><a href="#541-passing-structures-by-value" id="markdown-toc-541-passing-structures-by-value">5.4.1 Passing structures by value</a></li>
+      <li><a href="#542-return-by-value" id="markdown-toc-542-return-by-value">5.4.2 Return by value</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="52-wrapping-simple-c-declarations">5.2 Wrapping Simple C Declarations</h2>
+<p>For example, consider the following interface file:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">module</span> <span class="n">example</span>
+<span class="o">%</span><span class="kr">inline</span> <span class="o">%</span><span class="p">{</span>
+<span class="k">extern</span> <span class="kt">double</span> <span class="n">sin</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">int</span> <span class="n">strcmp</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">int</span> <span class="n">Foo</span><span class="p">;</span>
+<span class="o">%</span><span class="p">}</span>
+<span class="cp">#define STATUS 50
+#define VERSION "1.1"
+</span></code></pre>
+</div>
+<p>When SWIG creates an extension module, these declarations are accessible as scripting language functions, 
+variables, and constants respectively. For example, in python:</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">example</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="mf">5.2335956</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">example</span><span class="o">.</span><span class="n">strcmp</span><span class="p">(</span><span class="s">'Dave'</span><span class="p">,</span> <span class="s">'Mike'</span><span class="p">)</span>
+<span class="o">-</span><span class="mi">1</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">example</span><span class="o">.</span><span class="n">cvar</span><span class="o">.</span><span class="n">Foo</span>
+<span class="mi">42</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">example</span><span class="o">.</span><span class="n">STATUS</span>
+<span class="mi">50</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">example</span><span class="o">.</span><span class="n">VERSION</span>
+<span class="mf">1.1</span>
+</code></pre>
+</div>
+<p>Whenever possible, SWIG creates an interface that closely matches the underlying C/C++ code. 
+However, due to subtle differences between languages, run-time environments, and semantics, it is not always possible to do so.</p>
+
+<h3 id="521-basic-type-handling">5.2.1 Basic Type Handling</h3>
+<p>In order to build an interface, SWIG has to convert C/C++ datatypes to equivalent types in the target language:</p>
+
+<h4 id="5211-integral">5.2.1.1 Integral</h4>
+<p>When an integral value is converted from C, a cast is used to convert it to the representation in the target language. 
+Thus, a 16 bit short in C may be promoted to a 32 bit integer. When integers are converted in the other direction,
+ the value is cast back into the original C type. If the value is too large to fit, <em>it is silently truncated.</em></p>
+
+<p>bool data type is cast to and from an integer value of 0 and 1 unless the target language provides a special boolean type.</p>
+
+<p>unsigned/signed char are special cases that are handled as small 8-bit integers. Normally, the char datatype is mapped as a one-character ASCII string.</p>
+
+<p><em>As a rule of thumb, the int datatype and all variations of char and short datatypes are safe to use. 
+For unsigned int and long data types, you will need to carefully check the correct operation of your program after it has been wrapped with SWIG.</em></p>
+
+<h4 id="5212-float">5.2.1.2 Float</h4>
+<p>SWIG recognizes the following floating point types : float and double. Floating point numbers are mapped to 
+and from the natural representation of floats in the target language. This is almost always a C <em>double</em>.</p>
+
+<h4 id="5213-unicode">5.2.1.3 Unicode:</h4>
+<p>For those scripting languages that provide Unicode support, Unicode strings are often available in an 8-bit 
+representation such as UTF-8 that can be mapped to the char * type (in which case the SWIG interface will probably work).</p>
+
+<h3 id="522-global-variables">5.2.2 Global Variables</h3>
+<p>Whenever possible, SWIG maps C/C++ global variables into scripting language variables.</p>
+
+<p>Whenever the scripting language variable is used, the underlying C global variable is accessed。
+However, the way to access global variables in different script langs are different.</p>
+
+<p>Finally, if a global variable has been declared as const, it only supports read-only access.</p>
+
+<p>For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">module</span> <span class="n">example</span>
+<span class="kt">double</span> <span class="n">foo</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>results in a scripting language variable like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp"># Tcl
+</span><span class="n">set</span> <span class="n">foo</span> <span class="p">[</span><span class="mf">3.5</span><span class="p">]</span>                   <span class="p">;</span><span class="err">#</span> <span class="n">Set</span> <span class="n">foo</span> <span class="n">to</span> <span class="mf">3.5</span>
+<span class="n">puts</span> <span class="err">$</span><span class="n">foo</span>                       <span class="p">;</span><span class="err">#</span> <span class="n">Print</span> <span class="n">the</span> <span class="n">value</span> <span class="n">of</span> <span class="n">foo</span>
+<span class="cp"># Python
+</span><span class="n">cvar</span><span class="p">.</span><span class="n">foo</span> <span class="o">=</span> <span class="mf">3.5</span>                  <span class="err">#</span> <span class="n">Set</span> <span class="n">foo</span> <span class="n">to</span> <span class="mf">3.5</span>
+<span class="n">print</span> <span class="n">cvar</span><span class="p">.</span><span class="n">foo</span>                  <span class="err">#</span> <span class="n">Print</span> <span class="n">value</span> <span class="n">of</span> <span class="n">foo</span>
+<span class="cp"># Perl
+</span><span class="err">$</span><span class="n">foo</span> <span class="o">=</span> <span class="mf">3.5</span><span class="p">;</span>                     <span class="err">#</span> <span class="n">Set</span> <span class="n">foo</span> <span class="n">to</span> <span class="mf">3.5</span>
+<span class="n">print</span> <span class="err">$</span><span class="n">foo</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>               <span class="err">#</span> <span class="n">Print</span> <span class="n">value</span> <span class="n">of</span> <span class="n">foo</span>
+<span class="cp"># Ruby
+</span><span class="n">Module</span><span class="p">.</span><span class="n">foo</span> <span class="o">=</span> <span class="mf">3.5</span>               <span class="err">#</span> <span class="n">Set</span> <span class="n">foo</span> <span class="n">to</span> <span class="mf">3.5</span>
+<span class="n">print</span> <span class="n">Module</span><span class="p">.</span><span class="n">foo</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span>         <span class="err">#</span> <span class="n">Print</span> <span class="n">value</span> <span class="n">of</span> <span class="n">foo</span>
+</code></pre>
+</div>
+
+<h3 id="523-constants">5.2.3 Constants</h3>
+<p>Constants can be created using #define, enumerations, or a special %constant directive. 
+The following interface file shows a few valid constant declarations :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#define I_CONST       5               // An integer constant
+#define PI            3.14159         // A Floating point constant
+#define S_CONST       "hello world"   // A string constant
+#define NEWLINE       '\n'            // Character constant
+</span><span class="k">enum</span> <span class="n">boolean</span> <span class="p">{</span><span class="n">NO</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">YES</span><span class="o">=</span><span class="mi">1</span><span class="p">};</span>
+<span class="k">enum</span> <span class="n">months</span> <span class="p">{</span><span class="n">JAN</span><span class="p">,</span> <span class="n">FEB</span><span class="p">,</span> <span class="n">MAR</span><span class="p">,</span> <span class="n">APR</span><span class="p">,</span> <span class="n">MAY</span><span class="p">,</span> <span class="n">JUN</span><span class="p">,</span> <span class="n">JUL</span><span class="p">,</span> <span class="n">AUG</span><span class="p">,</span>
+             <span class="n">SEP</span><span class="p">,</span> <span class="n">OCT</span><span class="p">,</span> <span class="n">NOV</span><span class="p">,</span> <span class="n">DEC</span><span class="p">};</span>
+<span class="o">%</span><span class="n">constant</span> <span class="kt">double</span> <span class="n">BLAH</span> <span class="o">=</span> <span class="mf">42.37</span><span class="p">;</span>
+<span class="cp">#define PI_4 PI/4
+#define FLAGS 0x04 | 0x08 | 0x40
+</span></code></pre>
+</div>
+
+<h4 id="5231-special-cases">5.2.3.1 Special cases</h4>
+<p>1.SWIG will not create constants for macros unless the value can be completely determined by the preprocessor.</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#define EXTERN extern
+</span><span class="n">EXTERN</span> <span class="kt">void</span> <span class="n">foo</span><span class="p">();</span>
+</code></pre>
+</div>
+<p>what would the value of a constant called EXTERN would be?</p>
+
+<p>2.for the same conservative reasons even a constant with a simple cast will be ignored, such as</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#define F_CONST (double) 5 // A floating point constant with cast
+</span></code></pre>
+</div>
+
+<p>3.For enumerations, it is critical that the original enum definition be included somewhere 
+in the interface file (either in a header file or in the %{ %} block) because it needs the original 
+enumeration declaration in order to get the correct enum values as assigned by the C compiler.</p>
+
+<h4 id="5232-a-brief-word-about-const">5.2.3.2 A brief word about const</h4>
+<p>Typically, %constant is only used when you want to add constants to the scripting language interface 
+that are not defined in the original header file.</p>
+
+<p>If the right-most const occurs after all other type modifiers (such as pointers), then the variable is const. 
+Otherwise, it is not. Here are some examples of const declarations:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">const</span> <span class="kt">char</span> <span class="n">a</span><span class="p">;</span>           <span class="c1">// A constant character
+</span><span class="kt">char</span> <span class="k">const</span> <span class="n">b</span><span class="p">;</span>           <span class="c1">// A constant character (the same)
+</span><span class="kt">char</span> <span class="o">*</span><span class="k">const</span> <span class="n">c</span><span class="p">;</span>          <span class="c1">// A constant pointer to a character
+</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="k">const</span> <span class="n">d</span><span class="p">;</span>    <span class="c1">// A constant pointer to a constant character
+</span></code></pre>
+</div>
+<p>Here is an example of a declaration that is not const:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">e</span><span class="p">;</span> 
+</code></pre>
+</div>
+<p>In this case, the pointer e can change — it’s only the value being pointed to that is read-only.</p>
+
+<h3 id="525-a-cautionary-tale-of-char-">5.2.5 A cautionary tale of char *</h3>
+<p>When strings are passed from a scripting language to a C char *, the pointer usually points to 
+string data stored inside the interpreter.</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">char</span> <span class="o">*</span><span class="n">strcat</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">t</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>your application will perhaps crashes with a segmentation fault or other memory related problem. 
+This is because s refers to some internal data in the target language—data that you should mot  be touching.</p>
+
+<h2 id="53-pointers-and-complex-objects">5.3 Pointers and complex objects</h2>
+<hr />
+<h3 id="531-simple-pointers">5.3.1 Simple pointers</h3>
+<p>Pointers to primitive C data types such as:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="n">p_int</span><span class="p">;</span>
+<span class="kt">double</span><span class="o">***</span> <span class="n">ppp_double</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">**</span> <span class="n">pp_char</span><span class="p">;</span>
+<span class="n">Int</span><span class="o">*</span> <span class="n">null_ptr</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>are fully supported by SWIG.</p>
+
+<p>Rather than trying to convert the data being pointed to into a scripting representation, 
+SWIG simply encodes the pointer itself into a representation that contains the actual 
+value of the pointer and a type-tag.</p>
+
+<p>Thus, the SWIG representation of the above pointers (in Tcl), might look like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">_10081012_p_int</span>
+<span class="n">_1008e124_ppp_double</span>
+<span class="n">_f8ac_pp_char</span>
+<span class="n">_NULL_p_int</span>
+</code></pre>
+</div>
+
+<p>All pointers are treated as opaque objects by SWIG. Thus, a pointer may be returned by 
+a function and passed around to other C functions as needed.
+<em>(? here is something I feel unclear and need go over in the future.)</em></p>
+
+<p>The scripting language representation of a pointer value should never be manipulated directly.<br />
+eg. the numbers used may differ from the actual machine address (e.g., on little-endian machines, 
+the digits may appear in reverse order)</p>
+
+<h3 id="532-run-time-pointer-type-checking">5.3.2 Run time pointer type checking</h3>
+<p>Although this has the potential to cause a crash, NULL pointers are also 
+sometimes used as sentinel values or to denote a missing/empty value. 
+<em>Therefore, SWIG leaves NULL pointer checking up to the application</em>.<br />
+<em>(? here is something I feel unclear when I wrote this blog and need go 
+over in the future.)</em></p>
+
+<h3 id="533-derived-types-structs-and-classes">5.3.3 Derived types, structs, and classes</h3>
+<p>For everything else (structs, classes, arrays, etc…) SWIG applies a very simple rule :</p>
+<blockquote>
+  <p>Everything else is a pointer</p>
+</blockquote>
+
+<p>Suppose you have an interface file like this :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">module</span> <span class="n">fileio</span>
+<span class="kt">FILE</span> <span class="o">*</span><span class="n">fopen</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">fclose</span><span class="p">(</span><span class="kt">FILE</span> <span class="o">*</span><span class="p">);</span>
+<span class="kt">unsigned</span> <span class="n">fread</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ptr</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">size</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">nobj</span><span class="p">,</span> <span class="kt">FILE</span> <span class="o">*</span><span class="p">);</span>
+<span class="kt">unsigned</span> <span class="n">fwrite</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">ptr</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">size</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">nobj</span><span class="p">,</span> <span class="kt">FILE</span> <span class="o">*</span><span class="p">);</span>
+<span class="kt">void</span> <span class="o">*</span><span class="n">malloc</span><span class="p">(</span><span class="kt">int</span> <span class="n">nbytes</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">free</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+</code></pre>
+</div>
+<p>In this file, SWIG doesn’t know what a FILE is, but since it’s used as a pointer, 
+so it doesn’t really matter what it is. If you wrapped this module into Python, 
+you can use the functions just like you expect :</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># Copy a file </span>
+<span class="k">def</span> <span class="nf">filecopy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+  <span class="n">f1</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
+  <span class="n">f2</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span>
+  <span class="nb">buffer</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mi">8192</span><span class="p">)</span>
+  <span class="n">nbytes</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="nb">buffer</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">f1</span><span class="p">)</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">nbytes</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="n">fwrite</span><span class="p">(</span><span class="nb">buffer</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">f2</span><span class="p">)</span>
+          <span class="n">nbytes</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="nb">buffer</span><span class="p">,</span> <span class="mi">8192</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">f1</span><span class="p">)</span>
+  <span class="n">free</span><span class="p">(</span><span class="nb">buffer</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>In this case f1, f2, and buffer are all opaque objects containing C pointers. 
+It doesn’t matter what value they contain–our program works just fine 
+without this knowledge.</p>
+
+<p>When SWIG encounters an undeclared data type, it automatically assumes 
+that it is a structure or class.</p>
+
+<h3 id="535-typedef">5.3.5 Typedef</h3>
+<p>Like C, typedef can be used to define new type names in SWIG. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="kt">size_t</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<p>typedef definitions appearing in a SWIG interface are not propagated to the 
+generated wrapper code.</p>
+
+<p>Therefore, they either need to be defined in an 
+included header file or placed in the declarations section like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="p">{</span>
+ <span class="cm">/* Include in the generated wrapper file */</span>  
+<span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="kt">size_t</span><span class="p">;</span> 
+<span class="o">%</span><span class="p">}</span>  
+<span class="cm">/* Tell SWIG about it */</span>  
+<span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="kt">size_t</span><span class="p">;</span>  
+</code></pre>
+</div>
+<p>or</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="kr">inline</span> <span class="o">%</span><span class="p">{</span> <span class="k">typedef</span> <span class="kt">unsigned</span> <span class="kt">int</span> <span class="kt">size_t</span><span class="p">;</span> <span class="o">%</span><span class="p">}</span>
+</code></pre>
+</div>
+
+<p>SWIG tracks typedef declarations and uses this information for run-time 
+type checking.</p>
+
+<p>For instance, if you use the above typedef and had the following function 
+declaration:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="n">foo</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span> <span class="o">*</span><span class="n">ptr</span><span class="p">);</span>
+</code></pre>
+</div>
+<p>The corresponding wrapper function will accept arguments of type 
+unsigned int * or size_t *.</p>
+
+<h3 id="541-passing-structures-by-value">5.4.1 Passing structures by value</h3>
+<p>For example, consider the following function:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">double</span> <span class="n">dot_product</span><span class="p">(</span><span class="n">Vector</span> <span class="n">a</span><span class="p">,</span> <span class="n">Vector</span> <span class="n">b</span><span class="p">);</span>
+</code></pre>
+</div>
+<p>To deal with this, SWIG transforms the function to use pointers by creating 
+a wrapper equivalent to the following:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">wrap_dot_product</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="n">Vector</span> <span class="o">*</span><span class="n">b</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">Vector</span> <span class="n">x</span> <span class="o">=</span> <span class="o">*</span><span class="n">a</span><span class="p">;</span>
+    <span class="n">Vector</span> <span class="n">y</span> <span class="o">=</span> <span class="o">*</span><span class="n">b</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">dot_product</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>In the target language, the dot_product() function now accepts pointers to 
+Vectors instead of Vectors. For the most part, this transformation is 
+transparent so you might not notice.</p>
+
+<h3 id="542-return-by-value">5.4.2 Return by value</h3>
+<p>For example, consider the following function:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Vector</span> <span class="n">cross_product</span><span class="p">(</span><span class="n">Vector</span> <span class="n">v1</span><span class="p">,</span> <span class="n">Vector</span> <span class="n">v2</span><span class="p">);</span>
+</code></pre>
+</div>
+<p>This function wants to return Vector, but SWIG only really supports pointers. 
+As a result, SWIG creates a wrapper like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Vector</span> <span class="o">*</span><span class="nf">wrap_cross_product</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v1</span><span class="p">,</span> <span class="n">Vector</span> <span class="o">*</span><span class="n">v2</span><span class="p">)</span> 
+<span class="p">{</span>
+        <span class="n">Vector</span> <span class="n">x</span> <span class="o">=</span> <span class="o">*</span><span class="n">v1</span><span class="p">;</span>
+        <span class="n">Vector</span> <span class="n">y</span> <span class="o">=</span> <span class="o">*</span><span class="n">v2</span><span class="p">;</span>
+        <span class="n">Vector</span> <span class="o">*</span><span class="n">result</span><span class="p">;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Vector</span><span class="p">));</span>
+        <span class="o">*</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>Or if SWIG was run with the -c++ option:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Vector</span> <span class="o">*</span><span class="nf">wrap_cross</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v1</span><span class="p">,</span> <span class="n">Vector</span> <span class="o">*</span><span class="n">v2</span><span class="p">)</span> 
+<span class="p">{</span>
+        <span class="n">Vector</span> <span class="n">x</span> <span class="o">=</span> <span class="o">*</span><span class="n">v1</span><span class="p">;</span>
+        <span class="n">Vector</span> <span class="n">y</span> <span class="o">=</span> <span class="o">*</span><span class="n">v2</span><span class="p">;</span>
+        <span class="n">Vector</span> <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="p">(</span><span class="n">cross</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span> <span class="c1">// Uses default copy constructor
+</span>        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>In both cases, SWIG allocates a new object and returns a reference to it.
+It is up to the user to delete the returned object when it is no longer in use.</p>
+
+<p>Clearly, this will leak memory if you are unaware of the implicit memory
+allocation and don’t take steps to free the result.</p>
+
+<p>It should also be noted that the handling of pass/return by value in C++ has
+some special cases.</p>
+
+<p>For example, the above code fragments don’t work correctly if Vector doesn’t
+define a default constructor. The section on SWIG and C++ has more
+ information about this case.</p>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2016/03/23/good-logging-practice/">Good Logging Practices</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2016/03/30/swig-3-basics-1/">SWIG-3-Basics-1</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+<!-- 多说评论框 start -->
+<div class="ds-thread" data-thread-key="http://localhost:1234/2016/03/26/swig-3-basics-0/" data-title="SWIG-3-Basics-0" data-url="http://localhost:1234/2016/03/26/swig-3-basics-0/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    var duoshuoQuery = {
+        short_name: "kiddinglife"
+    };
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:1234/2016/03/26/swig-3-basics-0/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:1234/2016/03/26/swig-3-basics-0/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//kiddinglife.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             For my youth dedicated to coding 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/kiddinglife" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:jakezhang1989@hotmail.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>       
+            <a href="https://www.linkedin.com/in/kiddinglife" title="LinkedIn"><i class="fa fa-linkedin" aria-hidden="true"></i></a>  
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

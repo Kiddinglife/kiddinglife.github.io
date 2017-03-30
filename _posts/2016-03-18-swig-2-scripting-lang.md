@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "SWIG-2-script-lang"
-date:   2016-03-18 21:10:03
+title:  "SWIG-2-Script-Lang"
+date:   2016-03-19 21:10:03
 categories: tool
 tags:  swig script-language c/c++
 ---

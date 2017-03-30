@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>lock-free-multi-process-shared-memory</title>
-    <meta name="description" content="  How to make lock free ipc communication between          OPTION 1:      OPTION2:      How to make lock free ipc communication betweena single writer and a ...">
+    <title>SWIG-3-Basics-1</title>
+    <meta name="description" content="">
 
     <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
     <link rel="stylesheet" href="/css/main.css ">
-    <link rel="canonical" href="http://localhost:1234/2016/03/18/lock-free-multi-process-shared-memory/">
+    <link rel="canonical" href="http://localhost:1234/2016/03/30/swig-3-basics-1/">
     <link rel="alternate" type="application/rss+xml" title="Kiddinglife" href="http://localhost:1234/feed.xml ">
 
 
@@ -141,11 +141,11 @@
 
         <div class="page clearfix" post>
     <div class="left">
-        <h1>lock-free-multi-process-shared-memory</h1>
+        <h1>SWIG-3-Basics-1</h1>
         <div class="label">
 
             <div class="label-card">
-                <i class="fa fa-calendar"></i>2016-03-18
+                <i class="fa fa-calendar"></i>2016-03-30
             </div>
 
             <div class="label-card">
@@ -165,7 +165,7 @@
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#ipc" title="Category: ipc" rel="category">ipc</a>
+        <a href="/category/#tool" title="Category: tool" rel="category">tool</a>
     
   
 
@@ -182,11 +182,14 @@
   <i class="fa fa-tags"></i>
   
     
-        <!--a href="/tag/#os" title="Tag: os" rel="tag">os</a-->
-        <a href="/tag/#os" title="Tag: os" rel="tag">os</a>&nbsp;
+        <!--a href="/tag/#swig" title="Tag: swig" rel="tag">swig</a-->
+        <a href="/tag/#swig" title="Tag: swig" rel="tag">swig</a>&nbsp;
     
-        <!--a href="/tag/#lock-free" title="Tag: lock-free" rel="tag">lock-free</a-->
-        <a href="/tag/#lock-free" title="Tag: lock-free" rel="tag">lock-free</a>
+        <!--a href="/tag/#script-language" title="Tag: script-language" rel="tag">script-language</a-->
+        <a href="/tag/#script-language" title="Tag: script-language" rel="tag">script-language</a>&nbsp;
+    
+        <!--a href="/tag/#c%2Fc%2B%2B" title="Tag: c/c++" rel="tag">c/c++</a-->
+        <a href="/tag/#c/c++" title="Tag: c/c++" rel="tag">c/c++</a>
     
   
 
@@ -197,50 +200,7 @@
         </div>
         <hr>
         <article itemscope itemtype="http://schema.org/BlogPosting">
-        <ul id="markdown-toc">
-  <li><a href="#how-to-make-lock-free-ipc-communication-between" id="markdown-toc-how-to-make-lock-free-ipc-communication-between">How to make lock free ipc communication between</a>    <ul>
-      <li><a href="#option-1" id="markdown-toc-option-1">OPTION 1:</a></li>
-      <li><a href="#option2" id="markdown-toc-option2">OPTION2:</a></li>
-    </ul>
-  </li>
-</ul>
-
-<h3 id="how-to-make-lock-free-ipc-communication-between">How to make lock free ipc communication between</h3>
-<p>a single writer and a single reader via shared-memory ?</p>
-
-<h4 id="option-1">OPTION 1:</h4>
-<p>two fifo q1 and q2 used to simlate biodirectional data flows bwtween p1 and p2.</p>
-
-<p>no lock required at all. queue refers to linux lock free queue.</p>
-
-<p>q1: t1 as writer and t2 as reader so single data flow p1—&gt;p2<br />
-q2: t1 as reader and t2 as writer so single data flow p1&lt;—p2</p>
-
-<p>when writer writes all buffer, return error code of ENOBUF to 
-caller just as socket does</p>
-
-<h4 id="option2">OPTION2:</h4>
-<p>这种单独单写的连原子操作都不需要，更不要说mutex之类的了。</p>
-
-<p>假设A,B两进程通信</p>
-
-<p>首先，将共享内存区域分成n块，如何分自己定义。</p>
-
-<p>其次，每块内存指定一个byte做标志，</p>
-
-<p>定义为: 0为A可读写状态，B不可读写；<br />
-       1为B可读写状态，A不可读写。<br />
-A的行为：
-          遍历n块内存，找到一个标志为0的：
-          接收：
-          查看是否有B发来的消息，有，则接收，设置为可发送状态；
-          发送：消息复制到该块区域，设置标志为1；
-B的行为:
-          遍历n块内存，找到一个标志为1的：
-          接收：
-          查看是否有B发来的消息，有，则接收，设置为可发送状态；
-          发送：消息复制到该块区域，设置标志为0；</p>
-
+        
 
         </article>
         <hr>
@@ -254,43 +214,11 @@ B的行为:
                 
                     
                 
-            
-                
-                    
-                
                     
                 
             
-        
-            
-            
                 
                     
-                        
-                        <h2 id="similar_posts">Similar Posts</h2>
-                        <ul>
-                        
-                        <li class="relatedPost">
-                            <a href="http://localhost:1234/2017/03/07/csapp-1-preface/">CS:APP-1-Introduction
-                            
-                            </a>
-                        </li>
-                        
-                        
-                    
-                
-                    
-                
-            
-        
-            
-            
-                
-                    
-                
-                    
-                
-            
                 
                     
                 
@@ -305,13 +233,6 @@ B的行为:
                 
                     
                 
-            
-        
-            
-            
-                
-                    
-                
                     
                 
             
@@ -323,16 +244,11 @@ B的行为:
                 
                     
                 
-            
-                
-                    
-                
                     
                 
             
-        
-            
-            
+                
+                    
                 
                     
                 
@@ -347,13 +263,6 @@ B的行为:
                 
                     
                 
-            
-        
-            
-            
-                
-                    
-                
                     
                 
             
@@ -365,7 +274,22 @@ B的行为:
                 
                     
                 
+                    
+                
             
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
                 
                     
                 
@@ -373,20 +297,70 @@ B的行为:
                 
             
         
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
         
-            </ul>
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
         
 
         <div class="post-recent">
     <div class="pre">
         
-        <p><strong>上一篇</strong> <a href="/2016/03/17/swig-1-intro/">SWIG-1-Introductions</a></p>
+        <p><strong>上一篇</strong> <a href="/2016/03/26/swig-3-basics-0/">SWIG-3-Basics-0</a></p>
         
     </div>
     <div class="nex">
 
         
-        <p><strong>下一篇</strong> <a href="/2016/03/20/swig-2-scripting-lang/">SWIG-2-Script-Lang</a></p>
+        <p><strong>下一篇</strong> <a href="/2017/03/01/algo-reverse-list/">Reverse List</a></p>
         
     </div>
 </div>
@@ -395,7 +369,7 @@ B的行为:
         <h2 id="comments">Comments</h2>
         
 <!-- 多说评论框 start -->
-<div class="ds-thread" data-thread-key="http://localhost:1234/2016/03/18/lock-free-multi-process-shared-memory/" data-title="lock-free-multi-process-shared-memory" data-url="http://localhost:1234/2016/03/18/lock-free-multi-process-shared-memory/"></div>
+<div class="ds-thread" data-thread-key="http://localhost:1234/2016/03/30/swig-3-basics-1/" data-title="SWIG-3-Basics-1" data-url="http://localhost:1234/2016/03/30/swig-3-basics-1/"></div>
 <!-- 多说评论框 end -->
 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
@@ -423,8 +397,8 @@ B的行为:
      */
 
     var disqus_config = function() {
-        this.page.url = 'http://localhost:1234/2016/03/18/lock-free-multi-process-shared-memory/'; // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://localhost:1234/2016/03/18/lock-free-multi-process-shared-memory/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'http://localhost:1234/2016/03/30/swig-3-basics-1/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:1234/2016/03/30/swig-3-basics-1/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 
     (function() { // DON'T EDIT BELOW THIS LINE
