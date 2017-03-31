@@ -224,6 +224,12 @@
       <li><a href="#535-typedef" id="markdown-toc-535-typedef">5.3.5 Typedef</a></li>
       <li><a href="#541-passing-structures-by-value" id="markdown-toc-541-passing-structures-by-value">5.4.1 Passing structures by value</a></li>
       <li><a href="#542-return-by-value" id="markdown-toc-542-return-by-value">5.4.2 Return by value</a></li>
+      <li><a href="#543-linking-to-global-structure-variables" id="markdown-toc-543-linking-to-global-structure-variables">5.4.3 Linking to global structure variables</a></li>
+      <li><a href="#544-linking-to-char" id="markdown-toc-544-linking-to-char">5.4.4 Linking to char*</a></li>
+      <li><a href="#544-linking-to-const-char" id="markdown-toc-544-linking-to-const-char">5.4.4 Linking to const char*</a></li>
+      <li><a href="#545-arrays" id="markdown-toc-545-arrays">5.4.5 Arrays</a></li>
+      <li><a href="#548-defaultoptional-arguments" id="markdown-toc-548-defaultoptional-arguments">5.4.8 Default/optional arguments</a></li>
+      <li><a href="#549-pointers-to-functions-and-callbacks" id="markdown-toc-549-pointers-to-functions-and-callbacks">5.4.9 Pointers to functions and callbacks</a></li>
     </ul>
   </li>
 </ul>
@@ -370,7 +376,6 @@ string data stored inside the interpreter.</p>
 This is because s refers to some internal data in the target language—data that you should mot  be touching.</p>
 
 <h2 id="53-pointers-and-complex-objects">5.3 Pointers and complex objects</h2>
-<hr />
 <h3 id="531-simple-pointers">5.3.1 Simple pointers</h3>
 <p>Pointers to primitive C data types such as:</p>
 <div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span><span class="o">*</span> <span class="n">p_int</span><span class="p">;</span>
@@ -411,7 +416,7 @@ over in the future.)</em></p>
 <h3 id="533-derived-types-structs-and-classes">5.3.3 Derived types, structs, and classes</h3>
 <p>For everything else (structs, classes, arrays, etc…) SWIG applies a very simple rule :</p>
 <blockquote>
-  <p>Everything else is a pointer</p>
+  <p><strong>Everything else is a pointer</strong></p>
 </blockquote>
 
 <p>Suppose you have an interface file like this :</p>
@@ -541,6 +546,328 @@ some special cases.</p>
 <p>For example, the above code fragments don’t work correctly if Vector doesn’t
 define a default constructor. The section on SWIG and C++ has more
  information about this case.</p>
+
+<h3 id="543-linking-to-global-structure-variables">5.4.3 Linking to global structure variables</h3>
+<p>For example, a global variable like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Vector</span> <span class="n">unit_i</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>gets mapped to an underlying pair of set/get functions like this :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Vector</span> <span class="o">*</span><span class="nf">unit_i_get</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">unit_i</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">unit_i_set</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">unit_i</span> <span class="o">=</span> <span class="o">*</span><span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>A global variable created in this manner will show up as a pointer in the
+target scripting language. It would be an extremely bad idea to free or
+destroy such a pointer.</p>
+
+<p>Also, C++ classes must supply a properly defined copy constructor in order
+for assignment to work correctly.</p>
+
+<h3 id="544-linking-to-char">5.4.4 Linking to char*</h3>
+<p>When a global variable of type char * appears, SWIG uses malloc() or new
+to allocate memory for the new value.</p>
+
+<p>Specifically, if you have a variable like this</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">char</span> <span class="o">*</span><span class="n">foo</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>SWIG generates the following code:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cm">/* C mode */</span>
+<span class="kt">void</span> <span class="nf">foo_set</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">foo</span><span class="p">)</span> <span class="n">free</span><span class="p">(</span><span class="n">foo</span><span class="p">);</span>
+    <span class="n">foo</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">strcpy</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cm">/* C++ mode.  When -c++ option is used */</span>
+<span class="kt">void</span> <span class="nf">foo_set</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">foo</span><span class="p">)</span> <span class="k">delete</span> <span class="p">[]</span> <span class="n">foo</span><span class="p">;</span>
+    <span class="n">foo</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">strlen</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">];</span>
+    <span class="n">strcpy</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>If this is not the behavior that you want, consider making the variable
+read-only using the %immutable directive.</p>
+
+<p>Alternatively, you might write a short assist-function to set the value
+exactly like you want. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="kr">inline</span> <span class="o">%</span><span class="p">{</span>
+    <span class="kt">void</span> <span class="n">set_foo</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">value</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">strncpy</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="o">%</span><span class="p">}</span>
+</code></pre>
+</div>
+<p>Note: If you write an assist function like this, you will have to call it 
+as a function from the target scripting language (it does not work like a variable). 
+For example, in Python you will have to write:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">set_foo</span><span class="p">(</span><span class="s">"Hello World"</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>A common mistake with char * variables is to link to a variable declared like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">char</span> <span class="o">*</span><span class="n">VERSION</span> <span class="o">=</span> <span class="s">"1.0"</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>In this case, the variable will be readable, but any attempt to change the 
+value results in a segmentation or general protection fault.</p>
+
+<p>This is due to the fact that SWIG is trying to release the old value using 
+free or delete when the string literal value currently assigned to the variable 
+wasn’t allocated using malloc() or new.</p>
+
+<p>To fix this behavior, you can either:</p>
+<ol>
+  <li>mark the variable as read-only,</li>
+  <li>write a typemap (as described in Chapter 6),</li>
+  <li>write a special set function as shown.</li>
+  <li>declare the variable as an array: <code class="highlighter-rouge">char VERSION[32] = "1.0";</code></li>
+</ol>
+
+<h3 id="544-linking-to-const-char">5.4.4 Linking to const char*</h3>
+<p>SWIG still generates functions  for setting and getting the value. However,
+ the default behavior <em>does not</em> release the previous contents 
+(resulting in a possible memory leak).</p>
+
+<p>In fact, you may get a warning message such as this when wrapping 
+ such a variable:</p>
+<blockquote>
+  <p>example.i:20. Typemap warning. Setting const char * variable may leak memory</p>
+</blockquote>
+
+<p>The reason for this behavior is that const char * variables are often used 
+ to point to string literals. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">foo</span> <span class="o">=</span> <span class="s">"Hello World</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>On the other hand, it is legal to change the pointer to point to some other 
+value.</p>
+
+<p>When setting a variable of this type, SWIG allocates a new string 
+(using malloc or new) and changes the pointer to point to the new value.</p>
+
+<p>However, the following repeated modifications of the value will result in a memory 
+leak since the old value is not released by default.</p>
+
+<p><em>Anyway, try to use const char* or char* as read-only.</em></p>
+
+<h3 id="545-arrays">5.4.5 Arrays</h3>
+<p>Arrays are fully supported by SWIG, but they are always handled as pointers
+instead of mapping them to a special array object or list in the target language.</p>
+
+<p>Thus, the following declarations :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="n">foobar</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">[</span><span class="mi">40</span><span class="p">]);</span>
+<span class="kt">void</span> <span class="n">grok</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]);</span>
+<span class="kt">void</span> <span class="n">transpose</span><span class="p">(</span><span class="kt">double</span> <span class="n">a</span><span class="p">[</span><span class="mi">20</span><span class="p">][</span><span class="mi">20</span><span class="p">]);</span>
+</code></pre>
+</div>
+<p>are processed as if they were really declared like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="n">foobar</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">grok</span><span class="p">(</span><span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">transpose</span><span class="p">(</span><span class="kt">double</span> <span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">)[</span><span class="mi">20</span><span class="p">]);</span>
+</code></pre>
+</div>
+<p>Like C, SWIG <em>does not</em> perform array bounds checking. 
+It is up to the user to make sure the pointer points to a suitably 
+allocated region of memory.</p>
+
+<p>Multi-dimensional arrays are transformed into a pointer to an array of one 
+less dimension. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="p">[</span><span class="mi">10</span><span class="p">];</span>         <span class="c1">// Maps to int *
+</span><span class="kt">int</span> <span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="mi">20</span><span class="p">];</span>     <span class="c1">// Maps to int (*)[20]
+</span><span class="kt">int</span> <span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="mi">20</span><span class="p">][</span><span class="mi">30</span><span class="p">];</span> <span class="c1">// Maps to int (*)[20][30]
+</span></code></pre>
+</div>
+
+<p>Array variables are supported, but are read-only by default.
+For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span>   <span class="n">a</span><span class="p">[</span><span class="mi">100</span><span class="p">][</span><span class="mi">200</span><span class="p">];</span>
+</code></pre>
+</div>
+<p>In this case, reading the variable ‘a’ returns a pointer of type  <code class="highlighter-rouge">int (*)[200] </code> 
+that points to the first element of the array  <code class="highlighter-rouge">&amp;a[0][0] </code>.</p>
+
+<p>Trying to modify ‘a’ results in an error. This is because SWIG does not know 
+how to copy data from the target  language into the array.</p>
+
+<p>To work around this limitation,  you may want to write a few simple assist
+functions like this: For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="kr">inline</span> <span class="o">%</span><span class="p">{</span>
+        <span class="kt">void</span> <span class="n">a_set</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="n">j</span><span class="p">,</span> <span class="kt">int</span> <span class="n">val</span><span class="p">)</span> 
+        <span class="p">{</span>
+            <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kt">int</span> <span class="n">a_get</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="n">j</span><span class="p">)</span> 
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+        <span class="p">}</span>
+<span class="o">%</span><span class="p">}</span>
+</code></pre>
+</div>
+<p>In the target language, the value <em>cannot</em> be set/get like a normal variable 
+but set/get it like this:</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">a_set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="c"># set a[0][0] to 1</span>
+<span class="n">val</span> <span class="o">=</span> <span class="n">a_get</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="c"># get a[0][0]</span>
+</code></pre>
+</div>
+
+<p>To dynamically create arrays of various sizes and shapes, it may be useful
+to write some helper functions in your interface. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="c1">// Some array helpers
+</span><span class="o">%</span><span class="kr">inline</span> <span class="o">%</span><span class="p">{</span>
+    <span class="cm">/* Create any sort of [size] array */</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">int_array</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="n">size</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="cm">/* Create a two-dimension array [size][10] */</span>
+    <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">int_array_10</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">))[</span><span class="mi">10</span><span class="p">]</span> 
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="p">)[</span><span class="mi">10</span><span class="p">])</span> <span class="n">malloc</span><span class="p">(</span><span class="n">size</span><span class="o">*</span><span class="mi">10</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="o">%</span><span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Arrays of char are handled as a special case by SWIG. In this case, 
+strings in the target language can be stored in the array.</p>
+
+<p>For example, if you have a declaration like this,</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">char</span> <span class="n">pathname</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+</code></pre>
+</div>
+<p>SWIG generates functions for both getting and setting the value that are
+equivalent to the following code:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">char</span> <span class="o">*</span><span class="nf">pathname_get</span><span class="p">()</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">pathname</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">pathname_set</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">value</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">strncpy</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="mi">256</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>The difference is that in the target language, the value <em>can be</em> set/get like
+a normal variable.</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">pathname</span> <span class="o">=</span> <span class="s">'python'</span> <span class="c"># set</span>
+<span class="k">print</span> <span class="n">pathname</span> <span class="c"># get</span>
+</code></pre>
+</div>
+
+<h3 id="548-defaultoptional-arguments">5.4.8 Default/optional arguments</h3>
+<p>For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="n">plot</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">color</span><span class="o">=</span><span class="n">WHITE</span><span class="p">);</span>
+</code></pre>
+</div>
+<p>SWIG generates wrapper code where the default arguments 
+are optional in the target language:</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">plot</span> <span class="o">-</span><span class="mf">3.4</span> <span class="mf">7.5</span>    <span class="c"># Use default value</span>
+<span class="n">plot</span> <span class="o">-</span><span class="mf">3.4</span> <span class="mf">7.5</span> <span class="mi">10</span> <span class="c"># set color to 10 instead</span>
+</code></pre>
+</div>
+
+<h3 id="549-pointers-to-functions-and-callbacks">5.4.9 Pointers to functions and callbacks</h3>
+<p>SWIG provides full support for function pointers provided that the callback 
+functions are defined in C and not in the target language.</p>
+
+<p>For example, consider a function like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="n">binary_op</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">op</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">));</span>
+</code></pre>
+</div>
+<p>When you first wrap something like this into an extension module, 
+you may find the function to be impossible to use. For instance, in Python:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">def</span> <span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">:</span>
+<span class="p">...</span>     <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span>
+<span class="p">...</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">binary_op</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">add</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">in</span> <span class="o">?</span>
+<span class="n">TypeError</span><span class="o">:</span> <span class="n">Type</span> <span class="n">error</span><span class="p">.</span> <span class="n">Expected</span> <span class="n">_p_f_int_int__int</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre>
+</div>
+<p>The reason for this error is that SWIG doesn’t know how to map a 
+scripting language function into a C callback.</p>
+
+<p>However, existing C functions can be used as arguments provided you 
+install them as constants. One way to do this is to use the %constant 
+directive like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cm">/* Function with a callback */</span>
+<span class="kt">int</span> <span class="n">binary_op</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">op</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">));</span>
+<span class="cm">/* Some callback functions */</span>
+<span class="o">%</span><span class="n">constant</span> <span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<span class="o">%</span><span class="n">constant</span> <span class="kt">int</span> <span class="n">sub</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<span class="o">%</span><span class="n">constant</span> <span class="kt">int</span> <span class="n">mul</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+</code></pre>
+</div>
+<p>In this case, add, sub, and mul become function pointer constants 
+in the target scripting language. This allows you to use them as follows:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">binary_op</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">add</span><span class="p">)</span>
+<span class="mi">7</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">binary_op</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">mul</span><span class="p">)</span>
+<span class="mi">12</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre>
+</div>
+<p>Unfortunately, by declaring the callback functions as constants, 
+they are no longer accessible as functions. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span><span class="o">:</span>
+  <span class="n">File</span> <span class="s">"&lt;stdin&gt;"</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="n">in</span> <span class="o">?</span>
+<span class="n">TypeError</span><span class="o">:</span> <span class="n">object</span> <span class="n">is</span> <span class="n">not</span> <span class="n">callable</span><span class="o">:</span> <span class="err">'</span><span class="n">_ff020efc_p_f_int_int__int</span><span class="err">'</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre>
+</div>
+<p>If you want to make a function available as both a callback function and 
+a function, you can use the %callback and %nocallback directives like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cm">/* Function with a callback */</span>
+<span class="kt">int</span> <span class="n">binary_op</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">op</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">));</span>
+<span class="cm">/* Some callback functions */</span>
+<span class="o">%</span><span class="n">callback</span><span class="p">(</span><span class="s">"%s_cb"</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">sub</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">mul</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span>
+<span class="o">%</span><span class="n">nocallback</span><span class="p">;</span>
+</code></pre>
+</div>
+<p><code class="highlighter-rouge">%s</code> gets replaced by the function name. The callback mode remains in 
+effect until it is explicitly disabled using <code class="highlighter-rouge">%nocallback</code>. When you do this,
+ the interface now works as follows:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">binary_op</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">add_cb</span><span class="p">)</span>
+<span class="mi">7</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">binary_op</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">mul_cb</span><span class="p">)</span>
+<span class="mi">12</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="mi">7</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mul</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="mi">12</span>
+</code></pre>
+</div>
+<p>Notice that when the function is used as a callback, special names 
+such as  <code class="highlighter-rouge">add_cb</code> are used instead. To call the function normally,
+just use the original function name such as  <code class="highlighter-rouge">add() </code>.</p>
+
+<blockquote>
+  <p>Although SWIG does not normally allow callback functions to be written in
+the target language, this can be accomplished with the use of typemaps 
+and other advanced SWIG features.</p>
+</blockquote>
+
+<p>See the Typemaps chapter for more 
+about typemaps and individual target language chapters for more on 
+callbacks and the ‘director’ feature.</p>
 
 
         </article>
