@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>SWIG-3-Basics-0</title>
+    <title>SWIG-3: Types Wrapping Between C and Scripting</title>
     <meta name="description" content="  5.2 Wrapping Simple C Declarations          5.2.1 Basic Type Handling                  5.2.1.1 Integral          5.2.1.2 Float          5.2.1.3 Unicode:   ...">
 
     <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
@@ -141,7 +141,7 @@
 
         <div class="page clearfix" post>
     <div class="left">
-        <h1>SWIG-3-Basics-0</h1>
+        <h1>SWIG-3: Types Wrapping Between C and Scripting</h1>
         <div class="label">
 
             <div class="label-card">
@@ -230,6 +230,18 @@
       <li><a href="#545-arrays" id="markdown-toc-545-arrays">5.4.5 Arrays</a></li>
       <li><a href="#548-defaultoptional-arguments" id="markdown-toc-548-defaultoptional-arguments">5.4.8 Default/optional arguments</a></li>
       <li><a href="#549-pointers-to-functions-and-callbacks" id="markdown-toc-549-pointers-to-functions-and-callbacks">5.4.9 Pointers to functions and callbacks</a></li>
+    </ul>
+  </li>
+  <li><a href="#55-structures-and-unions" id="markdown-toc-55-structures-and-unions">5.5 Structures and unions</a>    <ul>
+      <li><a href="#552-char-strings-members" id="markdown-toc-552-char-strings-members">5.5.2 Char* strings members</a></li>
+      <li><a href="#553-array-members" id="markdown-toc-553-array-members">5.5.3 Array members</a></li>
+      <li><a href="#555-c-constructors-and-destructors" id="markdown-toc-555-c-constructors-and-destructors">5.5.5 C constructors and destructors</a></li>
+      <li><a href="#556-adding-member-functions-to-c-structures" id="markdown-toc-556-adding-member-functions-to-c-structures">5.5.6 Adding member functions to C structures</a></li>
+      <li><a href="#557-nested-structures" id="markdown-toc-557-nested-structures">5.5.7 Nested structures</a></li>
+    </ul>
+  </li>
+  <li><a href="#56-code-insertion" id="markdown-toc-56-code-insertion">5.6 Code Insertion</a>    <ul>
+      <li><a href="#561-the-output-of-swig" id="markdown-toc-561-the-output-of-swig">5.6.1 The output of SWIG</a></li>
     </ul>
   </li>
 </ul>
@@ -860,14 +872,560 @@ such as  <code class="highlighter-rouge">add_cb</code> are used instead. To call
 just use the original function name such as  <code class="highlighter-rouge">add() </code>.</p>
 
 <blockquote>
-  <p>Although SWIG does not normally allow callback functions to be written in
-the target language, this can be accomplished with the use of typemaps 
+  <p>Although SWIG does not normally allow callback functions to be written 
+in the target language, this can be accomplished with the use of type maps 
 and other advanced SWIG features.</p>
 </blockquote>
 
 <p>See the Typemaps chapter for more 
 about typemaps and individual target language chapters for more on 
 callbacks and the ‘director’ feature.</p>
+
+<h2 id="55-structures-and-unions">5.5 Structures and unions</h2>
+<p>If SWIG encounters the definition of a C structure or union, 
+it creates a set of accessor functions. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">Vector</span> 
+<span class="p">{</span>
+    <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>gets transformed into the following set of accessor functions :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">Vector_x_get</span><span class="p">(</span><span class="k">struct</span> <span class="n">Vector</span> <span class="o">*</span><span class="n">obj</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">obj</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">double</span> <span class="nf">Vector_y_get</span><span class="p">(</span><span class="k">struct</span> <span class="n">Vector</span> <span class="o">*</span><span class="n">obj</span><span class="p">)</span> 
+<span class="p">{</span> 
+    <span class="k">return</span> <span class="n">obj</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">double</span> <span class="nf">Vector_z_get</span><span class="p">(</span><span class="k">struct</span> <span class="n">Vector</span> <span class="o">*</span><span class="n">obj</span><span class="p">)</span> 
+<span class="p">{</span> 
+    <span class="k">return</span> <span class="n">obj</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">Vector_x_set</span><span class="p">(</span><span class="k">struct</span> <span class="n">Vector</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">double</span> <span class="n">value</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">obj</span><span class="o">-&gt;</span><span class="n">x</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">Vector_y_set</span><span class="p">(</span><span class="k">struct</span> <span class="n">Vector</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">double</span> <span class="n">value</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">obj</span><span class="o">-&gt;</span><span class="n">y</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">Vector_z_set</span><span class="p">(</span><span class="k">struct</span> <span class="n">Vector</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">double</span> <span class="n">value</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">obj</span><span class="o">-&gt;</span><span class="n">z</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>In addition, SWIG creates default constructor and destructor functions if 
+none are defined in the interface. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">Vector</span> <span class="o">*</span><span class="nf">new_Vector</span><span class="p">()</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">Vector</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">delete_Vector</span><span class="p">(</span><span class="k">struct</span> <span class="n">Vector</span> <span class="o">*</span><span class="n">obj</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>Using these low-level accessor functions, an object can be minimally 
+manipulated from the target language using code like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code> <span class="n">v</span> <span class="o">=</span> <span class="n">new_Vector</span><span class="p">()</span>
+<span class="n">Vector_x_set</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">Vector_y_set</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">Vector_z_set</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">delete_Vector</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>However, most of SWIG’s language modules also provide a high-level 
+interface that is more convenient. Keep reading.</p>
+
+<h3 id="552-char-strings-members">5.5.2 Char* strings members</h3>
+<p>Structures involving character strings require some care.</p>
+
+<p>SWIG assumes that all members of type char * have been dynamically 
+allocated using malloc() and that they are <em>NULL-terminated</em> ASCII strings.
+For example :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">module</span> <span class="n">mymodule</span>
+<span class="p">...</span>
+<span class="k">struct</span> <span class="n">Foo</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>This results in the following accessor functions :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="c1">// Note: If the -c++ option is used, new and delete are used to perform memory allocation.
+</span><span class="kt">char</span> <span class="o">*</span><span class="nf">Foo_name_get</span><span class="p">(</span><span class="n">Foo</span> <span class="o">*</span><span class="n">obj</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">Foo</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">char</span> <span class="o">*</span><span class="nf">Foo_name_set</span><span class="p">(</span><span class="n">Foo</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">c</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">obj</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">free</span><span class="p">(</span><span class="n">obj</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+    <span class="n">obj</span><span class="o">-&gt;</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">strcpy</span><span class="p">(</span><span class="n">obj</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">c</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">obj</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>If this behavior differs from what you need in your applications, 
+the SWIG “memberin” typemap can be used to change it. 
+See the typemaps chapter for further details.</p>
+
+<h3 id="553-array-members">5.5.3 Array members</h3>
+<p>Arrays may appear as the members of structures, but they will be 
+read-only by default. SWIG may generate a warning message:</p>
+<blockquote>
+  <p>interface.i:116. Warning. Array member will be read-only</p>
+</blockquote>
+
+<p>To eliminate the warning message, typemaps can be used, 
+but this is discussed in a later chapter. In many cases, 
+the warning message is <em>harmless</em>.</p>
+
+<p>5.5.4 Structure data members
+Occasionally, a structure will contain data members that are themselves 
+structures. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">Foo</span> 
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Foo</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Bar</span> 
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+    <span class="n">Foo</span> <span class="n">f</span><span class="p">;</span>  <span class="cm">/* Structure data member */</span>
+<span class="p">}</span> <span class="n">Bar</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>When a structure member is wrapped, it is handled as a pointer, 
+unless the %naturalvar directive is used where it is handled more like a 
+C++ reference (see C++ Member data).</p>
+
+<p>The accessors to the member variable as a pointer are effectively 
+wrapped as follows:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Foo</span> <span class="o">*</span><span class="nf">Bar_f_get</span><span class="p">(</span><span class="n">Bar</span> <span class="o">*</span><span class="n">b</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="n">b</span><span class="o">-&gt;</span><span class="n">f</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">Bar_f_set</span><span class="p">(</span><span class="n">Bar</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">Foo</span> <span class="o">*</span><span class="n">value</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">b</span><span class="o">-&gt;</span><span class="n">f</span> <span class="o">=</span> <span class="o">*</span><span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>The reasons for this are have to do with the problem of modifying and 
+accessing data inside the data member. For example, suppose you 
+wanted to modify f.x in C like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Bar</span> <span class="o">*</span><span class="n">b</span><span class="p">;</span>
+<span class="n">b</span><span class="o">-&gt;</span><span class="n">f</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">37</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>Translating them to function calls in C (as would be used inside 
+the scripting language interface) results in the following code:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Bar</span> <span class="o">*</span><span class="n">b</span><span class="p">;</span>
+<span class="n">Foo_x_set</span><span class="p">(</span><span class="n">Bar_f_get</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="mi">37</span><span class="p">);</span>
+</code></pre>
+</div>
+<p>In this code, if the <em>Bar_f_get()</em> function were to return a <em>Foo</em> instead of a 
+<em>Foo*</em>, then the resulting modification would be applied to a copy of f and
+not the data member f itself. Clearly that’s not what you want!</p>
+
+<p>It should be noted that <em>this transformation to pointers</em> only occurs
+if SWIG knows that a data member is a structure or class. 
+For instance, if you had a structure like this,</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">struct</span> <span class="n">Foo</span> 
+<span class="p">{</span>
+    <span class="n">WORD</span>   <span class="n">w</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p><em>and nothing was known about WORD,</em> then SWIG will generate more 
+normal accessor functions like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">WORD</span> <span class="nf">Foo_w_get</span><span class="p">(</span><span class="n">Foo</span> <span class="o">*</span><span class="n">f</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">f</span><span class="o">-&gt;</span><span class="n">w</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">Foo_w_set</span><span class="p">(</span><span class="n">FOO</span> <span class="o">*</span><span class="n">f</span><span class="p">,</span> <span class="n">WORD</span> <span class="n">value</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">f</span><span class="o">-&gt;</span><span class="n">w</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<blockquote>
+  <p><strong>Compatibility Note:</strong> if you need to tell SWIG that an undeclared datatype is really a struct, 
+simply use a forward struct declaration such as “struct Foo;”.</p>
+</blockquote>
+
+<h3 id="555-c-constructors-and-destructors">5.5.5 C constructors and destructors</h3>
+<p>When wrapping structures, it is generally useful to have a mechanism for
+creating and destroying objects</p>
+
+<p>As there may be memory allocations happening when constructing 
+structures that should be released when destruction.</p>
+
+<p>SWIG will by default automatically generate functions for creating and 
+destroying objects using malloc() and free() when SWIG is <em>used on C code</em>,
+with C++ being handled differently.</p>
+
+<p>If you don’t want SWIG to generate default constructors for your interfaces, 
+you can use the <code class="highlighter-rouge">%nodefaultctor</code> directive or the <code class="highlighter-rouge">-nodefaultctor</code>
+command line option. For example:</p>
+<blockquote>
+  <p>swig -nodefaultctor example.i</p>
+</blockquote>
+
+<p>or</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">module</span> <span class="n">foo</span>
+<span class="p">...</span>
+<span class="o">%</span><span class="n">nodefaultctor</span><span class="p">;</span>        <span class="c1">// Don't create default constructors
+</span><span class="p">...</span> <span class="n">declarations</span> <span class="p">...</span>
+<span class="o">%</span><span class="n">clearnodefaultctor</span><span class="p">;</span>   <span class="c1">// Re-enable default constructors
+</span></code></pre>
+</div>
+<p>If you need more precise control, <code class="highlighter-rouge">%nodefaultctor</code> can selectively target 
+individual structure definitions. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">nodefaultctor</span> <span class="n">Foo</span><span class="p">;</span> <span class="c1">// No default constructor for Foo
+</span><span class="p">...</span>
+<span class="k">struct</span> <span class="n">Foo</span> 
+<span class="p">{</span>             
+    <span class="c1">// No default constructor generated.
+</span><span class="p">};</span>
+<span class="k">struct</span> <span class="n">Bar</span> 
+<span class="p">{</span>             
+    <span class="c1">// Default constructor generated.
+</span><span class="p">};</span>
+</code></pre>
+</div>
+
+<p><em>Since ignoring the implicit or default destructors most of the time produces 
+memory leaks, SWIG will always try to generate them.</em></p>
+
+<p>If needed, however, you can selectively disable the generation of the 
+default/implicit destructor by using <code class="highlighter-rouge">%nodefaultdtor</code>:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">nodefaultdtor</span> <span class="n">Foo</span><span class="p">;</span> <span class="c1">// No default/implicit destructor for Foo
+</span><span class="p">...</span>
+<span class="k">struct</span> <span class="n">Foo</span> 
+<span class="p">{</span>              
+    <span class="c1">// No default destructor is generated.
+</span><span class="p">};</span>
+<span class="k">struct</span> <span class="n">Bar</span> 
+<span class="p">{</span>              
+    <span class="c1">// Default destructor generated.
+</span><span class="p">};</span>
+</code></pre>
+</div>
+
+<p><strong>Note:</strong> There are also the <code class="highlighter-rouge">-nodefault</code> option and <code class="highlighter-rouge">%nodefault</code> directive, 
+which disable both the default or implicit destructor generation. 
+<em>This could lead to memory leaks across the target languages, 
+and it is highly recommended you don’t use them.</em></p>
+
+<h3 id="556-adding-member-functions-to-c-structures">5.5.6 Adding member functions to C structures</h3>
+<p>SWIG provides a special %extend directive that makes it possible to attach 
+methods to C structures for purposes of building an object oriented interface. 
+Suppose you have a C header file with the following declaration :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cm">/* file : vector.h */</span>
+<span class="p">...</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Vector</span> 
+<span class="p">{</span>
+    <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Vector</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>You can make a Vector look a lot like a class by writing a SWIG 
+interface like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="c1">// file : vector.i
+</span><span class="o">%</span><span class="n">module</span> <span class="n">mymodule</span>
+<span class="o">%</span><span class="p">{</span>
+        <span class="cp">#include "vector.h"
+</span><span class="o">%</span><span class="p">}</span>
+
+<span class="o">%</span><span class="n">include</span> <span class="s">"vector.h"</span>          <span class="c1">// Just grab original C header file
+</span><span class="o">%</span><span class="n">extend</span> <span class="n">Vector</span> 
+<span class="p">{</span>             
+    <span class="c1">// Attach these functions to struct Vector.
+</span>    <span class="c1">// The newly constructed object must be returned as if the constructor 
+</span>    <span class="c1">// declaration had a return value, a Vector * in this case.
+</span>    <span class="n">Vector</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">,</span> <span class="kt">double</span> <span class="n">z</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">;</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Vector</span><span class="p">));</span>
+        <span class="n">v</span><span class="o">-&gt;</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+        <span class="n">v</span><span class="o">-&gt;</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">;</span>
+        <span class="n">v</span><span class="o">-&gt;</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="o">~</span><span class="n">Vector</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">free</span><span class="p">(</span><span class="err">$</span><span class="n">self</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kt">double</span> <span class="n">magnitude</span><span class="p">()</span> 
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="err">$</span><span class="n">self</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">*</span><span class="err">$</span><span class="n">self</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">+</span><span class="err">$</span><span class="n">self</span><span class="o">-&gt;</span><span class="n">y</span><span class="o">*</span><span class="err">$</span><span class="n">self</span><span class="o">-&gt;</span><span class="n">y</span><span class="o">+</span><span class="err">$</span><span class="n">self</span><span class="o">-&gt;</span><span class="n">z</span><span class="o">*</span><span class="err">$</span><span class="n">self</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">print</span><span class="p">()</span> 
+    <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"Vector [%g, %g, %g]</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="err">$</span><span class="n">self</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span> <span class="err">$</span><span class="n">self</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">,</span> <span class="err">$</span><span class="n">self</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>Note the usage of the <code class="highlighter-rouge">$self</code> special variable. Its usage is identical to a 
+C++ ‘this’ pointer and should be used whenever access to the struct 
+instance is required.</p>
+
+<p>Now, when used with proxy classes in Python, you can do things like this :</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">v</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>                 <span class="c"># Create a new vector</span>
+<span class="k">print</span> <span class="n">v</span><span class="o">.</span><span class="n">magnitude</span><span class="p">()</span>                <span class="c"># Print magnitude</span>
+<span class="c"># 5.0</span>
+<span class="n">v</span><span class="o">.</span><span class="k">print</span><span class="p">()</span>                  <span class="c"># Print it out</span>
+<span class="c"># [ 3, 4, 0 ]</span>
+<span class="k">del</span> <span class="n">v</span>                      <span class="c"># Destroy it</span>
+</code></pre>
+</div>
+<hr />
+<p>The %extend directive can also be used inside the definition of the 
+Vector structure. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="c1">// file : vector.i
+</span><span class="o">%</span><span class="n">module</span> <span class="n">mymodule</span>
+<span class="o">%</span><span class="p">{</span>
+        <span class="cp">#include "vector.h"
+</span><span class="o">%</span><span class="p">}</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Vector</span> <span class="p">{</span>
+  <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
+  <span class="o">%</span><span class="n">extend</span> <span class="p">{</span>
+    <span class="n">Vector</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">,</span> <span class="kt">double</span> <span class="n">z</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+    <span class="o">~</span><span class="n">Vector</span><span class="p">()</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+    <span class="p">...</span>
+  <span class="p">}</span>
+<span class="p">}</span> <span class="n">Vector</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>Note that %extend can be used to access externally written functions 
+provided they follow the naming convention used in this example :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cm">/* File : vector.c */</span>
+<span class="cm">/* Vector methods */</span>
+
+<span class="cp">#include "vector.h"
+</span>
+<span class="n">Vector</span> <span class="o">*</span><span class="nf">new_Vector</span><span class="p">(</span><span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="kt">double</span> <span class="n">y</span><span class="p">,</span> <span class="kt">double</span> <span class="n">z</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">;</span>
+  <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Vector</span><span class="p">));</span>
+  <span class="n">v</span><span class="o">-&gt;</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">;</span>
+  <span class="n">v</span><span class="o">-&gt;</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">;</span>
+  <span class="n">v</span><span class="o">-&gt;</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">delete_Vector</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">free</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">double</span> <span class="nf">Vector_magnitude</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">*</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">+</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">y</span><span class="o">*</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">y</span><span class="o">+</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">z</span><span class="o">*</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// File : vector.i
+// Interface file
+</span><span class="o">%</span><span class="n">module</span> <span class="n">mymodule</span>
+<span class="o">%</span><span class="p">{</span>
+<span class="cp">#include "vector.h"
+</span><span class="o">%</span><span class="p">}</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Vector</span> <span class="p">{</span>
+  <span class="kt">double</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
+  <span class="o">%</span><span class="n">extend</span> <span class="p">{</span>
+    <span class="n">Vector</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">);</span> <span class="c1">// This calls new_Vector()
+</span>    <span class="o">~</span><span class="n">Vector</span><span class="p">();</span>           <span class="c1">// This calls delete_Vector()
+</span>    <span class="kt">double</span> <span class="n">magnitude</span><span class="p">();</span>  <span class="c1">// This will call Vector_magnitude()
+</span>    <span class="p">...</span>
+  <span class="p">}</span>
+<span class="p">}</span> <span class="n">Vector</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>The name used for %extend should be the name of the struct and not the
+ name of any typedef to the struct. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">Integer</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Int</span><span class="p">;</span>
+<span class="o">%</span><span class="n">extend</span> <span class="n">Integer</span> <span class="p">{</span> <span class="p">...</span>  <span class="p">}</span> <span class="cm">/* Correct name */</span>
+<span class="o">%</span><span class="n">extend</span> <span class="n">Int</span> <span class="p">{</span> <span class="p">...</span>  <span class="p">}</span> <span class="cm">/* Incorrect name */</span>
+
+<span class="k">struct</span> <span class="n">Float</span> <span class="p">{</span>
+  <span class="kt">float</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Float</span> <span class="n">FloatValue</span><span class="p">;</span>
+<span class="o">%</span><span class="n">extend</span> <span class="n">Float</span> <span class="p">{</span> <span class="p">...</span>  <span class="p">}</span> <span class="cm">/* Correct name */</span>
+<span class="o">%</span><span class="n">extend</span> <span class="n">FloatValue</span> <span class="p">{</span> <span class="p">...</span>  <span class="p">}</span> <span class="cm">/* Incorrect name */</span>
+</code></pre>
+</div>
+<p>There is one exception to this rule and that is when the struct is 
+anonymously named such as:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+  <span class="kt">double</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Double</span><span class="p">;</span>
+<span class="o">%</span><span class="n">extend</span> <span class="n">Double</span> <span class="p">{</span> <span class="p">...</span>  <span class="p">}</span> <span class="cm">/* Okay */</span>
+</code></pre>
+</div>
+<hr />
+<p><em>A little known feature</em> of the <code class="highlighter-rouge">%extend</code> directive is that it can also be used 
+to add synthesized attributes or to modify the behavior of existing data 
+attributes.</p>
+
+<p>For example, suppose you wanted to make magnitude a read-only attribute 
+of Vector instead of a method. To do this, you might write some code like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="c1">// Add a new attribute to Vector
+</span><span class="o">%</span><span class="n">extend</span> <span class="n">Vector</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">magnitude</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// Now supply the implementation of the Vector_magnitude_get function
+</span><span class="o">%</span><span class="p">{</span>
+<span class="k">const</span> <span class="kt">double</span> <span class="n">Vector_magnitude_get</span><span class="p">(</span><span class="n">Vector</span> <span class="o">*</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="k">const</span> <span class="kt">double</span><span class="p">)</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">*</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">x</span><span class="o">+</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">y</span><span class="o">*</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">y</span><span class="o">+</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">z</span><span class="o">*</span><span class="n">v</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">%</span><span class="p">}</span>
+</code></pre>
+</div>
+<p>Now, for all practical purposes, magnitude will appear like an 
+attribute of the object.</p>
+
+<p>A similar technique can also be used to work with data members that you 
+want to process. For example, consider this interface:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">Person</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">50</span><span class="p">];</span>
+  <span class="p">...</span>
+<span class="p">}</span> <span class="n">Person</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>Say you wanted to ensure name was always upper case, you can rewrite
+the interface as follows to ensure this occurs whenever a name is read 
+or written to:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">Person</span> <span class="p">{</span>
+  <span class="o">%</span><span class="n">extend</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">50</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">}</span> <span class="n">Person</span><span class="p">;</span>
+
+<span class="o">%</span><span class="p">{</span>
+<span class="cp">#include &lt;string.h&gt;
+#include &lt;ctype.h&gt;
+</span><span class="kt">void</span> <span class="n">make_upper</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">c</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">c</span> <span class="o">=</span> <span class="n">name</span><span class="p">;</span> <span class="o">*</span><span class="n">c</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span>
+    <span class="o">*</span><span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="n">toupper</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">c</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* Specific implementation of set/get functions forcing capitalization */</span>
+<span class="kt">char</span> <span class="o">*</span><span class="n">Person_name_get</span><span class="p">(</span><span class="n">Person</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">make_upper</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">Person_name_set</span><span class="p">(</span><span class="n">Person</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">strncpy</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+  <span class="n">make_upper</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">%</span><span class="p">}</span>
+</code></pre>
+</div>
+<p><strong>Note:</strong> it should be stressed that even though <code class="highlighter-rouge">%extend</code> can be used to 
+add new data members, these new members can not require the allocation
+of additional storage in the object (e.g., their values must be entirely 
+synthesized from existing attributes of the structure or obtained elsewhere).</p>
+
+<h3 id="557-nested-structures">5.5.7 Nested structures</h3>
+<p>Occasionally, a C program will involve structures like this :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code> <span class="k">typedef</span> <span class="k">struct</span> <span class="n">Object</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">objtype</span><span class="p">;</span>
+  <span class="k">union</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">ivalue</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">dvalue</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">strvalue</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">ptrvalue</span><span class="p">;</span>
+  <span class="p">}</span> <span class="n">intRep</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Object</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>When SWIG encounters this, it performs a structure splitting operation that 
+transforms the declaration into the equivalent of the following:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">union</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">ivalue</span><span class="p">;</span>
+  <span class="kt">double</span> <span class="n">dvalue</span><span class="p">;</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">strvalue</span><span class="p">;</span>
+  <span class="kt">void</span> <span class="o">*</span><span class="n">ptrvalue</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Object_intRep</span><span class="p">;</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Object</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">objType</span><span class="p">;</span>
+  <span class="n">Object_intRep</span> <span class="n">intRep</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Object</span><span class="p">;</span>
+</code></pre>
+</div>
+<p>SWIG will then create an Object_intRep structure for use inside the 
+interface file. Accessor functions will be created for both structures. 
+In this case, functions like this would be created :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Object_intRep</span> <span class="o">*</span><span class="nf">Object_intRep_get</span><span class="p">(</span><span class="n">Object</span> <span class="o">*</span><span class="n">o</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">Object_intRep</span> <span class="o">*</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">intRep</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">Object_intRep_ivalue_get</span><span class="p">(</span><span class="n">Object_intRep</span> <span class="o">*</span><span class="n">o</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">o</span><span class="o">-&gt;</span><span class="n">ivalue</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">Object_intRep_ivalue_set</span><span class="p">(</span><span class="n">Object_intRep</span> <span class="o">*</span><span class="n">o</span><span class="p">,</span> <span class="kt">int</span> <span class="n">value</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">o</span><span class="o">-&gt;</span><span class="n">ivalue</span> <span class="o">=</span> <span class="n">value</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">double</span> <span class="nf">Object_intRep_dvalue_get</span><span class="p">(</span><span class="n">Object_intRep</span> <span class="o">*</span><span class="n">o</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">o</span><span class="o">-&gt;</span><span class="n">dvalue</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">...</span> <span class="n">etc</span> <span class="p">...</span>
+</code></pre>
+</div>
+<p>Although this process is a little hairy, it works like you would expect in the 
+target scripting language–especially when proxy classes are used. 
+For instance, in Perl:</p>
+<div class="language-perl highlighter-rouge"><pre class="highlight"><code><span class="c1"># Perl5 script for accessing nested member</span>
+<span class="nv">$o</span> <span class="o">=</span> <span class="nv">CreateObject</span><span class="p">();</span>                    <span class="c1"># Create an object somehow</span>
+<span class="nv">$o</span><span class="o">-&gt;</span><span class="p">{</span><span class="nv">intRep</span><span class="p">}</span><span class="o">-&gt;</span><span class="p">{</span><span class="nv">ivalue</span><span class="p">}</span> <span class="o">=</span> <span class="mi">7</span>              <span class="c1"># Change value of o.intRep.ivalue</span>
+</code></pre>
+</div>
+<p><strong>Note:</strong>   if you have a lot of nested structure declarations, it is advisable to 
+double-check them after running SWIG. Nesting is handled differently in 
+C++ mode, see Nested classes.</p>
+
+<h2 id="56-code-insertion">5.6 Code Insertion</h2>
+<p>Sometimes it is necessary to insert special code into the resulting wrapper
+file generated by SWIG. For example, you may want to include additional 
+C code to perform initialization or other operations.</p>
+
+<p>There are four common ways to insert code, but it’s useful to know how
+the output of SWIG is structured first.</p>
+
+<h3 id="561-the-output-of-swig">5.6.1 The output of SWIG</h3>
+<p>When SWIG creates its output C/C++ file, it is broken up into five sections:</p>
+<ul>
+  <li>Begin section  <br />
+ A placeholder for users to put code at the beginning of the C/C++ 
+ wrapper file. This is most often used to define preprocessor macros 
+ that are used in later sections.</li>
+  <li>Runtime code  <br />
+ This code is internal to SWIG and is used to include type-checking and 
+ other support functions that are used by the rest of the module.</li>
+  <li>Header section  <br />
+ This is user-defined support code that has been included by the %{ … %} 
+ directive. Usually this consists of header files and other helper functions.</li>
+  <li>Wrapper code  <br />
+ These are the wrappers generated automatically by SWIG.</li>
+  <li>Module initialization  <br />
+ The function generated by SWIG to initialize the module upon loading.</li>
+</ul>
 
 
         </article>
@@ -1028,7 +1586,7 @@ callbacks and the ‘director’ feature.</p>
     <div class="nex">
 
         
-        <p><strong>下一篇</strong> <a href="/2016/03/30/swig-3-basics-1/">SWIG-3-Basics-1</a></p>
+        <p><strong>下一篇</strong> <a href="/2016/03/30/swig-3-basics-1/">Game</a></p>
         
     </div>
 </div>
@@ -1037,7 +1595,7 @@ callbacks and the ‘director’ feature.</p>
         <h2 id="comments">Comments</h2>
         
 <!-- 多说评论框 start -->
-<div class="ds-thread" data-thread-key="http://localhost:1234/2016/03/26/swig-3-basics-0/" data-title="SWIG-3-Basics-0" data-url="http://localhost:1234/2016/03/26/swig-3-basics-0/"></div>
+<div class="ds-thread" data-thread-key="http://localhost:1234/2016/03/26/swig-3-basics-0/" data-title="SWIG-3: Types Wrapping Between C and Scripting" data-url="http://localhost:1234/2016/03/26/swig-3-basics-0/"></div>
 <!-- 多说评论框 end -->
 <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
