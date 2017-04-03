@@ -76,7 +76,7 @@ __NOTE:__ As a rule of thumb, SWIG should not be used on raw C++ source files, _
 When wrapping C++ code, it is critical that SWIG be called with the `-c++` option. 
 
 When compiling and linking the resulting wrapper file, it is normal to use the `C++` compiler. For example:
-```c++
+```shell
 $ swig -c++ -tcl example.i
 $ c++ -fPIC -c example_wrap.cxx 
 $ c++ example_wrap.o $(OBJS) -o example.so
