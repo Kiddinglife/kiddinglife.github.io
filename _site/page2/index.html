@@ -148,139 +148,6 @@
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2017/03/03/algo-is-pop-order/">Is right Pop Sequence ?</a>
-                </h2>
-                <div class="label">
-                    <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-03-03
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-
-                    <div class="label-card">
-                    
-
-
-<!-- <span class="point">•</span> -->
-<span class="categories">
-  <i class="fa fa-th-list"></i>
-  
-    
-        <a href="/category/#algo" title="Category: algo" rel="category">algo</a>
-    
-  
-
-  <!-- <span class="point">•</span> -->
-</span>
-
-
-                    </div>
-
-                    <div class="label-card">
-                    
-<!-- <span class="point">•</span> -->
-<span class="pageTag">
-  <i class="fa fa-tags"></i>
-  
-    
-        <a href="/tag/#stack" title="Tag: stack" rel="tag">stack</a>
-    
-  
-
-</span>
-
-                    </div>
-                </div>
-                <div class="excerpt">
-                    
-<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;stack&gt;
-#include &lt;vector&gt;
-</span><span class="k">static</span> <span class="kt">bool</span> <span class="nf">is_pop_order</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">pushV</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">popV</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="cm">/*
-   * 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。
-   * 假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，
-   * 序列4，5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。
-   * （注意：这两个序列的长度是相等的）
-   * ------------------------------
-   * Given two integer sequences, one is push sequence of stack.
-   * Please justify if the other one is a possible popup sequence of stack.
-   * Assume all pushed numbers are different. eg. 1,2,3,4 is stack's push sequence,
-   * 4,5,3,2,1 is a possible popup sequence while 4,3,5,1,2 is not a possible popup sequence
-   *
-   * Given pushV 1234, popV  4321
-   * train of thought:
-   * Use another stack to simulate pushs and pops
-   * for ele0 in popV:
-   *    for ele1 in pushV:
-   *       if ele1 is not ele0:
-   *          push to stack tmp  # tmp stack can be 123 when visiting all eles in pushV()
-   *       if ele1 is last ele in popV:
-   *          compare each ele in tmep stak with ele0:
-   *            if not equal:
-   *               then return false
-   *            else:
-   *               pop tmp stack
-   * return true if temp stack empty else false         
-   */</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">pushV</span><span class="p">.</span><span class="n">empty</span> <span class="p">())</span>
-    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tmp</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">pushsize</span> <span class="o">=</span> <span class="n">pushV</span><span class="p">.</span><span class="n">size</span> <span class="p">();</span>
-  <span class="kt">int</span> <span class="n">popsize</span> <span class="o">=</span> <span class="n">popV</span><span class="p">.</span><span class="n">size</span> <span class="p">();</span>
-  <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">popsize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">pushsize</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="k">while</span> <span class="p">(</span><span class="n">popV</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pushV</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
-      <span class="p">{</span>
-        <span class="n">tmp</span><span class="p">.</span><span class="n">push</span> <span class="p">(</span><span class="n">pushV</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
-        <span class="n">j</span><span class="o">++</span><span class="p">;</span>
-      <span class="p">}</span>
-      <span class="n">j</span><span class="o">++</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">else</span>
-    <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">popV</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">tmp</span><span class="p">.</span><span class="n">top</span> <span class="p">())</span>
-        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
-      <span class="n">tmp</span><span class="p">.</span><span class="n">pop</span> <span class="p">();</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="n">tmp</span><span class="p">.</span><span class="n">empty</span> <span class="p">();</span>
-<span class="p">}</span>
-
-<span class="n">TEST_F</span><span class="p">(</span><span class="n">mpath</span><span class="p">,</span><span class="n">test_is_pop_order</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pushV</span> <span class="o">=</span>
-    <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">popV</span> <span class="o">=</span>
-    <span class="p">{</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span> <span class="p">};</span>
-  <span class="kt">bool</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">is_pop_order</span> <span class="p">(</span><span class="n">pushV</span><span class="p">,</span> <span class="n">popV</span><span class="p">);</span>
-  <span class="n">ASSERT_TRUE</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
-
-  <span class="n">popV</span><span class="p">.</span><span class="n">clear</span> <span class="p">();</span>
-  <span class="n">popV</span> <span class="o">=</span>
-  <span class="p">{</span> <span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span>
-  <span class="n">ret</span> <span class="o">=</span> <span class="n">is_pop_order</span> <span class="p">(</span><span class="n">pushV</span><span class="p">,</span> <span class="n">popV</span><span class="p">);</span>
-  <span class="n">ASSERT_FALSE</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre>
-</div>
-
-                </div>
-                <div class="read-all">
-                    <a  href="/2017/03/03/algo-is-pop-order/"><i class="fa fa-newspaper-o"></i>Read All</a>
-                </div>
-                <hr>
-              </li>
-            
-              <li>
-                <h2>
                   <a class="post-link" href="/2017/03/02/tdd-steps/">How to apply tdd</a>
                 </h2>
                 <div class="label">
@@ -818,6 +685,75 @@
                 <hr>
               </li>
             
+              <li>
+                <h2>
+                  <a class="post-link" href="/2016/04/04/what-exact-problems-game-back-end-solve/">What Exact Problems Game Backend Resolved?</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2016-04-04
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Game" title="Category: Game" rel="category">Game</a>&nbsp;
+    
+        <a href="/category/#Backend" title="Category: Backend" rel="category">Backend</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#network" title="Tag: network" rel="tag">network</a>&nbsp;
+    
+        <a href="/tag/#design-pattern" title="Tag: design-pattern" rel="tag">design-pattern</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    
+<p>服务的概念就是为了提出一种与物理容器无关的抽象。服务可以以某个进程为容器，
+也可以以某个线程为容器。可以像skynet一样以一个luaState为容器，
+也可以像Erlang游戏服务端那样以一个actor为容器。而一个容器也可以提供多种服务。
+The concept of ‘service’ has nothing to do with physic machine. It can live
+in process, thread, lua state like sky net or actor like erlang. An</p>
+
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2016/04/04/what-exact-problems-game-back-end-solve/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
         </ul>
 
 
@@ -853,8 +789,6 @@
                     
                         <li><a href="/2017/03/06/grof-jump-floor/">Frog Jump Floor</a></li>
                     
-                        <li><a href="/2017/03/05/gernric-api-introduction/">Generic</a></li>
-                    
                         <li><a href="/2017/03/03/ccia-1-hello-world/">CCIA-1-hello-world</a></li>
                     
                         <li><a href="/2017/03/03/algo-is-pop-order/">Is right Pop Sequence ?</a></li>
@@ -864,6 +798,8 @@
                         <li><a href="/2017/03/02/algo-repalce-empty-space/">Replace Empty Space</a></li>
                     
                         <li><a href="/2017/03/01/find-number-in-array/">Find Integer</a></li>
+                    
+                        <li><a href="/2017/03/01/endian-formate/">Endian Formate</a></li>
                     
                 </ul>
             </div>
@@ -904,6 +840,24 @@
                     </li>
                     
                     <li>
+                        <a href="/category/#Game" class="categories-list-item" cate="Game">
+                            <span class="name">
+                                Game
+                            </span>
+                            <span class="badge">1</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#Backend" class="categories-list-item" cate="Backend">
+                            <span class="name">
+                                Backend
+                            </span>
+                            <span class="badge">1</span>
+                        </a>
+                    </li>
+                    
+                    <li>
                         <a href="/category/#algo" class="categories-list-item" cate="algo">
                             <span class="name">
                                 algo
@@ -936,15 +890,6 @@
                                 read
                             </span>
                             <span class="badge">4</span>
-                        </a>
-                    </li>
-                    
-                    <li>
-                        <a href="/category/#geco" class="categories-list-item" cate="geco">
-                            <span class="name">
-                                geco
-                            </span>
-                            <span class="badge">1</span>
                         </a>
                     </li>
                     
@@ -1006,6 +951,20 @@
                       
                       
                       <a href="/tag/#debug" style="font-size: 9pt; color: #999;">debug</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#network" style="font-size: 9pt; color: #999;">network</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#design-pattern" style="font-size: 9pt; color: #999;">design-pattern</a>
                     
                       
                       
@@ -1076,13 +1035,6 @@
                       
                       
                       <a href="/tag/#c++" style="font-size: 15pt; color: #333;">c++</a>
-                    
-                      
-                      
-                      
-                      
-                      
-                      <a href="/tag/#python" style="font-size: 9pt; color: #999;">python</a>
                     
                       
                       

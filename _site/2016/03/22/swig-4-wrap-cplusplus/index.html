@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>SWIG-4: Wrap C++</title>
+    <meta name="description" content="  6.1 Introduction of C++ Wrapping  6.2 Approach of C++ Wrapping  6.3 Supported C++ features  6.4 Command line options and compilation  6.5 Proxy classes    ...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:1234/2016/03/22/swig-4-wrap-cplusplus/">
+    <link rel="alternate" type="application/rss+xml" title="Kiddinglife" href="http://localhost:1234/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?cf8506e0ef223e57ff6239944e5d46a4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-72449510-4', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">Kiddinglife</a>
+        <small>C/C++/PYTHON ENGINEER</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>Home
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>Archives
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>Categories
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/tag/">
+                        
+                            <i class="fa fa-tags"></i>Tags
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>Collections
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>Demo
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-heart"></i>About
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>SWIG-4: Wrap C++</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-03-22
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#tool" title="Category: tool" rel="category">tool</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#swig" title="Tag: swig" rel="tag">swig</a-->
+        <a href="/tag/#swig" title="Tag: swig" rel="tag">swig</a>&nbsp;
+    
+        <!--a href="/tag/#script-language" title="Tag: script-language" rel="tag">script-language</a-->
+        <a href="/tag/#script-language" title="Tag: script-language" rel="tag">script-language</a>&nbsp;
+    
+        <!--a href="/tag/#c%2Fc%2B%2B" title="Tag: c/c++" rel="tag">c/c++</a-->
+        <a href="/tag/#c/c++" title="Tag: c/c++" rel="tag">c/c++</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#61-introduction-of-c-wrapping" id="markdown-toc-61-introduction-of-c-wrapping">6.1 Introduction of C++ Wrapping</a></li>
+  <li><a href="#62-approach-of-c-wrapping" id="markdown-toc-62-approach-of-c-wrapping">6.2 Approach of C++ Wrapping</a></li>
+  <li><a href="#63-supported-c-features" id="markdown-toc-63-supported-c-features">6.3 Supported C++ features</a></li>
+  <li><a href="#64-command-line-options-and-compilation" id="markdown-toc-64-command-line-options-and-compilation">6.4 Command line options and compilation</a></li>
+  <li><a href="#65-proxy-classes" id="markdown-toc-65-proxy-classes">6.5 Proxy classes</a>    <ul>
+      <li><a href="#651-construction-of-proxy-classes" id="markdown-toc-651-construction-of-proxy-classes">6.5.1 Construction of proxy classes</a></li>
+      <li><a href="#652-resource-management-in-proxies" id="markdown-toc-652-resource-management-in-proxies">6.5.2 Resource management in proxies</a></li>
+      <li><a href="#6521-issues-brought-from-proxies" id="markdown-toc-6521-issues-brought-from-proxies">6.5.2.1 Issues brought from proxies</a></li>
+      <li><a href="#6521-solution-is-ownership-transfer" id="markdown-toc-6521-solution-is-ownership-transfer">6.5.2.1 Solution is ownership transfer</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>This chapter describes SWIG’s support for wrapping C++. As a prerequisite, 
+you should first read the chapter <em>SWIG-3: Wrap ANSI C Type</em> to see how SWIG wraps ANSI C. 
+Support for C++ builds upon ANSI C wrapping and that material will be useful 
+in understanding this chapter.</p>
+
+<h2 id="61-introduction-of-c-wrapping">6.1 Introduction of C++ Wrapping</h2>
+<p>SWIG only provides support for a subset of C++ features. Fortunately, this is now a rather large subset.
+there is no semantically obvious (or automatic ) way to map many of its advanced features into other 
+languages. As a simple example:</p>
+<ul>
+  <li>consider the problem of wrapping C++ multiple inheritance to a target language with no such support.</li>
+  <li>Similarly, the use of overloaded operators and overloaded functions can be problematic when no such 
+ capability exists in a target language.</li>
+</ul>
+
+<p>In contrast, C++ has increasingly relied upon generic programming and templates for much of its 
+functionality. Although templates are a powerful feature, they are largely orthogonal to the whole notion 
+of binary components and libraries. For example, an STL vector does not define any kind of binary object 
+for which SWIG can just create a wrapper.</p>
+
+<h2 id="62-approach-of-c-wrapping">6.2 Approach of C++ Wrapping</h2>
+<p>To wrap C++, SWIG uses a layered approach to code generation.</p>
+
+<p><em>At the lowest level,</em> SWIG generates a collection of procedural ANSI-C style wrappers. These wrappers take 
+care of basic type conversion, type checking, error handling, and other low-level details of the C++ binding.</p>
+
+<p>These wrappers are also sufficient to bind C++ into any target language that supports built-in procedures. 
+In some sense, you might view this layer of wrapping as providing a C library interface to C++.</p>
+
+<p><em>On top of the low-level procedural (flattened) interface,</em> SWIG generates <em>proxy classes</em> that provide a natural 
+object-oriented (OO) interface to the underlying code. The proxy classes are typically written in the target language 
+itself. For instance, in Python, a real Python class is used to provide a wrapper around the underlying C++ object.</p>
+
+<p>SWIG tries to maintain a very strict and clean separation between the implementation of your C++ application 
+and the resulting wrapper code.it does not play sneaky tricks with the C++ type system, it doesn’t mess with your class 
+hierarchies, and it doesn’t introduce new semantics.</p>
+
+<p><strong>NOTE:</strong> <em>Although this approach might not provide the most seamless integration with C++ (not most efficiently), 
+it is safe, simple, portable, and debuggable.</em></p>
+
+<p>Some of this chapter focuses on the low-level procedural interface to C++ that is used as the foundation for 
+all language modules.</p>
+
+<p><strong>NOTE:</strong> Keep in mind that the target languages also provide the high-level OO interface via proxy classes. 
+More detailed coverage can be found in the documentation for each target language.</p>
+
+<h2 id="63-supported-c-features">6.3 Supported C++ features</h2>
+<p>SWIG currently supports most C++ features including the following:</p>
+<ul>
+  <li>Classes</li>
+  <li>Constructors and destructors</li>
+  <li>Virtual functions</li>
+  <li>Public inheritance (including multiple inheritance)</li>
+  <li>Static functions</li>
+  <li>Function and method overloading</li>
+  <li>Operator overloading for many standard operators</li>
+  <li>References</li>
+  <li>Templates (including specialization and member templates)</li>
+  <li>Pointers to members</li>
+  <li>Namespaces</li>
+  <li>Default parameters</li>
+  <li>Smart pointers</li>
+</ul>
+
+<p>The following C++ features are not currently supported:</p>
+<ul>
+  <li>Overloaded versions of certain operators (new, delete, etc.)</li>
+</ul>
+
+<p><strong>NOTE:</strong> As a rule of thumb, SWIG should not be used on raw C++ source files, <em>use header files only.</em></p>
+
+<h2 id="64-command-line-options-and-compilation">6.4 Command line options and compilation</h2>
+<p>When wrapping C++ code, it is critical that SWIG be called with the <code class="highlighter-rouge">-c++</code> option.</p>
+
+<p>When compiling and linking the resulting wrapper file, it is normal to use the <code class="highlighter-rouge">C++</code> compiler. For example:</p>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>swig -c++ -tcl example.i
+<span class="gp">$ </span>c++ -fPIC -c example_wrap.cxx 
+<span class="gp">$ </span>c++ example_wrap.o <span class="k">$(</span>OBJS<span class="k">)</span> -o example.so
+</code></pre>
+</div>
+<p>Unfortunately, the process varies slightly on each platform. Make sure you refer to the documentation on each 
+target language for further details.</p>
+
+<h2 id="65-proxy-classes">6.5 Proxy classes</h2>
+<p>if you’re building a Python module, each C++ class is wrapped by a Python proxy class.<br />
+Or if you’re building a Java module, each C++ class is wrapped by a Java proxy class.</p>
+
+<h3 id="651-construction-of-proxy-classes">6.5.1 Construction of proxy classes</h3>
+<p>roxy classes are always constructed as an extra layer of wrapping that uses low-level accessor functions. 
+To illustrate, suppose you had a C++ class like this:</p>
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>class Foo <span class="o">{</span>
+  public:
+    Foo<span class="o">()</span>;
+    ~Foo<span class="o">()</span>;
+    int  bar<span class="o">(</span>int x<span class="o">)</span>;
+    int  x;
+<span class="o">}</span>;
+</code></pre>
+</div>
+<p>the real proxy class is written in the target language. For example, in Python, 
+the proxy might look roughly like this:</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">this</span> <span class="o">=</span> <span class="n">new_Foo</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">delete_Foo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">this</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Foo_bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">this</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s">'x'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Foo_x_get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">this</span><span class="p">)</span>
+        <span class="c"># ...</span>
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s">'x'</span><span class="p">:</span>
+            <span class="n">Foo_x_set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">this</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="c"># ...</span>
+</code></pre>
+</div>
+<p><strong>NOTE:</strong> the low-level accessor functions are always used by the proxy classes. 
+Whenever possible, proxies try to take advantage of language features that 
+are similar to C++. This might include operator overloading, exception handling, 
+and other features.</p>
+
+<h3 id="652-resource-management-in-proxies">6.5.2 Resource management in proxies</h3>
+<h3 id="6521-issues-brought-from-proxies">6.5.2.1 Issues brought from proxies</h3>
+<p>A major issue with proxies concerns the memory management of wrapped 
+objects. Consider the following C++ code:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Foo</span> 
+<span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">Foo</span><span class="p">();</span>
+        <span class="o">~</span><span class="n">Foo</span><span class="p">();</span>
+        <span class="kt">int</span> <span class="n">bar</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">);</span>
+        <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">class</span> <span class="nc">Spam</span> 
+<span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">Foo</span> <span class="o">*</span><span class="n">value</span><span class="p">;</span>
+        <span class="p">...</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>Consider some script code that uses these classes:</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">()</span>               <span class="c"># Creates a new Foo 1</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Spam</span><span class="p">()</span>           <span class="c"># Creates a new Spam 1</span>
+<span class="n">s</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">f</span>            <span class="c"># Stores a reference to f inside s 2</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">value</span>           <span class="c"># Returns stored reference 3</span>
+<span class="n">g</span> <span class="o">=</span> <span class="mi">4</span>                    <span class="c"># Reassign g to some other value 4</span>
+<span class="k">del</span> <span class="n">f</span>                     <span class="c"># Destroy f 5</span>
+</code></pre>
+</div>
+<p>1.When objects are created in the script, the objects are wrapped by newly 
+created proxy classes. That is, there is both a new proxy class instance and 
+a new instance of the underlying C++ class.In this example, both <code class="highlighter-rouge">f</code> and <code class="highlighter-rouge">s</code> 
+are created in this way.</p>
+
+<p>2.However, the statement s.value is rather curious. <code class="highlighter-rouge">s.value</code> is a script 
+representations of <code class="highlighter-rouge">Foo*</code>. when executed, a pointer to f is set to Foo* value inside<br />
+the underlying C++ object of <code class="highlighter-rouge">s</code> . This means that the scripting proxy class 
+AND another C++ class share a reference to the same object. As a result,
+now the underlying C++ object of <code class="highlighter-rouge">s</code> stores a reference to the underlying 
+C++ object of <code class="highlighter-rouge">f</code>.</p>
+
+<p>3.To make matters even more interesting, consider the statement <code class="highlighter-rouge">g = s.value</code>. 
+When executed, this creates a new proxy class g that provides a wrapper 
+around the C++ object stored in <code class="highlighter-rouge">s.value</code>.</p>
+
+<p>In general, there is no way to know where this object came from—it could 
+have been created by the script, but it could also have been generated internally.</p>
+
+<p>In this particular example, the assignment of g results in a second proxy 
+class for <code class="highlighter-rouge">Foo</code>. In other words, a reference to <code class="highlighter-rouge">Foo</code> is now shared by two proxy 
+objects (<code class="highlighter-rouge">f</code> and <code class="highlighter-rouge">g</code>) and a C++ object(<code class="highlighter-rouge">Spam</code>).</p>
+
+<p>4.In the statement, g=4, the variable g is reassigned. In many languages, 
+this makes the old value of g available for garbage collection. Therefore, 
+this causes one of the proxy classes to be destroyed.</p>
+
+<p>5.Later on, the statement del f destroys the other proxy class.</p>
+
+<p><em>Of course, there is still a reference to the original object stored inside another C++ 
+object. What happens to it? Is the object still valid?</em></p>
+
+<h3 id="6521-solution-is-ownership-transfer">6.5.2.1 Solution is ownership transfer</h3>
+<p>To answer this problem, we must talk anout proxy classes that provide an API
+for controlling ownership. In C++ pseudocode, ownership control might 
+look roughly like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FooProxy</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="n">Foo</span>    <span class="o">*</span><span class="n">self</span><span class="p">;</span>
+    <span class="kt">int</span>     <span class="n">thisown</span><span class="p">;</span>
+
+    <span class="n">FooProxy</span><span class="p">()</span> <span class="p">{</span>
+      <span class="n">self</span> <span class="o">=</span> <span class="n">new_Foo</span><span class="p">();</span>
+      <span class="n">thisown</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>       <span class="c1">// Newly created object
+</span>    <span class="p">}</span>
+    <span class="o">~</span><span class="n">FooProxy</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">thisown</span><span class="p">)</span> <span class="n">delete_Foo</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+    <span class="c1">// Ownership control API
+</span>    <span class="kt">void</span> <span class="n">disown</span><span class="p">()</span> <span class="p">{</span>
+      <span class="n">thisown</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">acquire</span><span class="p">()</span> <span class="p">{</span>
+      <span class="n">thisown</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FooPtrProxy</span><span class="o">:</span> <span class="k">public</span> <span class="n">FooProxy</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">FooPtrProxy</span><span class="p">(</span><span class="n">Foo</span> <span class="o">*</span><span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">self</span> <span class="o">=</span> <span class="n">s</span><span class="p">;</span>
+    <span class="n">thisown</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">SpamProxy</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="n">FooProxy</span> <span class="o">*</span><span class="n">value_get</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">FooPtrProxy</span><span class="p">(</span><span class="n">Spam_value_get</span><span class="p">(</span><span class="n">self</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">value_set</span><span class="p">(</span><span class="n">FooProxy</span> <span class="o">*</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Spam_value_set</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">v</span><span class="o">-&gt;</span><span class="n">self</span><span class="p">);</span>
+    <span class="n">v</span><span class="o">-&gt;</span><span class="n">disown</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>Looking at this code, there are a few central features:</p>
+<ol>
+  <li>Each proxy class keeps an extra flag to indicate ownership. C++ objects 
+ are only destroyed if the ownership flag is set.</li>
+  <li>When new objects are created in the target language, the ownership 
+ flag is set.</li>
+  <li>When a reference to an internal C++ object is returned, it is wrapped
+  by a proxy class, but the proxy class does not have ownership.</li>
+  <li>In certain cases, ownership is adjusted. For instance, when a value is 
+ assigned to the member of a class, ownership is lost.</li>
+  <li>Manual ownership control is provided by special disown() and acquire() 
+ methods.</li>
+</ol>
+
+<p>Given the tricky nature of C++ memory management, it is impossible for 
+proxy classes to automatically handle every possible memory management 
+problem. However, proxies do provide a mechanism for manual control 
+that can be used (if necessary) to address some of the more tricky memory 
+management problems.</p>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2016/03/20/swig-2-scripting-lang/">SWIG-2: Script Lang</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2016/03/23/good-logging-practice/">Good Logging Practices</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+<!-- 多说评论框 start -->
+<div class="ds-thread" data-thread-key="http://localhost:1234/2016/03/22/swig-4-wrap-cplusplus/" data-title="SWIG-4: Wrap C++" data-url="http://localhost:1234/2016/03/22/swig-4-wrap-cplusplus/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    var duoshuoQuery = {
+        short_name: "kiddinglife"
+    };
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+
+    var disqus_config = function() {
+        this.page.url = 'http://localhost:1234/2016/03/22/swig-4-wrap-cplusplus/'; // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://localhost:1234/2016/03/22/swig-4-wrap-cplusplus/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document,
+            s = d.createElement('script');
+
+        s.src = '//kiddinglife.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    Content
+                </div>
+                <ul id="content-side" class="content-ul">
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             For my youth dedicated to coding 
+        </p>
+        <p class="contact">
+            Contact me at: 
+            <a href="https://github.com/kiddinglife" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a>  
+            <a href="mailto:jakezhang1989@hotmail.com" title="email"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>       
+            <a href="https://www.linkedin.com/in/kiddinglife" title="LinkedIn"><i class="fa fa-linkedin" aria-hidden="true"></i></a>  
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次，本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        </p>
+        <p class="power">
+            <span>
+                Site powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://pages.github.com/">Github Pages</a>.
+            </span>
+            <span>
+                Theme designed by <a href="https://github.com/Gaohaoyang">HyG</a>.
+            </span>
+        </p>
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

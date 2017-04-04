@@ -1281,180 +1281,6 @@ most circumstances; it’s only if the identifier has semantic meaning associate
             
               <li>
                 <h2>
-                  <a class="post-link" href="/2017/03/05/gernric-api-introduction/">Generic</a>
-                </h2>
-                <div class="label">
-                    <div class="label-card">
-                        <i class="fa fa-calendar"></i>2017-03-05
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-                    <div class="label-card">
-                        
-                    </div>
-
-                    <div class="label-card">
-                    
-
-
-<!-- <span class="point">•</span> -->
-<span class="categories">
-  <i class="fa fa-th-list"></i>
-  
-    
-        <a href="/category/#geco" title="Category: geco" rel="category">geco</a>
-    
-  
-
-  <!-- <span class="point">•</span> -->
-</span>
-
-
-                    </div>
-
-                    <div class="label-card">
-                    
-<!-- <span class="point">•</span> -->
-<span class="pageTag">
-  <i class="fa fa-tags"></i>
-  
-    
-        <a href="/tag/#python" title="Tag: python" rel="tag">python</a>
-    
-  
-
-</span>
-
-                    </div>
-                </div>
-                <div class="excerpt">
-                    <ul id="markdown-toc">
-  <li><a href="#forms" id="markdown-toc-forms">Forms</a></li>
-  <li><a href="#links" id="markdown-toc-links">Links</a></li>
-</ul>
-
-<h2 id="forms">Forms</h2>
-<p><strong>_forms</strong> is used to indicate what request formate to be accepted by server in next game. You can find it in response section in debug page and it is something that looks like this:</p>
-<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="s2">"_forms"</span><span class="err">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"application/vnd.miko.slots.generic_engine_model_a.earlycollect.bank-v1+json"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"earlycollect_bank"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schemas.geco.io/slots/earlycollect-v1.json"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"application/vnd.miko.slots.generic_engine_model_a.earlycollect.collect-v1+json"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"earlycollect_collect"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"perLine"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schemas.geco.io/slots/earlycollect-v1.json"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"stake"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"selectedWinLines"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"application/vnd.geco.slots.spin-v1+json"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"spin"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"perLine"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schemas.geco.io/slots/spin-v1.json"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"stake"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"selectedWinLines"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="err">,</span><span class="w">
-  </span><span class="s2">"gamestate"</span><span class="err">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"stake"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"win"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"interlevel"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"currentPlay"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"currentWinnings"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.1</span><span class="p">,</span><span class="w">
-</span></code></pre>
-</div>
-
-<h2 id="links">Links</h2>
-<p><strong>_links</strong> is used as shortcut button that connects to <strong>_forms</strong> via <code class="highlighter-rouge">type</code> field value. It looks like this:</p>
-<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="w"> </span><span class="s2">"_links"</span><span class="err">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:6543/game/10?ccy=GBP"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/vnd.miko.slots.generic_engine_model_a.earlycollect.bank-v1+json"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"rel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"earlycollect_bank"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:6543/game/10?ccy=GBP"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/vnd.miko.slots.generic_engine_model_a.earlycollect.collect-v1+json"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"rel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"earlycollect_collect"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:6543/gameplay/27038/client_state"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/octet-stream"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUT"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"rel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gameplay-client-state-save"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="err">,</span><span class="w">
-</span></code></pre>
-</div>
-<p>Also, there are clickable buttons shown in debug page that will automatically copy and past the required “form” to request body field. For example, you should see something like this in request body frame after clicking “early_collect (POST)” button: <em>(caution: if you see different things, please ask to redeploy generic backend)</em></p>
-<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"earlycollect_collect"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"perLine"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schemas.geco.io/slots/earlycollect-v1.json"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"stake"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.04"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"selectedWinLines"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"2"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"3"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"4"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"5"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"6"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"7"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"8"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"9"</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
-<p>you do not need manully assign values to each field shown above as they have values in default. eg. <code class="highlighter-rouge">"stake":"0.04",</code>. However, sometime you have to manully fill some fields with your own values. For example, after clicking button of “Intervelevl”, you see this in request body frame:</p>
-<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"interlevel"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schemas.geco.io/slots/interlevel-v1.json"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
-<p>But, the one shown in <em>_forms</em> is looking like this:</p>
-<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="w">  </span><span class="s2">"_forms"</span><span class="err">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"application/vnd.miko.slots.generic_engine_model_a.interlevel-v1+json"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"interlevel"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"cashShipsCollected"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-      </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schemas.geco.io/slots/interlevel-v1.json"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"energyShipsCollected"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="err">,</span><span class="w">
-</span></code></pre>
-</div>
-<p>Obviously,<code class="highlighter-rouge">"energyShipsCollected": []</code> is missing and so you have to manully add it and assign values (here they are ships player catches) in request body frame. after that, it should look like this (assume player catches all energy ships):</p>
-<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"interlevel"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schemas.geco.io/slots/interlevel-v1.json"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"cashShipsCollected"</span><span class="p">:[],</span><span class="w">
-  </span><span class="nt">"energyShipsCollected"</span><span class="p">:[</span><span class="s2">"ep1"</span><span class="p">,</span><span class="s2">"ep2"</span><span class="p">,</span><span class="s2">"ep3"</span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
-<p>As you can see, <code class="highlighter-rouge">"energyShipsCollected":["ep1","ep2","ep3"]</code> has fixed value like ep1 ep2 ep3. All possible manully -assigned-values are listed below:<br />
-“energyShipsCollected”: [“ep1”,”ep2”,”ep3”] // player catches all energy ships<br />
-“energyShipsCollected”: [“ep1”] // player catches not all energy ships<br />
-“energyShipsCollected”: [] // empty means player catches no energy ships<br />
-“cashShipsCollected”: [“cash1”,”cash2”,”cash3”] // player catches all cash ships<br />
-“cashShipsCollected”: [“cash1”] // player catches not all cash ships<br />
-“cashShipsCollected”: [] // empty means player catches no cash ships</p>
-
-
-                </div>
-                <div class="read-all">
-                    <a  href="/2017/03/05/gernric-api-introduction/"><i class="fa fa-newspaper-o"></i>Read All</a>
-                </div>
-                <hr>
-              </li>
-            
-              <li>
-                <h2>
                   <a class="post-link" href="/2017/03/03/ccia-1-hello-world/">CCIA-1-hello-world</a>
                 </h2>
                 <div class="label">
@@ -1539,6 +1365,139 @@ each thread performs the same operation on different parts of the data.</li>
                 <hr>
               </li>
             
+              <li>
+                <h2>
+                  <a class="post-link" href="/2017/03/03/algo-is-pop-order/">Is right Pop Sequence ?</a>
+                </h2>
+                <div class="label">
+                    <div class="label-card">
+                        <i class="fa fa-calendar"></i>2017-03-03
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+                    <div class="label-card">
+                        
+                    </div>
+
+                    <div class="label-card">
+                    
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#algo" title="Category: algo" rel="category">algo</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+                    </div>
+
+                    <div class="label-card">
+                    
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <a href="/tag/#stack" title="Tag: stack" rel="tag">stack</a>
+    
+  
+
+</span>
+
+                    </div>
+                </div>
+                <div class="excerpt">
+                    
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;stack&gt;
+#include &lt;vector&gt;
+</span><span class="k">static</span> <span class="kt">bool</span> <span class="nf">is_pop_order</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">pushV</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">popV</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="cm">/*
+   * 输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。
+   * 假设压入栈的所有数字均不相等。例如序列1,2,3,4,5是某栈的压入顺序，
+   * 序列4，5,3,2,1是该压栈序列对应的一个弹出序列，但4,3,5,1,2就不可能是该压栈序列的弹出序列。
+   * （注意：这两个序列的长度是相等的）
+   * ------------------------------
+   * Given two integer sequences, one is push sequence of stack.
+   * Please justify if the other one is a possible popup sequence of stack.
+   * Assume all pushed numbers are different. eg. 1,2,3,4 is stack's push sequence,
+   * 4,5,3,2,1 is a possible popup sequence while 4,3,5,1,2 is not a possible popup sequence
+   *
+   * Given pushV 1234, popV  4321
+   * train of thought:
+   * Use another stack to simulate pushs and pops
+   * for ele0 in popV:
+   *    for ele1 in pushV:
+   *       if ele1 is not ele0:
+   *          push to stack tmp  # tmp stack can be 123 when visiting all eles in pushV()
+   *       if ele1 is last ele in popV:
+   *          compare each ele in tmep stak with ele0:
+   *            if not equal:
+   *               then return false
+   *            else:
+   *               pop tmp stack
+   * return true if temp stack empty else false         
+   */</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">pushV</span><span class="p">.</span><span class="n">empty</span> <span class="p">())</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">stack</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tmp</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">pushsize</span> <span class="o">=</span> <span class="n">pushV</span><span class="p">.</span><span class="n">size</span> <span class="p">();</span>
+  <span class="kt">int</span> <span class="n">popsize</span> <span class="o">=</span> <span class="n">popV</span><span class="p">.</span><span class="n">size</span> <span class="p">();</span>
+  <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">popsize</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">pushsize</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="k">while</span> <span class="p">(</span><span class="n">popV</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pushV</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+      <span class="p">{</span>
+        <span class="n">tmp</span><span class="p">.</span><span class="n">push</span> <span class="p">(</span><span class="n">pushV</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+        <span class="n">j</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="n">j</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">popV</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">tmp</span><span class="p">.</span><span class="n">top</span> <span class="p">())</span>
+        <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+      <span class="n">tmp</span><span class="p">.</span><span class="n">pop</span> <span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">tmp</span><span class="p">.</span><span class="n">empty</span> <span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">mpath</span><span class="p">,</span><span class="n">test_is_pop_order</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pushV</span> <span class="o">=</span>
+    <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">popV</span> <span class="o">=</span>
+    <span class="p">{</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span> <span class="p">};</span>
+  <span class="kt">bool</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">is_pop_order</span> <span class="p">(</span><span class="n">pushV</span><span class="p">,</span> <span class="n">popV</span><span class="p">);</span>
+  <span class="n">ASSERT_TRUE</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
+
+  <span class="n">popV</span><span class="p">.</span><span class="n">clear</span> <span class="p">();</span>
+  <span class="n">popV</span> <span class="o">=</span>
+  <span class="p">{</span> <span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span>
+  <span class="n">ret</span> <span class="o">=</span> <span class="n">is_pop_order</span> <span class="p">(</span><span class="n">pushV</span><span class="p">,</span> <span class="n">popV</span><span class="p">);</span>
+  <span class="n">ASSERT_FALSE</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+                </div>
+                <div class="read-all">
+                    <a  href="/2017/03/03/algo-is-pop-order/"><i class="fa fa-newspaper-o"></i>Read All</a>
+                </div>
+                <hr>
+              </li>
+            
         </ul>
 
 
@@ -1574,8 +1533,6 @@ each thread performs the same operation on different parts of the data.</li>
                     
                         <li><a href="/2017/03/06/grof-jump-floor/">Frog Jump Floor</a></li>
                     
-                        <li><a href="/2017/03/05/gernric-api-introduction/">Generic</a></li>
-                    
                         <li><a href="/2017/03/03/ccia-1-hello-world/">CCIA-1-hello-world</a></li>
                     
                         <li><a href="/2017/03/03/algo-is-pop-order/">Is right Pop Sequence ?</a></li>
@@ -1585,6 +1542,8 @@ each thread performs the same operation on different parts of the data.</li>
                         <li><a href="/2017/03/02/algo-repalce-empty-space/">Replace Empty Space</a></li>
                     
                         <li><a href="/2017/03/01/find-number-in-array/">Find Integer</a></li>
+                    
+                        <li><a href="/2017/03/01/endian-formate/">Endian Formate</a></li>
                     
                 </ul>
             </div>
@@ -1625,6 +1584,24 @@ each thread performs the same operation on different parts of the data.</li>
                     </li>
                     
                     <li>
+                        <a href="/category/#Game" class="categories-list-item" cate="Game">
+                            <span class="name">
+                                Game
+                            </span>
+                            <span class="badge">1</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="/category/#Backend" class="categories-list-item" cate="Backend">
+                            <span class="name">
+                                Backend
+                            </span>
+                            <span class="badge">1</span>
+                        </a>
+                    </li>
+                    
+                    <li>
                         <a href="/category/#algo" class="categories-list-item" cate="algo">
                             <span class="name">
                                 algo
@@ -1657,15 +1634,6 @@ each thread performs the same operation on different parts of the data.</li>
                                 read
                             </span>
                             <span class="badge">4</span>
-                        </a>
-                    </li>
-                    
-                    <li>
-                        <a href="/category/#geco" class="categories-list-item" cate="geco">
-                            <span class="name">
-                                geco
-                            </span>
-                            <span class="badge">1</span>
                         </a>
                     </li>
                     
@@ -1727,6 +1695,20 @@ each thread performs the same operation on different parts of the data.</li>
                       
                       
                       <a href="/tag/#debug" style="font-size: 9pt; color: #999;">debug</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#network" style="font-size: 9pt; color: #999;">network</a>
+                    
+                      
+                      
+                      
+                      
+                      
+                      <a href="/tag/#design-pattern" style="font-size: 9pt; color: #999;">design-pattern</a>
                     
                       
                       
@@ -1797,13 +1779,6 @@ each thread performs the same operation on different parts of the data.</li>
                       
                       
                       <a href="/tag/#c++" style="font-size: 15pt; color: #333;">c++</a>
-                    
-                      
-                      
-                      
-                      
-                      
-                      <a href="/tag/#python" style="font-size: 9pt; color: #999;">python</a>
                     
                       
                       
