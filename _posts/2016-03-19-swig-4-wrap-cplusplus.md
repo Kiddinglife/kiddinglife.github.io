@@ -252,6 +252,129 @@ problem. However, proxies do provide a mechanism for manual control
 that can be used (if necessary) to address some of the more tricky memory 
 management problems.
 
+__NOTE:__ Language specific details on proxy classes are contained in the chapters 
+describing each target language. This chapter has merely introduced the 
+topic in a very general way.
+
+## 6.6 Simple C++ wrapping
+The following code shows a SWIG interface file for a simple C++ class:
+```c++
+%module list
+%{
+        #include "list.h"
+%}
+
+// Very simple C++ example for linked list
+class List 
+{
+    public:
+        List();
+        ~List();
+        int  search(char *value);
+        void insert(char *);
+        void remove(char *);
+        char *get(int n);
+        static void print(List *l);
+        
+        int  length;
+};
+```
+To generate wrappers for this class, SWIG first reduces the class to a 
+collection of _low-level C-style accessor functions_ which are then used 
+by the proxy classes.
+
+### 6.6.1 C-style Constructors and destructors
+C++ constructors and destructors are translated into accessor functions 
+such as the following :
+```c++
+List * new_List(void) {
+  return new List;
+}
+void delete_List(List *l) {
+  delete l;
+}
+```
+## 6.6.2 Default ctors, copy ctors and implicit dtors
+_Following the C++ rules for implicit constructor and destructors, 
+SWIG will automatically assume there is one even when they are not 
+explicitly declared in the class interface._
+
+In general then:  
+ 1. If a C++ class does not declare any explicit constructor, 
+SWIG will automatically generate a wrapper for one.
+ 2. If a C++ class does not declare an explicit copy constructor, 
+SWIG will automatically generate a wrapper for one if the `%copyctor` is used.
+ 3. If a C++ class does not declare an explicit destructor, SWIG will 
+automatically generate a wrapper for one.
+ 
+_And as in C++, a few rules that alters the previous behavior:_
+ 1. A default constructor is not created if a class already defines 
+ a constructor with arguments.
+ 2. Default constructors are not generated for classes with pure virtual 
+ methods or for classes that inherit from an abstract class, but don't 
+ provide definitions for all of the pure methods.
+ 3. A default constructor is not created unless all base classes support a 
+ default constructor.
+ 4. Default constructors and implicit destructors are not created if a class 
+ defines them in a private or protected section.
+ 5. Default constructors and implicit destructors are not created if any 
+ base class defines a non-public default constructor or destructor.
+ 
+To manually disable these, the `%nodefaultctor` and `%nodefaultdtor` feature
+flag directives can be used. 
+
+__NOTE:__  that these directives only affects the Implicit generation, 
+and they have no effect if the default/copy constructors or destructor 
+are explicitly declared in the class interface.
+
+For example:
+```c++
+%nodefaultctor Foo;  // Disable the default constructor for class Foo.
+class Foo {          
+// No default constructor is generated, unless one is declared
+...
+};
+class Bar {         
+ // A default constructor is generated, if possible
+...
+};
+```
+The directive `%nodefaultctor` can also be applied "globally", as in:
+```c++
+%nodefaultctor; // Disable creation of default constructors
+class Foo {     
+// No default constructor is generated, unless one is declared
+...
+};
+class Bar {   
+public:
+  Bar();        
+  // The default constructor is generated, since one is declared
+};
+%clearnodefaultctor; // Enable the creation of default constructors again
+```
+The corresponding `%nodefaultdtor` directive can be used to disable the 
+generation of the default or implicit destructor:
+```c++
+%nodefaultdtor Foo;   // Disable the implicit/default destructor for class Foo.
+class Foo {           
+// No destructor is generated, unless one is declared
+...
+};
+```
+__Note:__ The `%nodefault` directive/ `-nodefault` options described above, 
+which disable both the default constructor and the implicit destructors, 
+could lead to memory leaks, and so it is strongly recommended to not use them.
+
+
+ 
+  
+ 
+
+
+
+
+
 
 
 

@@ -212,6 +212,11 @@
       <li><a href="#6521-solution-is-ownership-transfer" id="markdown-toc-6521-solution-is-ownership-transfer">6.5.2.1 Solution is ownership transfer</a></li>
     </ul>
   </li>
+  <li><a href="#66-simple-c-wrapping" id="markdown-toc-66-simple-c-wrapping">6.6 Simple C++ wrapping</a>    <ul>
+      <li><a href="#661-c-style-constructors-and-destructors" id="markdown-toc-661-c-style-constructors-and-destructors">6.6.1 C-style Constructors and destructors</a></li>
+    </ul>
+  </li>
+  <li><a href="#662-default-ctors-copy-ctors-and-implicit-dtors" id="markdown-toc-662-default-ctors-copy-ctors-and-implicit-dtors">6.6.2 Default ctors, copy ctors and implicit dtors</a></li>
 </ul>
 
 <p>This chapter describes SWIG’s support for wrapping C++. As a prerequisite, 
@@ -464,6 +469,124 @@ proxy classes to automatically handle every possible memory management
 problem. However, proxies do provide a mechanism for manual control 
 that can be used (if necessary) to address some of the more tricky memory 
 management problems.</p>
+
+<p><strong>NOTE:</strong> Language specific details on proxy classes are contained in the chapters 
+describing each target language. This chapter has merely introduced the 
+topic in a very general way.</p>
+
+<h2 id="66-simple-c-wrapping">6.6 Simple C++ wrapping</h2>
+<p>The following code shows a SWIG interface file for a simple C++ class:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">module</span> <span class="n">list</span>
+<span class="o">%</span><span class="p">{</span>
+        <span class="cp">#include "list.h"
+</span><span class="o">%</span><span class="p">}</span>
+
+<span class="c1">// Very simple C++ example for linked list
+</span><span class="k">class</span> <span class="nc">List</span> 
+<span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">List</span><span class="p">();</span>
+        <span class="o">~</span><span class="n">List</span><span class="p">();</span>
+        <span class="kt">int</span>  <span class="n">search</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">value</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="n">insert</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="n">remove</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">);</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">get</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+        <span class="k">static</span> <span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">l</span><span class="p">);</span>
+        
+        <span class="kt">int</span>  <span class="n">length</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>To generate wrappers for this class, SWIG first reduces the class to a 
+collection of <em>low-level C-style accessor functions</em> which are then used 
+by the proxy classes.</p>
+
+<h3 id="661-c-style-constructors-and-destructors">6.6.1 C-style Constructors and destructors</h3>
+<p>C++ constructors and destructors are translated into accessor functions 
+such as the following :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">List</span> <span class="o">*</span> <span class="nf">new_List</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="n">List</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">delete_List</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">l</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">delete</span> <span class="n">l</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<h2 id="662-default-ctors-copy-ctors-and-implicit-dtors">6.6.2 Default ctors, copy ctors and implicit dtors</h2>
+<p><em>Following the C++ rules for implicit constructor and destructors, 
+SWIG will automatically assume there is one even when they are not 
+explicitly declared in the class interface.</em></p>
+
+<p>In general then:</p>
+<ol>
+  <li>If a C++ class does not declare any explicit constructor, 
+SWIG will automatically generate a wrapper for one.</li>
+  <li>If a C++ class does not declare an explicit copy constructor, 
+SWIG will automatically generate a wrapper for one if the <code class="highlighter-rouge">%copyctor</code> is used.</li>
+  <li>If a C++ class does not declare an explicit destructor, SWIG will 
+automatically generate a wrapper for one.</li>
+</ol>
+
+<p><em>And as in C++, a few rules that alters the previous behavior:</em></p>
+<ol>
+  <li>A default constructor is not created if a class already defines 
+ a constructor with arguments.</li>
+  <li>Default constructors are not generated for classes with pure virtual 
+ methods or for classes that inherit from an abstract class, but don’t 
+ provide definitions for all of the pure methods.</li>
+  <li>A default constructor is not created unless all base classes support a 
+ default constructor.</li>
+  <li>Default constructors and implicit destructors are not created if a class 
+ defines them in a private or protected section.</li>
+  <li>Default constructors and implicit destructors are not created if any 
+ base class defines a non-public default constructor or destructor.</li>
+</ol>
+
+<p>To manually disable these, the <code class="highlighter-rouge">%nodefaultctor</code> and <code class="highlighter-rouge">%nodefaultdtor</code> feature
+flag directives can be used.</p>
+
+<p><strong>NOTE:</strong>  that these directives only affects the Implicit generation, 
+and they have no effect if the default/copy constructors or destructor 
+are explicitly declared in the class interface.</p>
+
+<p>For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">nodefaultctor</span> <span class="n">Foo</span><span class="p">;</span>  <span class="c1">// Disable the default constructor for class Foo.
+</span><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>          
+<span class="c1">// No default constructor is generated, unless one is declared
+</span><span class="p">...</span>
+<span class="p">};</span>
+<span class="k">class</span> <span class="nc">Bar</span> <span class="p">{</span>         
+ <span class="c1">// A default constructor is generated, if possible
+</span><span class="p">...</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>The directive <code class="highlighter-rouge">%nodefaultctor</code> can also be applied “globally”, as in:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">nodefaultctor</span><span class="p">;</span> <span class="c1">// Disable creation of default constructors
+</span><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>     
+<span class="c1">// No default constructor is generated, unless one is declared
+</span><span class="p">...</span>
+<span class="p">};</span>
+<span class="k">class</span> <span class="nc">Bar</span> <span class="p">{</span>   
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Bar</span><span class="p">();</span>        
+  <span class="c1">// The default constructor is generated, since one is declared
+</span><span class="p">};</span>
+<span class="o">%</span><span class="n">clearnodefaultctor</span><span class="p">;</span> <span class="c1">// Enable the creation of default constructors again
+</span></code></pre>
+</div>
+<p>The corresponding <code class="highlighter-rouge">%nodefaultdtor</code> directive can be used to disable the 
+generation of the default or implicit destructor:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">nodefaultdtor</span> <span class="n">Foo</span><span class="p">;</span>   <span class="c1">// Disable the implicit/default destructor for class Foo.
+</span><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>           
+<span class="c1">// No destructor is generated, unless one is declared
+</span><span class="p">...</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p><strong>Note:</strong> The <code class="highlighter-rouge">%nodefault</code> directive/ <code class="highlighter-rouge">-nodefault</code> options described above, 
+which disable both the default constructor and the implicit destructors, 
+could lead to memory leaks, and so it is strongly recommended to not use them.</p>
 
 
         </article>
