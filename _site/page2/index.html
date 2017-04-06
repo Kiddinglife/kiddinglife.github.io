@@ -709,9 +709,7 @@
   <i class="fa fa-th-list"></i>
   
     
-        <a href="/category/#Geco" title="Category: Geco" rel="category">Geco</a>&nbsp;
-    
-        <a href="/category/#Engine" title="Category: Engine" rel="category">Engine</a>
+        <a href="/category/#game-server" title="Category: game-server" rel="category">game-server</a>
     
   
 
@@ -728,9 +726,7 @@
   <i class="fa fa-tags"></i>
   
     
-        <a href="/tag/#game-back-end" title="Tag: game-back-end" rel="tag">game-back-end</a>&nbsp;
-    
-        <a href="/tag/#server" title="Tag: server" rel="tag">server</a>&nbsp;
+        <a href="/tag/#gecoengine" title="Tag: gecoengine" rel="tag">gecoengine</a>&nbsp;
     
         <a href="/tag/#network" title="Tag: network" rel="tag">network</a>
     
@@ -748,12 +744,20 @@
       <li><a href="#513-real-and-ghost-entities" id="markdown-toc-513-real-and-ghost-entities">5.1.3. Real and Ghost Entities</a></li>
       <li><a href="#514-transitioning-between-spaces" id="markdown-toc-514-transitioning-between-spaces">5.1.4. Transitioning Between Spaces</a></li>
       <li><a href="#515-witness-priority-list" id="markdown-toc-515-witness-priority-list">5.1.5. Witness Priority List</a>        <ul>
-          <li><a href="#5151-event-history" id="markdown-toc-5151-event-history">5.1.5.1. Event History</a></li>
-          <li><a href="#5152-level-of-detail" id="markdown-toc-5152-level-of-detail">5.1.5.2 Level of Detail</a>            <ul>
-              <li><a href="#51521-non-state-changing-events" id="markdown-toc-51521-non-state-changing-events">5.1.5.2.1 Non-state-changing events</a></li>
-              <li><a href="#51522-state-changing-events" id="markdown-toc-51522-state-changing-events">5.1.5.2.2 State-changing events</a></li>
+          <li><a href="#5151-event-history" id="markdown-toc-5151-event-history">5.1.5.1. Event History</a>            <ul>
+              <li><a href="#51511-level-of-detail" id="markdown-toc-51511-level-of-detail">5.1.5.1.1 Level of Detail</a>                <ul>
+                  <li><a href="#515111-non-state-changing-events" id="markdown-toc-515111-non-state-changing-events">5.1.5.1.1.1 Non-state-changing events</a></li>
+                  <li><a href="#515112-state-changing-events" id="markdown-toc-515112-state-changing-events">5.1.5.1.1.2 State-changing events</a></li>
+                </ul>
+              </li>
             </ul>
           </li>
+        </ul>
+      </li>
+      <li><a href="#516-scripting-and-entities" id="markdown-toc-516-scripting-and-entities">5.1.6. Scripting and Entities</a>        <ul>
+          <li><a href="#5161-entity-classes" id="markdown-toc-5161-entity-classes">5.1.6.1. Entity Classes</a></li>
+          <li><a href="#5162-example-entity-definition-file" id="markdown-toc-5162-example-entity-definition-file">5.1.6.2. Example Entity Definition File</a></li>
+          <li><a href="#5163-properties" id="markdown-toc-5163-properties">5.1.6.3. Properties</a></li>
         </ul>
       </li>
     </ul>
@@ -846,6 +850,13 @@ the available bandwidth.</p>
 update packets, and their frequency. These parameters are specified in 
 the configuration file <res>/server/bw.xml.</res></p>
 
+<p>aoi priority list of e0:</p>
+<ul>
+  <li>e1 10m position and direction update event list { jump, weapon change …}</li>
+  <li>e2 20m position and direction update event list { jump, weapon change …}</li>
+  <li>e3 30m position and direction update event list { jump, weapon change …}</li>
+</ul>
+
 <h4 id="5151-event-history">5.1.5.1. Event History</h4>
 <p>Each entity keeps a history of its recent events. The history includes both 
 events that change its state (such as weapon change), as well as actions
@@ -862,7 +873,7 @@ priority queue.</p>
 since we expect that each entity in the priority queue will be considered 
 (roughly) once every 30 seconds in the worst case scenario.</p>
 
-<h4 id="5152-level-of-detail">5.1.5.2 Level of Detail</h4>
+<h5 id="51511-level-of-detail">5.1.5.1.1 Level of Detail</h5>
 <p>The priority queue handles the data throttling for continuous information. 
 For events, we still need to handle the case where there are too many 
 events filling up available downstream bandwidth to the client.</p>
@@ -880,7 +891,7 @@ The visible inventory may only be required when within, say, 100 metres.
 Finer details, such as a badge on clothing, might only be needed within 
 20 metres.</p>
 
-<h5 id="51521-non-state-changing-events">5.1.5.2.1 Non-state-changing events</h5>
+<h6 id="515111-non-state-changing-events">5.1.5.1.1.1 Non-state-changing events</h6>
 <p>In the description of each entity type, there is a description of all 
 messages (non-state-changing events) it can generate, along with the 
 priority associated with each one.</p>
@@ -893,7 +904,264 @@ the avatar and the entity.</p>
 <p>For example, there might be a type of chat heard only within 50 metres, 
 or a jump seen only within 100 metres.</p>
 
-<h5 id="51522-state-changing-events">5.1.5.2.2 State-changing events</h5>
+<h6 id="515112-state-changing-events">5.1.5.1.1.2 State-changing events</h6>
+<p>GECOEngine cannot ignore state-changing events that occur out of range, 
+because if the entity subsequently does get close enough, the client will 
+have an incorrect copy of the entity’s state.</p>
+
+<p>For example, the client may be interested in the type of weapon that an 
+entity is carrying, but only when it is within 100 metres. If the entity 
+changes its weapon outside this range, then this information is not sent 
+to the client as yet. BigWorld will only send it if the entity comes within 
+range.</p>
+
+<p>Unlike non-state-changing events, in which the priority level can have any 
+value, state-changing events have a discrete or non-contiguous number of state LODs
+specified by the developer.</p>
+
+<p>These can be thought of as rings around the client. Each property of an 
+entity’s type can be associated with one of these rings. For an example:</p>
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code>    <span class="nt">&lt;seatType&gt;</span>
+      <span class="nt">&lt;Type&gt;</span>         INT8          <span class="nt">&lt;/Type&gt;</span>
+      <span class="nt">&lt;Flags&gt;</span>        OTHER_CLIENT  <span class="nt">&lt;/Flags&gt;</span>
+      <span class="nt">&lt;Default&gt;</span>      -1            <span class="nt">&lt;/Default&gt;</span>  <span class="c">&lt;!-- See Seat.py --&gt;</span>
+      <span class="nt">&lt;DetailLevel&gt;</span>  NEAR          <span class="nt">&lt;/DetailLevel&gt;</span>
+    <span class="nt">&lt;/seatType&gt;</span>
+</code></pre>
+</div>
+
+<p>For example, supposed an avatar A is surrounded by four entities of the 
+same type, with LOD levels at 20m, 100m, and 500m. It will process 
+each entity according to its distance, as described in the table below:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity</th>
+      <th style="text-align: center">Distance</th>
+      <th style="text-align: right">20m</th>
+      <th>100m</th>
+      <th style="text-align: center">500m</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>E1</td>
+      <td style="text-align: center">15m</td>
+      <td style="text-align: right">y</td>
+      <td>y</td>
+      <td style="text-align: center">y</td>
+    </tr>
+    <tr>
+      <td>E2</td>
+      <td style="text-align: center">90m</td>
+      <td style="text-align: right">n</td>
+      <td>y</td>
+      <td style="text-align: center">y</td>
+    </tr>
+    <tr>
+      <td>E3</td>
+      <td style="text-align: center">400m</td>
+      <td style="text-align: right">n</td>
+      <td>n</td>
+      <td style="text-align: center">y</td>
+    </tr>
+    <tr>
+      <td>E4</td>
+      <td style="text-align: center">1000m</td>
+      <td style="text-align: right">n</td>
+      <td>n</td>
+      <td style="text-align: center">n</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>When an entity with an associated witness comes within an LOD ring of 
+another entity, any state associated with the ring that has changed since
+they were last this close is sent to the client.</p>
+
+<p>uses timestamps to achieve to prevent very often updates. A timestamp is
+stored with each property of each entity. This timestamp indicates when 
+that property was last changed. Also, for each entity in a witness’ AoI, 
+a timestamp corresponding to when that entity last left that level is kept 
+for each LOD ring.</p>
+
+<p>By itself, this does not allow us to throttle this data. To achieve this, 
+we only need to apply a multiplying factor to the interested level of the 
+avatar when it is calculated for other entities. Multiplying by a factor 
+less than one has the effect of reducing the amount of data sent. 
+As a result, the bigger the ring is, the more data to be sent. the smaller the 
+ring is, the less data to be sent.</p>
+
+<h3 id="516-scripting-and-entities">5.1.6. Scripting and Entities</h3>
+<p>The following sub-sections describe how to use scripting for entities.</p>
+
+<h4 id="5161-entity-classes">5.1.6.1. Entity Classes</h4>
+<p>An entity class describes a type of entity. The list below describes its 
+component parts:</p>
+<ul>
+  <li>An XML definition file    <res>/scripts/entity_defs/<entity>.def</entity></res></li>
+  <li>A Python cell script       <res>/scripts/cell/<entity>.py</entity></res></li>
+  <li>A Python base script     <res>/scripts/base/<entity>.py</entity></res></li>
+  <li>A Python client script    <res>/scripts/client/<entity>.py</entity></res></li>
+</ul>
+
+<p>The XML definition file can be considered the interface between the Cell, 
+Base and Client scripts. It defines all available public methods, and all 
+properties of an entity. In addition, it defines global characteristics of 
+the class, such as:</p>
+<ul>
+  <li>Whether the entity requires volatile position updates.</li>
+  <li>How the entity is instantiated on the client.</li>
+  <li>The base class of the entity, if any.</li>
+  <li>The interfaces implemented by the entity, if any.</li>
+</ul>
+
+<h4 id="5162-example-entity-definition-file">5.1.6.2. Example Entity Definition File</h4>
+<p>The following is an example entity definition file <res>/scripts/entity_defs/Seat.def.</res></p>
+
+<div class="language-xml highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;root&gt;</span>
+  <span class="nt">&lt;Properties&gt;</span>
+    <span class="nt">&lt;seatType&gt;</span>
+      <span class="nt">&lt;Type&gt;</span>         INT8          <span class="nt">&lt;/Type&gt;</span>
+      <span class="nt">&lt;Flags&gt;</span>        OTHER_CLIENT  <span class="nt">&lt;/Flags&gt;</span>
+      <span class="nt">&lt;Default&gt;</span>      -1            <span class="nt">&lt;/Default&gt;</span>  <span class="c">&lt;!-- See Seat.py --&gt;</span>
+      <span class="nt">&lt;DetailLevel&gt;</span>  NEAR          <span class="nt">&lt;/DetailLevel&gt;</span>
+    <span class="nt">&lt;/seatType&gt;</span>
+    <span class="nt">&lt;ownerID&gt;</span>
+      <span class="nt">&lt;Type&gt;</span>         INT32         <span class="nt">&lt;/Type&gt;</span>
+      <span class="nt">&lt;Flags&gt;</span>        OTHER_CLIENT  <span class="nt">&lt;/Flags&gt;</span>
+      <span class="nt">&lt;Default&gt;</span>      0             <span class="nt">&lt;/Default&gt;</span>
+    <span class="nt">&lt;/ownerID&gt;</span>
+    <span class="nt">&lt;channel&gt;</span>
+      <span class="nt">&lt;Type&gt;</span>         INT32         <span class="nt">&lt;/Type&gt;</span>
+      <span class="nt">&lt;Flags&gt;</span>        PRIVATE       <span class="nt">&lt;/Flags&gt;</span>
+    <span class="nt">&lt;/channel&gt;</span>
+  <span class="nt">&lt;/Properties&gt;</span>
+
+  <span class="nt">&lt;ClientMethods&gt;</span>
+    <span class="nt">&lt;clientMethod1&gt;</span>
+      <span class="nt">&lt;Arg&gt;</span>            STRING  <span class="nt">&lt;/Arg&gt;</span>  <span class="c">&lt;!-- msg --&gt;</span>
+      <span class="nt">&lt;DetailDistance&gt;</span> 30      <span class="nt">&lt;/DetailDistance&gt;</span>
+    <span class="nt">&lt;/clientMethod1&gt;</span>
+  <span class="nt">&lt;/ClientMethods&gt;</span>
+
+  <span class="nt">&lt;CellMethods&gt;</span>
+    <span class="nt">&lt;sitDownRequest&gt;</span>
+      <span class="nt">&lt;Exposed/&gt;</span>
+      <span class="nt">&lt;Arg&gt;</span>      OBJECT_ID  <span class="nt">&lt;/Arg&gt;</span>  <span class="c">&lt;!-- WHO --&gt;</span>
+    <span class="nt">&lt;/sitDownRequest&gt;</span>
+
+    <span class="nt">&lt;getUpRequest&gt;</span>
+      <span class="nt">&lt;Exposed/&gt;</span>
+      <span class="nt">&lt;Arg&gt;</span>      OBJECT_ID  <span class="nt">&lt;/Arg&gt;</span>  <span class="c">&lt;!-- WHO --&gt;</span>
+    <span class="nt">&lt;/getUpRequest&gt;</span>
+
+    <span class="nt">&lt;ownerNotSeated&gt;</span>
+    <span class="nt">&lt;/ownerNotSeated&gt;</span>
+
+    <span class="nt">&lt;tableChat&gt;</span>
+      <span class="nt">&lt;Arg&gt;</span>      STRING    <span class="nt">&lt;/Arg&gt;</span>  <span class="c">&lt;!-- msg --&gt;</span>
+    <span class="nt">&lt;/tableChat&gt;</span>
+  <span class="nt">&lt;/CellMethods&gt;</span>
+  
+  <span class="nt">&lt;LODLevels&gt;</span>
+    <span class="nt">&lt;level&gt;</span>  20   <span class="nt">&lt;hyst&gt;</span>   4  <span class="nt">&lt;/hyst&gt;</span> <span class="nt">&lt;label&gt;</span> NEAR   <span class="nt">&lt;/label&gt;</span>  <span class="nt">&lt;/level&gt;</span>
+    <span class="nt">&lt;level&gt;</span>  100  <span class="nt">&lt;hyst&gt;</span>  10  <span class="nt">&lt;/hyst&gt;</span> <span class="nt">&lt;label&gt;</span> MEDIUM <span class="nt">&lt;/label&gt;</span>  <span class="nt">&lt;/level&gt;</span>
+    <span class="nt">&lt;level&gt;</span>  250  <span class="nt">&lt;hyst&gt;</span>  20  <span class="nt">&lt;/hyst&gt;</span> <span class="nt">&lt;label&gt;</span> FAR    <span class="nt">&lt;/label&gt;</span>  <span class="nt">&lt;/level&gt;</span>
+  <span class="nt">&lt;/LODLevels&gt;</span>
+
+<span class="nt">&lt;/root&gt;</span>
+</code></pre>
+</div>
+
+<h4 id="5163-properties">5.1.6.3. Properties</h4>
+<p>All properties are defined in the XML file,</p>
+<ul>
+  <li>along with their data type,</li>
+  <li>an optional default value,</li>
+  <li>flags to indicate how they should be replicated,</li>
+  <li>and an optional tag DetailLevel for LOD processing.</li>
+</ul>
+
+<p>All cell entity properties need to be defined, even if they are private to 
+the class. This is because CellApps need to offload entities to other 
+CellApps, and having the data types of all properties defined allows 
+the data to be transported as efficiently as possible.</p>
+
+<p><strong>Note:</strong> For security and efficiency reasons, when a client modifies a 
+shared property, the change is not propagated to the server. All 
+communication from the client to the server must be done using method 
+calls.</p>
+
+<p>This is because only when original data  is changed or updated, 
+propagation of the new value on copy data can be done. 
+And the only way a client can change the original data is via rpc.</p>
+
+<p>When a Python script modifies the value of a property, the server does
+the work of propagating this property change to the correct places.</p>
+
+<p>In other words, when a property changed from the entity’s own client via 
+rpc or command msg, the server uses:</p>
+<ul>
+  <li>the flags OWN_CLIENT and ALL_CLIENTS
+to determine if an update should be sent to the entity’s own client,</li>
+  <li>the flags OTHER_CLIENTS and ALL_CLIENTS to determine if an update 
+should be sent to the other clients.</li>
+</ul>
+
+<p>Flag is consisted of SourceProcess + Accessibility +PropagationProcess.</p>
+
+<p>SourceProcess must not be same to PropagationProcess.</p>
+
+<p>SourceProcess is among CELL, BASE or CLIENT,</p>
+
+<p>Accessibility is among of PUBLIC, PRIVATE OR PROTECTED.</p>
+
+<p>PropagationProcess is among of ALL_CLIENT, OWN_CLIENT, 
+OTHER_CLIENT, BASE or NONE if only stored in SourceProcess no 
+propagation.</p>
+
+<p>IE., ALL_CLIENT can be treated as CELL__PUBLIC__ALL_CLIENT.</p>
+
+<p>The following flags are used in the XML definition to determine how each 
+property should be replicated.</p>
+<ul>
+  <li>ALL_CLIENT
+    <ul>
+      <li>Implies the CELL_PUBLIC flag</li>
+      <li>Only relevant for entities with an associated client,</li>
+      <li>IE., a player entity Properties that are visible to all nearby clients, 
+ including the owner.</li>
+      <li>Corresponds to setting both the OWN_CLIENT and OTHER_CLIENT flags.</li>
+    </ul>
+  </li>
+  <li>BASE
+    <ul>
+      <li>Properties that are used on bases.</li>
+    </ul>
+  </li>
+  <li>CELL_PRIVATE
+    <ul>
+      <li>Properties that contain state information that is internal to an entity.</li>
+      <li>They are available on to the owner, and only on the cell.</li>
+      <li>They will not be ghosted, and as such, entities on other cells will not be 
+able to see them.</li>
+    </ul>
+  </li>
+  <li>CELL_PUBLIC
+    <ul>
+      <li>Properties that are visible to other entities on the server.</li>
+      <li>They will be ghosted, and any other nearby entity will be able to read 
+them, whether they are in the same cell or not (as long as they are 
+within the AoI distance).</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>NOTE:</strong> Property definitions can also include the tag DetailLevel. This is used for 
+data LOD processing. For details on LOD processing, see the document 
+<em>Server Programming Guide Proxies and Players → Entity Control</em>.</p>
 
 
                 </div>
@@ -989,18 +1257,9 @@ or a jump seen only within 100 metres.</p>
                     </li>
                     
                     <li>
-                        <a href="/category/#Geco" class="categories-list-item" cate="Geco">
+                        <a href="/category/#game-server" class="categories-list-item" cate="game-server">
                             <span class="name">
-                                Geco
-                            </span>
-                            <span class="badge">1</span>
-                        </a>
-                    </li>
-                    
-                    <li>
-                        <a href="/category/#Engine" class="categories-list-item" cate="Engine">
-                            <span class="name">
-                                Engine
+                                game-server
                             </span>
                             <span class="badge">1</span>
                         </a>
@@ -1106,14 +1365,7 @@ or a jump seen only within 100 metres.</p>
                       
                       
                       
-                      <a href="/tag/#game-back-end" style="font-size: 9pt; color: #999;">game-back-end</a>
-                    
-                      
-                      
-                      
-                      
-                      
-                      <a href="/tag/#server" style="font-size: 9pt; color: #999;">server</a>
+                      <a href="/tag/#gecoengine" style="font-size: 9pt; color: #999;">gecoengine</a>
                     
                       
                       
