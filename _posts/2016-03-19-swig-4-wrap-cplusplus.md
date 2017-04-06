@@ -366,18 +366,98 @@ __Note:__ The `%nodefault` directive/ `-nodefault` options described above,
 which disable both the default constructor and the implicit destructors, 
 could lead to memory leaks, and so it is strongly recommended to not use them.
 
+### 6.6.3 When constructor wrappers aren't created
+If a class defines a constructor, SWIG normally tries to generate a wrapper 
+for it. However, SWIG will not generate a constructor wrapper if it thinks
+that it will result in illegal wrapper code. There are really two cases 
+where this might show up.
 
- 
-  
- 
+First, SWIG won't generate wrappers for protected or private constructors. 
+For example:
+```c++
+class Foo {
+protected:
+  Foo();         // Not wrapped.
+public:
+    ...
+};
+```  
+Next, SWIG won't generate wrappers for a class if it appears to be 
+abstract--that is, it has undefined pure virtual methods.
+Here are some examples:
+```c++
+class Bar {
+public:
+  Bar();               // Not wrapped.  Bar is abstract.
+  virtual void spam(void) = 0;
+};
 
+class Grok : public Bar {
+public:
+      Grok();        // Not wrapped. No implementation of abstract spam().
+      // but You can use `%feature("notabstract") Foo;` to force wrapping  `Grok();`
+};
+``` 
 
+### 6.6.4 Copy constructors
+If a class defines more than one constructor, its behavior depends on the 
+capabilities of the target language. If overloading is supported, the copy 
+constructor is accessible using the normal constructor function. 
+For example, if you have this:
+```c++
+class List {
+public:
+    List();    
+    List(const List &);      // Copy constructor
+    ...
+};
+``` 
+then the copy constructor can be used in script as follows:
+```python
+x = List()               # Create a list
+y = List(x)              # Copy list x
+``` 
+If the target language does not support overloading, then the copy 
+constructor is available through a special function like this:
+```c++
+List *copy_List(List *f) {
+    return new List(*f);
+}
+```
+then the copy constructor can be used in script as follows:
+```python
+x = List()               # Create a list
+y = copy_List(x)              # Copy list x
+``` 
 
+__Note:__ SWIG does not generate a copy constructor wrapper unless one 
+is explicitly declared in the class. This differs from the treatment of default
+constructors and destructors. However, copy constructor wrappers can 
+be generated if using the `copyctor` feature flag. For example:
+```c++
+%copyctor List;
+class List {
+public:
+    List();    
+};
+```
+Will generate a copy constructor wrapper for List.
 
+### 6.6.5 Member functions
+All member functions are roughly translated into accessor functions like this :
+```c++
+int List_search(List *obj, char *value) {
+  return obj->search(value);
+}
+```
+It should be noted that SWIG does not actually create a C accessor 
+function in the code it generates. Instead, member access such as 
+`obj->search(value)` is directly inlined into the generated wrapper functions. 
 
-
-
-
+### 6.6.6 Static members
+Static member functions are called directly without making any special 
+transformations. For example, the static member function print(List *l) 
+directly invokes List::print(List *l) in the generated wrapper code.
 
 
 
