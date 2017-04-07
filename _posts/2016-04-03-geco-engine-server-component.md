@@ -349,16 +349,238 @@ __NOTE:__ Property definitions can also include the tag DetailLevel. This is use
 data LOD processing. For details on LOD processing, see the document 
 _Server Programming Guide Proxies and Players → Entity Control_.
 
+#### 5.1.6.4. Built-in Properties
+In addition to the properties defined in the XML file, cell entity scripts also 
+have access to several built-in properties provided by the cell scripting 
+environment. These include:
+ - id (Read-only) Integer ID of the entity.
+ - spaceID (Read-only) ID of the space that the entity is in.
+ - vehicle (Read-only) Some other entity (or None) that the entity is riding upon.
+ - position (Read/write) Position of the entity, as a tuple of 3 floats.
+ - direction (Read/write) Direction of the entity, as a tuple of roll, pitch, and yaw.
+ - isOnGround (Read/write) Integer flag, containing 1 if the entity is on the ground, or 0 otherwise.
+ 
+It is possible to move an entity by changing its position property. However,
+for continuous movement, the method moveToPoint is recommended.
+The spaceID and vehicle properties are influenced by the teleport and 
+boardVehicle methods, respectively.
+
+#### 5.1.6.5. Methods
+There are different sections for client, cell, and base methods, and each 
+method contains its name and its list of arguments.
+
+Cell and base methods can also have an optional <Exposed/> tag. This 
+indicates whether the client can call this method. Exposed methods on the
+cell have an implicit argument, source, which is the ID of the entity
+associated with the client that called the method.
+
+Method definitions can also have a <DetailDistance> attribute which is 
+used in relation to Level of Detail filtering.
+
+#### 5.1.6.6. Calling Client methods
+A client has references to all entities that are within its AoI. 
+A cell component of an entity can call methods on other client entities 
+(including its own) that exist within this AoI.
+
+Four properties are available to the cell script, to facilitate calling client 
+methods. These are:
+ - ownClient (or client)
+ - otherClients
+ - allClients
+ - clientEntity
+ 
+A method called on one of these objects will be delivered to the indicated 
+clients.
+
+_For example, to call the chat method on the client script for this object, 
+for all nearby clients:_ `self.allClients.chat( "hi!" )`.
+
+#### 5.1.6.7. Cell Built-in Methods
+The cell script has access to numerous built-in script methods, 
+some of which are described in the list below:
+ - _destroy_ — Destroys the entity.
+ - _addTimer_ — Adds an asynchronous timer callback.
+ - _moveToPoint_ — Moves the entity in a straight line towards a point.
+ - _moveToEntity_ — Moves the entity towards another entity.
+ - _navigate_ — Moves the entity towards a point, avoiding obstacles.
+ - _cancel_ — Cancels a controller (timers, movement, etc...).
+ - _entitiesInRange_ — Finds entities within a given distance of the entity.
+ 
+#### 5.1.6.8. Controllers
+A controller is a C++ object associated with a cell entity. It normally 
+performs a task that would be inefficient or difficult to do from script. 
+It also generally has state information, which must be sent across the 
+network if the entity is offloaded to another cell.
+
+Examples of currently implemented controllers are:
+ - TimerController — Provides asynchronous timed callbacks.
+ - MoveToPointController — Moves the entity to a position, at a given velocity.
+ 
+Since controllers normally perform operations asynchronously, they notify 
+the script object of completion by calling a named script callback. 
+For example, the TimerController always calls the onTimer event handler, 
+and the MoveToPointController always calls the onMove event handler.
+
+5.1.6.10. Example Script File
+Cell entity script — <res>/scripts/cell/Seat.py
+The following is an example cell entity script file for a Seat object:
+```python
+"This module implements the Seat entity."
+import BigWorld
+import Avatar
+# -----------------------------------------------------------------------
+# Section: class Seat
+# -----------------------------------------------------------------------
+class Seat( BigWorld.Entity ):
+  "A Seat entity."
+  def __init__( self ):
+    BigWorld.Entity.__init__( self )
+
+  def sitDownRequest( self, source, entityID ):
+    if self.ownerID == 0 and source == entityID:
+      self.ownerID = entityID
+      BigWorld.entities[ self.ownerID ].enterMode(
+        Avatar.Avatar.MODE_SEATED, self.id, 0 )
+      if self.channel:
+        try:
+          channel = BigWorld.entities[ self.channel ]
+          channel.register( self.ownerID )
+        except:
+          pass
+
+  def getUpRequest( self, source, entityID ):
+    if self.ownerID == entityID and source == entityID:
+      if self.channel:
+        try:
+          channel = BigWorld.entities[ self.channel ]
+          channel.deregister( entityID )
+        except:
+          pass
+      BigWorld.entities[ self.ownerID ].cancelMode()
+      # The Avatar's cancelMode() method will in-turn call this
+      # Seat's ownerNotSeated() method to release itself.
+
+  def ownerNotSeated( self ):
+    self.ownerID = 0
+
+  def tableChat( self, msg ):
+    if self.channel:
+      channel = BigWorld.entities[ self.channel ]
+      assert( channel )
+      assert( self.ownerID )
+      channel.tellOthers( self.ownerID, "[local] " + msg )
+```
+
+### 5.1.7. Directed Messages
+Not all events are propagated via the event history. If an event is destined 
+for a specific player, or a small number of players, then it can be delivered
+almost immediately in its next packet.
+
+### 5.1.8. Forwarding From Ghosts
+Each ghost knows its real cell, so that it can forward messages to its 
+real version to be processed.
+
+Most messages are of the _pull_ type, as in when another player jumps — 
+it is up to the avatar (via the priority queue) to decide if and when to send 
+this to its client.
+
+Minority of the messages is of the push variety, as in when player A 
+wants to shake hands with player B. To do this, client A sends a handshake
+request to its cell, which in turns  makes a request to avatar B on the same cell. 
+
+Avatar B may be a ghost, in which case it forwards the request to its 
+real representation. This communication happens automatically and 
+transparently.
+
+### 5.1.9. Offloading Entities
+Approximately once a second each cell checks whether to offload any 
+entities to other cells. Each entity is considered against the boundary of 
+the current cell. 
+
+The boundary is artificially increased (by about 10 metres) 
+to avoid hysteresis. If an entity is found to be outside the boundary of the 
+current cell, it is offloaded to the most appropriate one.
+
+When an entity is offloaded, the real entity object is transformed into a 
+ghost entity, and vice-versa when an entity is loaded.
+
+### 5.1.10. Adding and Removing Cells
+When a cell is added to a large multi-cellular space during runtime, it is 
+done by gradually increasing its area, in order to avoid a large spike in 
+entities trying to change cells. Similarly for removing a cell, its area slowly 
+decreases until all entities are gone.
+
+### 5.1.11. Load Balancing
+Cell boundaries are moved in order to adjust the proportion of the server
+load that an individual cell is responsible for.
+ 
+The basic (simplified) idea is that if a cell is overloaded in comparison to 
+other cells, then its area is reduced. Conversely, if it is underloaded,
+ then its area is increased.
+
+### 5.1.12. Physics
+Because of factors such as latency inherent in traversing the Internet, 
+large number of desired players, and bandwidth limits, it is difficult (if not 
+impossible) to achieve a convincing game where full collision handling is 
+attempted.
+
+For more details, see the document _Server Programming Guide's section 
+Proxies and Players → Entity Control._
+
+### 5.1.13. Navigation System
+The key features of the navigation system are:
+ - Navigation of both indoor and outdoor chunks.
+ - Seamless transition between indoor and outdoor regions.
+ - Dynamic loading of navpoly graphs.
+ - Paths caching, for efficiency.
+
+For details, see the document _Server Programming Guide, 
+section Entities and the Universe → Navigation System._
+
+### 5.1.14. Range Triggers and Range Queries
+There is often the need to trigger an event when an entity (of a specific 
+type) gets close enough to another. These are called Range Triggers.
+
+There is also the need to find all entities that are in a given area. This is 
+called a Range Query.
+
+To perform a range query, the software searches just one of these lists to 
+the distance of the query range, and then selects the entities geometrically 
+in range (can be achieved by set intersection that must <z and <y).
 
 
+To perform a range trigger, the entity that is interested in a particular 
+range inserts high and low triggers in both the X and Z lists. When the 
+entity moves, the lists and the triggers are updated. When other entities
+ move, the lists are updated. If an entity crosses a trigger, or a trigger 
+ crosses an entity, then the software checks the other dimension to test 
+ whether it is actually a trigger event.
+ 
+ For the majority of situations this algorithm has been found to be very effective.
 
+### 5.1.15. Fault Tolerance
+The CellApp is designed to be fault tolerant. A CellApp process can stop 
+suddenly, or its machine can become disconnected from the network, 
+with little noticeable impact on the server.
 
+## 5.2. CellAppMgr
+The CellAppMgr is responsible for:
+ - Maintaining the correct adjacencies between cells.
+ - Adding new avatars to the correct cell.
+ - Acting as a global entity ID broker.
 
-  
+### 5.2.1. CellApp Registration
+When a new CellApp is started, it finds the location of the CellAppMgr by 
+broadcasting a message to all BWMachined daemons.
 
+If a BWMachined process has a CellAppMgr on its machine, then its 
+address is returned to the CellApp. Once the CellApp has the location 
+of the CellAppMgr, the CellApp registers itself with it. Next time the 
+CellAppMgr needs to create more cells, the new CellApp will be considered 
+as a potential host for it.
 
-
-
+Similarly, when the CellApp stops, it deregisters itself with the CellAppMgr, 
+after having all its cells gradually removed.
 
 
 

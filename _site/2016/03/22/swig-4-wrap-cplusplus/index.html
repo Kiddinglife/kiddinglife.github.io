@@ -216,7 +216,18 @@
       <li><a href="#661-c-style-constructors-and-destructors" id="markdown-toc-661-c-style-constructors-and-destructors">6.6.1 C-style Constructors and destructors</a></li>
     </ul>
   </li>
-  <li><a href="#662-default-ctors-copy-ctors-and-implicit-dtors" id="markdown-toc-662-default-ctors-copy-ctors-and-implicit-dtors">6.6.2 Default ctors, copy ctors and implicit dtors</a></li>
+  <li><a href="#662-default-ctors-copy-ctors-and-implicit-dtors" id="markdown-toc-662-default-ctors-copy-ctors-and-implicit-dtors">6.6.2 Default ctors, copy ctors and implicit dtors</a>    <ul>
+      <li><a href="#663-when-constructor-wrappers-arent-created" id="markdown-toc-663-when-constructor-wrappers-arent-created">6.6.3 When constructor wrappers aren’t created</a></li>
+      <li><a href="#664-copy-constructors" id="markdown-toc-664-copy-constructors">6.6.4 Copy constructors</a></li>
+      <li><a href="#665-member-functions" id="markdown-toc-665-member-functions">6.6.5 Member functions</a></li>
+      <li><a href="#666-static-members" id="markdown-toc-666-static-members">6.6.6 Static members</a></li>
+    </ul>
+  </li>
+  <li><a href="#67-default-arguments" id="markdown-toc-67-default-arguments">6.7 Default arguments</a></li>
+  <li><a href="#69-enums-and-constants" id="markdown-toc-69-enums-and-constants">6.9 Enums and constants</a></li>
+  <li><a href="#611-references-and-pointers" id="markdown-toc-611-references-and-pointers">6.11 References and pointers</a></li>
+  <li><a href="#613-inheritance" id="markdown-toc-613-inheritance">6.13 Inheritance</a></li>
+  <li><a href="#615-wrapping-overloaded-functions-and-methods" id="markdown-toc-615-wrapping-overloaded-functions-and-methods">6.15 Wrapping Overloaded Functions and Methods</a></li>
 </ul>
 
 <p>This chapter describes SWIG’s support for wrapping C++. As a prerequisite, 
@@ -587,6 +598,211 @@ generation of the default or implicit destructor:</p>
 <p><strong>Note:</strong> The <code class="highlighter-rouge">%nodefault</code> directive/ <code class="highlighter-rouge">-nodefault</code> options described above, 
 which disable both the default constructor and the implicit destructors, 
 could lead to memory leaks, and so it is strongly recommended to not use them.</p>
+
+<h3 id="663-when-constructor-wrappers-arent-created">6.6.3 When constructor wrappers aren’t created</h3>
+<p>If a class defines a constructor, SWIG normally tries to generate a wrapper 
+for it. However, SWIG will not generate a constructor wrapper if it thinks
+that it will result in illegal wrapper code. There are really two cases 
+where this might show up.</p>
+
+<p>First, SWIG won’t generate wrappers for protected or private constructors. 
+For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+<span class="k">protected</span><span class="o">:</span>
+  <span class="n">Foo</span><span class="p">();</span>         <span class="c1">// Not wrapped.
+</span><span class="nl">public:</span>
+    <span class="p">...</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>Next, SWIG won’t generate wrappers for a class if it appears to be 
+abstract–that is, it has undefined pure virtual methods.
+Here are some examples:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Bar</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Bar</span><span class="p">();</span>               <span class="c1">// Not wrapped.  Bar is abstract.
+</span>  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">spam</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">Grok</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Bar</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+      <span class="n">Grok</span><span class="p">();</span>        <span class="c1">// Not wrapped. No implementation of abstract spam().
+</span>      <span class="c1">// but You can use `%feature("notabstract") Foo;` to force wrapping  `Grok();`
+</span><span class="p">};</span>
+</code></pre>
+</div>
+
+<h3 id="664-copy-constructors">6.6.4 Copy constructors</h3>
+<p>If a class defines more than one constructor, its behavior depends on the 
+capabilities of the target language. If overloading is supported, the copy 
+constructor is accessible using the normal constructor function. 
+For example, if you have this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">List</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">List</span><span class="p">();</span>    
+    <span class="n">List</span><span class="p">(</span><span class="k">const</span> <span class="n">List</span> <span class="o">&amp;</span><span class="p">);</span>      <span class="c1">// Copy constructor
+</span>    <span class="p">...</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>then the copy constructor can be used in script as follows:</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="n">List</span><span class="p">()</span>               <span class="c"># Create a list</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>              <span class="c"># Copy list x</span>
+</code></pre>
+</div>
+<p>If the target language does not support overloading, then the copy 
+constructor is available through a special function like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">List</span> <span class="o">*</span><span class="nf">copy_List</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">f</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">List</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>then the copy constructor can be used in script as follows:</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">x</span> <span class="o">=</span> <span class="n">List</span><span class="p">()</span>               <span class="c"># Create a list</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">copy_List</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>              <span class="c"># Copy list x</span>
+</code></pre>
+</div>
+
+<p><strong>Note:</strong> SWIG does not generate a copy constructor wrapper unless one 
+is explicitly declared in the class. This differs from the treatment of default
+constructors and destructors. However, copy constructor wrappers can 
+be generated if using the <code class="highlighter-rouge">copyctor</code> feature flag. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="o">%</span><span class="n">copyctor</span> <span class="n">List</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">List</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">List</span><span class="p">();</span>    
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>Will generate a copy constructor wrapper for List.</p>
+
+<h3 id="665-member-functions">6.6.5 Member functions</h3>
+<p>All member functions are roughly translated into accessor functions like this :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">List_search</span><span class="p">(</span><span class="n">List</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">obj</span><span class="o">-&gt;</span><span class="n">search</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>It should be noted that SWIG does not actually create a C accessor 
+function in the code it generates. Instead, member access such as 
+<code class="highlighter-rouge">obj-&gt;search(value)</code> is directly inlined into the generated wrapper functions.</p>
+
+<h3 id="666-static-members">6.6.6 Static members</h3>
+<p>Static member functions are called directly without making any special 
+transformations. For example, the static member function print(List *l) 
+directly invokes List::print(List *l) in the generated wrapper code.</p>
+
+<h2 id="67-default-arguments">6.7 Default arguments</h2>
+<p>SWIG will wrap all types of functions that have default arguments. 
+For example member functions:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">bar</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="kt">int</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">4</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>SWIG handles default arguments by generating an extra overloaded 
+method for each defaulted argument.</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">bar</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">,</span> <span class="kt">int</span> <span class="n">z</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="n">bar</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="n">bar</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<h2 id="69-enums-and-constants">6.9 Enums and constants</h2>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Swig</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">enum</span> <span class="p">{</span><span class="n">ALE</span><span class="p">,</span> <span class="n">LAGER</span><span class="p">,</span> <span class="n">PORTER</span><span class="p">,</span> <span class="n">STOUT</span><span class="p">};</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>Generates the following set of constants in the target scripting language :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Swig_ALE</span> <span class="o">=</span> <span class="n">Swig</span><span class="o">::</span><span class="n">ALE</span>
+<span class="n">Swig_LAGER</span> <span class="o">=</span> <span class="n">Swig</span><span class="o">::</span><span class="n">LAGER</span>
+<span class="n">Swig_PORTER</span> <span class="o">=</span> <span class="n">Swig</span><span class="o">::</span><span class="n">PORTER</span>
+<span class="n">Swig_STOUT</span> <span class="o">=</span> <span class="n">Swig</span><span class="o">::</span><span class="n">STOUT</span>
+</code></pre>
+</div>
+
+<h2 id="611-references-and-pointers">6.11 References and pointers</h2>
+<p>C++ references are supported, but SWIG transforms them back into 
+pointers. For example, a declaration like this :</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">double</span> <span class="n">bar</span><span class="p">(</span><span class="kt">double</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>has a low-level accessor:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">double</span> <span class="nf">Foo_bar</span><span class="p">(</span><span class="n">Foo</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">obj</span><span class="o">-&gt;</span><span class="n">bar</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>As a special case, most language modules pass <em>const references to 
+primitive data types (int, short, float, etc.) by value</em> instead of pointers. 
+For example, if you have a function like this,</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="kt">void</span> <span class="n">foo</span><span class="p">(</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">);</span>
+</code></pre>
+</div>
+<p>it is called from a script as follows: <code class="highlighter-rouge">foo(3)  # Notice pass by value</code></p>
+
+<p>Functions that return a reference are remapped to return a pointer
+instead. For example:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Bar</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Foo</span> <span class="o">&amp;</span><span class="n">spam</span><span class="p">();</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>Generates an accessor like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">Foo</span> <span class="o">*</span><span class="nf">Bar_spam</span><span class="p">(</span><span class="n">Bar</span> <span class="o">*</span><span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Foo</span> <span class="o">&amp;</span><span class="n">result</span> <span class="o">=</span> <span class="n">obj</span><span class="o">-&gt;</span><span class="n">spam</span><span class="p">();</span>
+  <span class="k">return</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+<p>However, functions that return const references to primitive 
+data types (int, short, etc.) normally return the result as a value 
+rather than a pointer. For example, a function like this, <code class="highlighter-rouge">const int &amp;bar();</code>
+will will return integers such as 37 or 42 in the target scripting language 
+rather than a pointer to an integer.</p>
+
+<h2 id="613-inheritance">6.13 Inheritance</h2>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="n">C</span> <span class="o">*</span><span class="n">c</span> <span class="o">=</span> <span class="k">new</span> <span class="n">C</span><span class="p">();</span>
+<span class="kt">void</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">c</span><span class="p">;</span>
+<span class="kt">void</span> <span class="o">*</span><span class="n">pA</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">c</span><span class="p">;</span>
+<span class="kt">void</span> <span class="o">*</span><span class="n">pB</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">A_function</span><span class="p">((</span><span class="n">A</span> <span class="o">*</span><span class="p">)</span> <span class="n">pA</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">B_function</span><span class="p">((</span><span class="n">B</span> <span class="o">*</span><span class="p">)</span> <span class="n">pB</span><span class="p">);</span>
+</code></pre>
+</div>
+<p>In practice, the pointer is held as an integral number in the target 
+language proxy class.</p>
+
+<h2 id="615-wrapping-overloaded-functions-and-methods">6.15 Wrapping Overloaded Functions and Methods</h2>
+<p>For example, a class with a member template might look like this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">bar</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">,</span> <span class="n">T</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+  <span class="p">...</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+<p>if you want to leave the original class definition alone, just do this:</p>
+<div class="language-c++ highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">bar</span><span class="p">(</span><span class="n">T</span> <span class="n">x</span><span class="p">,</span> <span class="n">T</span> <span class="n">y</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+  <span class="p">...</span>
+<span class="p">};</span>
+<span class="p">...</span>
+<span class="o">%</span><span class="k">template</span><span class="p">(</span><span class="n">bari</span><span class="p">)</span> <span class="n">Foo</span><span class="o">::</span><span class="n">bar</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="o">%</span><span class="k">template</span><span class="p">(</span><span class="n">bard</span><span class="p">)</span> <span class="n">Foo</span><span class="o">::</span><span class="n">bar</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre>
+</div>
 
 
         </article>

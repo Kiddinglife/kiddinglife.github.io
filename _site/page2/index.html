@@ -758,8 +758,26 @@
           <li><a href="#5161-entity-classes" id="markdown-toc-5161-entity-classes">5.1.6.1. Entity Classes</a></li>
           <li><a href="#5162-example-entity-definition-file" id="markdown-toc-5162-example-entity-definition-file">5.1.6.2. Example Entity Definition File</a></li>
           <li><a href="#5163-properties" id="markdown-toc-5163-properties">5.1.6.3. Properties</a></li>
+          <li><a href="#5164-built-in-properties" id="markdown-toc-5164-built-in-properties">5.1.6.4. Built-in Properties</a></li>
+          <li><a href="#5165-methods" id="markdown-toc-5165-methods">5.1.6.5. Methods</a></li>
+          <li><a href="#5166-calling-client-methods" id="markdown-toc-5166-calling-client-methods">5.1.6.6. Calling Client methods</a></li>
+          <li><a href="#5167-cell-built-in-methods" id="markdown-toc-5167-cell-built-in-methods">5.1.6.7. Cell Built-in Methods</a></li>
+          <li><a href="#5168-controllers" id="markdown-toc-5168-controllers">5.1.6.8. Controllers</a></li>
         </ul>
       </li>
+      <li><a href="#517-directed-messages" id="markdown-toc-517-directed-messages">5.1.7. Directed Messages</a></li>
+      <li><a href="#518-forwarding-from-ghosts" id="markdown-toc-518-forwarding-from-ghosts">5.1.8. Forwarding From Ghosts</a></li>
+      <li><a href="#519-offloading-entities" id="markdown-toc-519-offloading-entities">5.1.9. Offloading Entities</a></li>
+      <li><a href="#5110-adding-and-removing-cells" id="markdown-toc-5110-adding-and-removing-cells">5.1.10. Adding and Removing Cells</a></li>
+      <li><a href="#5111-load-balancing" id="markdown-toc-5111-load-balancing">5.1.11. Load Balancing</a></li>
+      <li><a href="#5112-physics" id="markdown-toc-5112-physics">5.1.12. Physics</a></li>
+      <li><a href="#5113-navigation-system" id="markdown-toc-5113-navigation-system">5.1.13. Navigation System</a></li>
+      <li><a href="#5114-range-triggers-and-range-queries" id="markdown-toc-5114-range-triggers-and-range-queries">5.1.14. Range Triggers and Range Queries</a></li>
+      <li><a href="#5115-fault-tolerance" id="markdown-toc-5115-fault-tolerance">5.1.15. Fault Tolerance</a></li>
+    </ul>
+  </li>
+  <li><a href="#52-cellappmgr" id="markdown-toc-52-cellappmgr">5.2. CellAppMgr</a>    <ul>
+      <li><a href="#521-cellapp-registration" id="markdown-toc-521-cellapp-registration">5.2.1. CellApp Registration</a></li>
     </ul>
   </li>
 </ul>
@@ -1162,6 +1180,250 @@ within the AoI distance).</li>
 <p><strong>NOTE:</strong> Property definitions can also include the tag DetailLevel. This is used for 
 data LOD processing. For details on LOD processing, see the document 
 <em>Server Programming Guide Proxies and Players → Entity Control</em>.</p>
+
+<h4 id="5164-built-in-properties">5.1.6.4. Built-in Properties</h4>
+<p>In addition to the properties defined in the XML file, cell entity scripts also 
+have access to several built-in properties provided by the cell scripting 
+environment. These include:</p>
+<ul>
+  <li>id (Read-only) Integer ID of the entity.</li>
+  <li>spaceID (Read-only) ID of the space that the entity is in.</li>
+  <li>vehicle (Read-only) Some other entity (or None) that the entity is riding upon.</li>
+  <li>position (Read/write) Position of the entity, as a tuple of 3 floats.</li>
+  <li>direction (Read/write) Direction of the entity, as a tuple of roll, pitch, and yaw.</li>
+  <li>isOnGround (Read/write) Integer flag, containing 1 if the entity is on the ground, or 0 otherwise.</li>
+</ul>
+
+<p>It is possible to move an entity by changing its position property. However,
+for continuous movement, the method moveToPoint is recommended.
+The spaceID and vehicle properties are influenced by the teleport and 
+boardVehicle methods, respectively.</p>
+
+<h4 id="5165-methods">5.1.6.5. Methods</h4>
+<p>There are different sections for client, cell, and base methods, and each 
+method contains its name and its list of arguments.</p>
+
+<p>Cell and base methods can also have an optional <Exposed></Exposed> tag. This 
+indicates whether the client can call this method. Exposed methods on the
+cell have an implicit argument, source, which is the ID of the entity
+associated with the client that called the method.</p>
+
+<p>Method definitions can also have a <DetailDistance> attribute which is 
+used in relation to Level of Detail filtering.</DetailDistance></p>
+
+<h4 id="5166-calling-client-methods">5.1.6.6. Calling Client methods</h4>
+<p>A client has references to all entities that are within its AoI. 
+A cell component of an entity can call methods on other client entities 
+(including its own) that exist within this AoI.</p>
+
+<p>Four properties are available to the cell script, to facilitate calling client 
+methods. These are:</p>
+<ul>
+  <li>ownClient (or client)</li>
+  <li>otherClients</li>
+  <li>allClients</li>
+  <li>clientEntity</li>
+</ul>
+
+<p>A method called on one of these objects will be delivered to the indicated 
+clients.</p>
+
+<p><em>For example, to call the chat method on the client script for this object, 
+for all nearby clients:</em> <code class="highlighter-rouge">self.allClients.chat( "hi!" )</code>.</p>
+
+<h4 id="5167-cell-built-in-methods">5.1.6.7. Cell Built-in Methods</h4>
+<p>The cell script has access to numerous built-in script methods, 
+some of which are described in the list below:</p>
+<ul>
+  <li><em>destroy</em> — Destroys the entity.</li>
+  <li><em>addTimer</em> — Adds an asynchronous timer callback.</li>
+  <li><em>moveToPoint</em> — Moves the entity in a straight line towards a point.</li>
+  <li><em>moveToEntity</em> — Moves the entity towards another entity.</li>
+  <li><em>navigate</em> — Moves the entity towards a point, avoiding obstacles.</li>
+  <li><em>cancel</em> — Cancels a controller (timers, movement, etc…).</li>
+  <li><em>entitiesInRange</em> — Finds entities within a given distance of the entity.</li>
+</ul>
+
+<h4 id="5168-controllers">5.1.6.8. Controllers</h4>
+<p>A controller is a C++ object associated with a cell entity. It normally 
+performs a task that would be inefficient or difficult to do from script. 
+It also generally has state information, which must be sent across the 
+network if the entity is offloaded to another cell.</p>
+
+<p>Examples of currently implemented controllers are:</p>
+<ul>
+  <li>TimerController — Provides asynchronous timed callbacks.</li>
+  <li>MoveToPointController — Moves the entity to a position, at a given velocity.</li>
+</ul>
+
+<p>Since controllers normally perform operations asynchronously, they notify 
+the script object of completion by calling a named script callback. 
+For example, the TimerController always calls the onTimer event handler, 
+and the MoveToPointController always calls the onMove event handler.</p>
+
+<p>5.1.6.10. Example Script File
+Cell entity script — <res>/scripts/cell/Seat.py
+The following is an example cell entity script file for a Seat object:</res></p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="s">"This module implements the Seat entity."</span>
+<span class="kn">import</span> <span class="nn">BigWorld</span>
+<span class="kn">import</span> <span class="nn">Avatar</span>
+<span class="c"># -----------------------------------------------------------------------</span>
+<span class="c"># Section: class Seat</span>
+<span class="c"># -----------------------------------------------------------------------</span>
+<span class="k">class</span> <span class="nc">Seat</span><span class="p">(</span> <span class="n">BigWorld</span><span class="o">.</span><span class="n">Entity</span> <span class="p">):</span>
+  <span class="s">"A Seat entity."</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="n">BigWorld</span><span class="o">.</span><span class="n">Entity</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">sitDownRequest</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">entityID</span> <span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ownerID</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">source</span> <span class="o">==</span> <span class="n">entityID</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">ownerID</span> <span class="o">=</span> <span class="n">entityID</span>
+      <span class="n">BigWorld</span><span class="o">.</span><span class="n">entities</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">ownerID</span> <span class="p">]</span><span class="o">.</span><span class="n">enterMode</span><span class="p">(</span>
+        <span class="n">Avatar</span><span class="o">.</span><span class="n">Avatar</span><span class="o">.</span><span class="n">MODE_SEATED</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="nb">id</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+          <span class="n">channel</span> <span class="o">=</span> <span class="n">BigWorld</span><span class="o">.</span><span class="n">entities</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="p">]</span>
+          <span class="n">channel</span><span class="o">.</span><span class="n">register</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">ownerID</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+          <span class="k">pass</span>
+
+  <span class="k">def</span> <span class="nf">getUpRequest</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">entityID</span> <span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ownerID</span> <span class="o">==</span> <span class="n">entityID</span> <span class="ow">and</span> <span class="n">source</span> <span class="o">==</span> <span class="n">entityID</span><span class="p">:</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+          <span class="n">channel</span> <span class="o">=</span> <span class="n">BigWorld</span><span class="o">.</span><span class="n">entities</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="p">]</span>
+          <span class="n">channel</span><span class="o">.</span><span class="n">deregister</span><span class="p">(</span> <span class="n">entityID</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+          <span class="k">pass</span>
+      <span class="n">BigWorld</span><span class="o">.</span><span class="n">entities</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">ownerID</span> <span class="p">]</span><span class="o">.</span><span class="n">cancelMode</span><span class="p">()</span>
+      <span class="c"># The Avatar's cancelMode() method will in-turn call this</span>
+      <span class="c"># Seat's ownerNotSeated() method to release itself.</span>
+
+  <span class="k">def</span> <span class="nf">ownerNotSeated</span><span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ownerID</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="k">def</span> <span class="nf">tableChat</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">msg</span> <span class="p">):</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span><span class="p">:</span>
+      <span class="n">channel</span> <span class="o">=</span> <span class="n">BigWorld</span><span class="o">.</span><span class="n">entities</span><span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">channel</span> <span class="p">]</span>
+      <span class="k">assert</span><span class="p">(</span> <span class="n">channel</span> <span class="p">)</span>
+      <span class="k">assert</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">ownerID</span> <span class="p">)</span>
+      <span class="n">channel</span><span class="o">.</span><span class="n">tellOthers</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">ownerID</span><span class="p">,</span> <span class="s">"[local] "</span> <span class="o">+</span> <span class="n">msg</span> <span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="517-directed-messages">5.1.7. Directed Messages</h3>
+<p>Not all events are propagated via the event history. If an event is destined 
+for a specific player, or a small number of players, then it can be delivered
+almost immediately in its next packet.</p>
+
+<h3 id="518-forwarding-from-ghosts">5.1.8. Forwarding From Ghosts</h3>
+<p>Each ghost knows its real cell, so that it can forward messages to its 
+real version to be processed.</p>
+
+<p>Most messages are of the <em>pull</em> type, as in when another player jumps — 
+it is up to the avatar (via the priority queue) to decide if and when to send 
+this to its client.</p>
+
+<p>Minority of the messages is of the push variety, as in when player A 
+wants to shake hands with player B. To do this, client A sends a handshake
+request to its cell, which in turns  makes a request to avatar B on the same cell.</p>
+
+<p>Avatar B may be a ghost, in which case it forwards the request to its 
+real representation. This communication happens automatically and 
+transparently.</p>
+
+<h3 id="519-offloading-entities">5.1.9. Offloading Entities</h3>
+<p>Approximately once a second each cell checks whether to offload any 
+entities to other cells. Each entity is considered against the boundary of 
+the current cell.</p>
+
+<p>The boundary is artificially increased (by about 10 metres) 
+to avoid hysteresis. If an entity is found to be outside the boundary of the 
+current cell, it is offloaded to the most appropriate one.</p>
+
+<p>When an entity is offloaded, the real entity object is transformed into a 
+ghost entity, and vice-versa when an entity is loaded.</p>
+
+<h3 id="5110-adding-and-removing-cells">5.1.10. Adding and Removing Cells</h3>
+<p>When a cell is added to a large multi-cellular space during runtime, it is 
+done by gradually increasing its area, in order to avoid a large spike in 
+entities trying to change cells. Similarly for removing a cell, its area slowly 
+decreases until all entities are gone.</p>
+
+<h3 id="5111-load-balancing">5.1.11. Load Balancing</h3>
+<p>Cell boundaries are moved in order to adjust the proportion of the server
+load that an individual cell is responsible for.</p>
+
+<p>The basic (simplified) idea is that if a cell is overloaded in comparison to 
+other cells, then its area is reduced. Conversely, if it is underloaded,
+ then its area is increased.</p>
+
+<h3 id="5112-physics">5.1.12. Physics</h3>
+<p>Because of factors such as latency inherent in traversing the Internet, 
+large number of desired players, and bandwidth limits, it is difficult (if not 
+impossible) to achieve a convincing game where full collision handling is 
+attempted.</p>
+
+<p>For more details, see the document <em>Server Programming Guide’s section 
+Proxies and Players → Entity Control.</em></p>
+
+<h3 id="5113-navigation-system">5.1.13. Navigation System</h3>
+<p>The key features of the navigation system are:</p>
+<ul>
+  <li>Navigation of both indoor and outdoor chunks.</li>
+  <li>Seamless transition between indoor and outdoor regions.</li>
+  <li>Dynamic loading of navpoly graphs.</li>
+  <li>Paths caching, for efficiency.</li>
+</ul>
+
+<p>For details, see the document <em>Server Programming Guide, 
+section Entities and the Universe → Navigation System.</em></p>
+
+<h3 id="5114-range-triggers-and-range-queries">5.1.14. Range Triggers and Range Queries</h3>
+<p>There is often the need to trigger an event when an entity (of a specific 
+type) gets close enough to another. These are called Range Triggers.</p>
+
+<p>There is also the need to find all entities that are in a given area. This is 
+called a Range Query.</p>
+
+<p>To perform a range query, the software searches just one of these lists to 
+the distance of the query range, and then selects the entities geometrically 
+in range (can be achieved by set intersection that must &lt;z and &lt;y).</p>
+
+<p>To perform a range trigger, the entity that is interested in a particular 
+range inserts high and low triggers in both the X and Z lists. When the 
+entity moves, the lists and the triggers are updated. When other entities
+ move, the lists are updated. If an entity crosses a trigger, or a trigger 
+ crosses an entity, then the software checks the other dimension to test 
+ whether it is actually a trigger event.</p>
+
+<p>For the majority of situations this algorithm has been found to be very effective.</p>
+
+<h3 id="5115-fault-tolerance">5.1.15. Fault Tolerance</h3>
+<p>The CellApp is designed to be fault tolerant. A CellApp process can stop 
+suddenly, or its machine can become disconnected from the network, 
+with little noticeable impact on the server.</p>
+
+<h2 id="52-cellappmgr">5.2. CellAppMgr</h2>
+<p>The CellAppMgr is responsible for:</p>
+<ul>
+  <li>Maintaining the correct adjacencies between cells.</li>
+  <li>Adding new avatars to the correct cell.</li>
+  <li>Acting as a global entity ID broker.</li>
+</ul>
+
+<h3 id="521-cellapp-registration">5.2.1. CellApp Registration</h3>
+<p>When a new CellApp is started, it finds the location of the CellAppMgr by 
+broadcasting a message to all BWMachined daemons.</p>
+
+<p>If a BWMachined process has a CellAppMgr on its machine, then its 
+address is returned to the CellApp. Once the CellApp has the location 
+of the CellAppMgr, the CellApp registers itself with it. Next time the 
+CellAppMgr needs to create more cells, the new CellApp will be considered 
+as a potential host for it.</p>
+
+<p>Similarly, when the CellApp stops, it deregisters itself with the CellAppMgr, 
+after having all its cells gradually removed.</p>
 
 
                 </div>

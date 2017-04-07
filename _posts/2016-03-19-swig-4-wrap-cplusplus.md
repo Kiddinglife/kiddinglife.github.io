@@ -459,8 +459,117 @@ Static member functions are called directly without making any special
 transformations. For example, the static member function print(List *l) 
 directly invokes List::print(List *l) in the generated wrapper code.
 
+## 6.7 Default arguments
+SWIG will wrap all types of functions that have default arguments. 
+For example member functions:
+```c++
+class Foo {
+public:
+    void bar(int x, int y = 3, int z = 4);
+};
+```
+SWIG handles default arguments by generating an extra overloaded 
+method for each defaulted argument.
+```c++
+class Foo {
+public:
+    void bar(int x, int y, int z);
+    void bar(int x, int y);
+    void bar(int x);
+};
+```
+## 6.9 Enums and constants
+```c++
+class Swig {
+public:
+  enum {ALE, LAGER, PORTER, STOUT};
+};
+```
+Generates the following set of constants in the target scripting language :
+```c++
+Swig_ALE = Swig::ALE
+Swig_LAGER = Swig::LAGER
+Swig_PORTER = Swig::PORTER
+Swig_STOUT = Swig::STOUT
+```
 
+## 6.11 References and pointers
+C++ references are supported, but SWIG transforms them back into 
+pointers. For example, a declaration like this :
+```c++
+class Foo {
+public:
+  double bar(double &a);
+}
+```
+has a low-level accessor:
+```c++
+double Foo_bar(Foo *obj, double *a) {
+  obj->bar(*a);
+}
+```
+As a special case, most language modules pass _const references to 
+primitive data types (int, short, float, etc.) by value_ instead of pointers. 
+For example, if you have a function like this,
+```c++
+void foo(const int &x);
+```
+it is called from a script as follows: `foo(3)  # Notice pass by value`
 
+Functions that return a reference are remapped to return a pointer
+instead. For example:
+```c++
+class Bar {
+public:
+  Foo &spam();
+};
+```
+Generates an accessor like this:
+```c++
+Foo *Bar_spam(Bar *obj) {
+  Foo &result = obj->spam();
+  return &result;
+}
+```
+However, functions that return const references to primitive 
+data types (int, short, etc.) normally return the result as a value 
+rather than a pointer. For example, a function like this, `const int &bar();`
+will will return integers such as 37 or 42 in the target scripting language 
+rather than a pointer to an integer.
+
+## 6.13 Inheritance
+```c++
+C *c = new C();
+void *p = (void *) c;
+void *pA = (void *) c;
+void *pB = (void *) c;
+...
+int x = A_function((A *) pA);
+int y = B_function((B *) pB);
+```
+In practice, the pointer is held as an integral number in the target 
+language proxy class.
+
+## 6.15 Wrapping Overloaded Functions and Methods
+For example, a class with a member template might look like this:
+```c++
+class Foo {
+public:
+  template<class T> void bar(T x, T y) { ... };
+  ...
+};
+```
+if you want to leave the original class definition alone, just do this:
+```c++
+class Foo {
+public:
+  template<class T> void bar(T x, T y) { ... };
+  ...
+};
+...
+%template(bari) Foo::bar<int>;
+%template(bard) Foo::bar<double>;
+```
 
 
 
