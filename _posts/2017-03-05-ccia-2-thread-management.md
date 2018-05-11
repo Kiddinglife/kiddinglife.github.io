@@ -87,12 +87,11 @@ void oops()
    my_thread.detach(); 
 } // 3. 函数退出时新线程可能还在运行  New thread might still be running when func exits
 ```
-处理这种情况的常规方法 ：    
-common way to handle this scenario
-1 数据复制到线程中，而非共享数据  
+处理这种情况的常规方法 common way to handle this scenario:  
+1 数据复制到线程中，而非共享数据    
 make the thread function self-contained and copy the data into the thread rather than sharing the data。     
-2 使用一个能访问局部变量的函数去创建线程是一个糟糕的主意(除非十分确定线程会在函数完成前结束，例如使用join)。  
-ensure that the thread has completed execution before the function exits by joining with the thread.
+2 使用一个能访问局部变量的函数去创建线程是一个糟糕的主意(除非十分确定线程会在函数完成前结束，例如使用join see 2.1.2).  
+repace `my_thread.detach()` with `my_thread.join()`;
 
 ### 2.1.2 等待线程完成 Waiting for a thread to complete
 join()是简单粗暴的等待线程完成或不等待。当你需要对等待中的线程有更灵活的控制时，比
@@ -104,9 +103,9 @@ have to use alternative mechanisms such as condition variables and futures。
 
 调用join()的行为，还清理了线程相关的存储部分，这样 std::thread 对象将不再与已经
 完成的线程有任何关联。这意味着，只能对一个线程使用一次join();一旦已经使用过
-join()， std::thread 对象就不能再次加入了，当对其使用joinable()时，将返回否（false）。  
+join()， std::thread 对象就不能再次加入了，当对其使用joinable()时，将返回否（false）。    
 The act of calling join() also cleans up any storage associated
-with the thread, so the std::thread object is no longer associated with the nowfinished
+with the thread, so the std::thread object is no longer associated with the now finished
 thread; it isn’t associated with any thread. This means that you can call
 join() only once for a given thread; once you’ve called join(), the std::thread
 object is no longer joinable, and joinable() will return false.
@@ -116,9 +115,13 @@ object is no longer joinable, and joinable() will return false.
 个线程，可以在线程启动后，直接使用detach()进行分离。如果打算等待对应线程，则需要细
 心挑选调用join()的位置。当在线程运行之后产生异常，在join()调用之前抛出，就意味着很这
 次调用会被跳过.   
-you need to ensure that you’ve called either join() or detach() before a std::thread object is destroyed. If you’re detaching a thread, you can usually call detach() immediately after the thread has been started, so this isn’t a
+you need to ensure that you’ve called either join() or detach() before a std::thread object is destroyed.  
+If you’re detaching a thread, you can usually call detach() immediately after the thread has been started, so this isn’t a
 problem. But if you’re intending to wait for the thread, you need to pick carefully the place in the code where you call join(). This means that the call to join() is liable to be skipped if an exception is thrown after the thread has been started but before the call to join().
+
+Solotion is shown below:
 ```c++
+// solution 1 add join() in all exit palces
 struct func; 
 void f()
 {
@@ -137,7 +140,8 @@ catch(...)
 t.join(); // 2
 }
 
-// Using RAII to wait for a thread to complete
+// solution 2 is using RAII to wait for a thread to complete 
+// it is easier than s0lution 1
 class thread_guard
 {
    std::thread& t;
@@ -233,12 +237,12 @@ std::thread t(f,3,buffer); // 2
 t.detach();
 }
 ```
-这种情况下，buffer②是一个指针变量，指向本地变量，通过std::thread对象构造函数copy到thread内部成员中②。然而，函数有很大的可能，会在thread将字面值转化成 std::string 对象之前崩溃(oops)，从而导致线程的一些未定义行为。解决方案就是将字面值转化为 std::string 对象，然后传递给thread，从而拷贝buffer到thread中去.   
+这种情况下，buffer②是一个指针变量，指向本地变量，通过std::thread对象构造函数copy到thread内部成员中②。然而，oops函数有很大的可能，会在thread将字面值转化成 std::string 对象之前exit，从而导致线程的一些未定义行为。解决方案就是将字面值转化为 std::string 对象，然后传递给thread，从而拷贝buffer到thread中去.   
 In this case, it’s the pointer to the local variable buffer B that’s passed through to the
 new thread c, and there’s a significant chance that the function oops will exit before
 the buffer has been converted to a std::string on the new thread, thus leading to
 undefined behavior. The solution is to cast to std::string before passing the buffer
-to the std::thread constructor.
+to the std::thread constructor.(thread's ctor is inviked on the new thread execution).
 ```c++        
 void f(int i,std::string const& s);
 void not_oops(int some_param)
