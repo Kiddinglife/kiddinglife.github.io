@@ -10,9 +10,10 @@ tags:  recursion
 {:toc}
 
 Important rules of thumb
- 1 The recursion has a base case—we always include a conditional statement as the first statement in the program that has a  return .
- 2 Recursive calls must address subproblems that are smaller in some sense so that recursive calls converge to the base case.
- 3 Recursive calls should not address subproblems that overlap. 
+ 1. The recursion has a base case—we always include a conditional statement as the first statement in the program that has a  return .
+ 2. Recursive calls must address subproblems that are smaller in some sense so that recursive calls converge to the base case.
+ 3. Recursive calls should not address subproblems that overlap. 
+ 
 ```java
 // Recursive implementation of binary search
 public static int rank(int key, int[] a, int lo, int hi)
