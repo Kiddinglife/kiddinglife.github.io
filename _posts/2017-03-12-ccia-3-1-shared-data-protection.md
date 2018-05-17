@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CCIA-3-shared-data-1"
+title:  "CCIA-3: Protect Shared Data"
 date:   2017-03-12 10:02:02
 categories: read
 tags:  thread c++
@@ -9,10 +9,20 @@ tags:  thread c++
 * content
 {:toc}
 
-## 3.1 Problems with sharing data between threads
-If all shared data is read-only, there’s no problem. However, if data is shared between threads, and **one or more threads** start modifying the data, there’s a lot of potential for trouble.
+Topics Covered:
+ - Problems with sharing data between threads
+ - Protecting data with mutexes
+ - Alternative facilities for protecting shared data
+ 
 
-One concept that’s widely used to help programmers reason about their code is that of invariants—statements that are always true about a particular data structure, These invariants are often broken during an update, especially if the data structure is of any complexity or the update requires modification of more than one value.
+## 3.1 Problems with sharing data between threads
+If all shared data is read-only, there’s no problem. However, if data is shared between threads, 
+and **one or more threads** start modifying the data, there’s a lot of potential for trouble.
+
+One concept that’s widely used to help programmers reason about their code is that of 
+invariants—statements that are always true about a particular data structure, 
+These invariants are often broken during an update, especially if the data structure is 
+of any complexity or the update requires modification of more than one value.
 
 Consider a doubly linked list, the steps in deleting an entry from such a list are shown below:
  1. Identify the node to delete (N). a
@@ -20,20 +30,33 @@ Consider a doubly linked list, the steps in deleting an entry from such a list a
  3. Update the link from the node after N to point to the node prior to N. c
  4. Delete node N. d
 
-if one thread is reading the doubly linked list while another is removing a node, it’s quite possible for the reading thread to see the list with a node only partially removed (because only one of the links has been changed, as in step b of figure 3.1), so the **invariant is broken**. 
+if one thread is reading the doubly linked list while another is removing a node, 
+it’s quite possible for the reading thread to see the list with a node only partially 
+removed (because only one of the links has been changed, as in step b of figure 3.1), 
+so the **invariant is broken**. 
 
-The consequences of this broken invariant can vary; if the other thread is just reading the list items from left to right in the diagram, it will skip the node being. On the other hand, if the second thread is trying to delete the rightmost node in the diagram, it might end up permanently corrupting the data structure and
-eventually crashing the program. this is an example of one of the most common causes of bugs in concurrent code: **a race condition**.
+The consequences of this broken invariant can vary; if the other thread is just reading 
+the list items from left to right in the diagram, it will skip the node being. On the other hand, if the second thread is trying to delete the rightmost node in the diagram, it might end up permanently corrupting the data structure and
+eventually crashing the program. this is an example of one of the most common causes of 
+bugs in concurrent code: **a race condition**.
 
 ### 3.1.1 Race Condition
-In concurrency, a race condition is anything where the outcome depends on the **relative ordering** of execution of operations on two or more threads; the threads race to perform their **respective operations**.
+In concurrency, a race condition is anything where the outcome depends 
+on the **relative ordering** of execution of operations on two or more threads; 
+the threads race to perform their **respective operations**.
 
-the term race condition is usually used to mean a **problematic race condition**; **benign race conditions** aren’t so interesting and aren’t a cause of bugs. The C++ Standard also defines the term data race to mean the specific type of race condition that arises because of concurrent modification to a single object (see section 5.1.2 for details); data races cause the dreaded undefined behavior and it is problemic race condition.  
+the term race condition is usually used to mean a **problematic race condition**; 
+**benign race conditions** aren’t so interesting and aren’t a cause of bugs. 
+data races cause the dreaded undefined behavior and it is problemic race condition.  
 
-Take steps in deleting an entry from such a list above as example. Assume thread a operation is to visit each element and thread b operation is to delete element. There are 3 outcomes with diferent relative-ordering executions:
- 1.  benign race condition outcome: thread a reads deleting element -> thread b deletes left link step b-> thread b deletes right link step c 
- 2.  problemic race condition outcome: thread b deletes left link step b -> thread a reads deleting element -> thread b deletes right link step c 
- 3.  benign race condition outcome: thread a reads deleting element -> thread b deletes right link step c ->  thread a reads deleting element  
+Take steps in deleting an entry from such a list above as example. Assume thread a operation is to visit each element 
+and thread b operation is to delete element. There are 3 outcomes with diferent relative-ordering executions:
+ 1.  benign race condition outcome: thread a reads deleting element -> thread b 
+ deletes left link step b-> thread b deletes right link step c 
+ 2.  problemic race condition outcome: thread b deletes left link step b -> 
+ thread a reads deleting element -> thread b deletes right link step c 
+ 3.  benign race condition outcome: thread a reads deleting element -> 
+ thread b deletes right link step c ->  thread a reads deleting element  
 
 ### 3.1.2 Problematic race conditions
 Problematic race conditions typically occur where completing an operation requires modification of two or more distinct pieces of data, such as the two link pointers in the above example. 
